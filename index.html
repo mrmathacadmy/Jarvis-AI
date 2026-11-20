@@ -1,0 +1,956 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS AI</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, sans-serif;
+    background:#070b14;
+    color:#eaf3ff;
+    min-height:100vh;
+}
+
+:root{
+    --blue:#00c8ff;
+    --bg:#070b14;
+    --panel:#101827;
+    --border:#20354b;
+}
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:260px;
+    background:#0b1220;
+    border-right:1px solid var(--border);
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:bold;
+    color:var(--blue);
+    letter-spacing:3px;
+    margin-bottom:30px;
+}
+
+.logo small{
+    display:block;
+    font-size:10px;
+    color:#8ca6c2;
+    letter-spacing:2px;
+    margin-top:5px;
+}
+
+.new-chat{
+    padding:13px;
+    background:#14253b;
+    border:1px solid #25415e;
+    border-radius:10px;
+    color:white;
+    cursor:pointer;
+    margin-bottom:20px;
+}
+
+.nav-title{
+    font-size:11px;
+    color:#8296ad;
+    margin:12px 0;
+}
+
+.nav-item{
+    padding:12px;
+    border-radius:9px;
+    margin-bottom:5px;
+    cursor:pointer;
+    color:#b9c8d9;
+    transition:.2s;
+}
+
+.nav-item:hover,
+.nav-item.active{
+    background:#14253b;
+    color:var(--blue);
+}
+
+.sidebar-bottom{
+    margin-top:auto;
+    font-size:12px;
+    color:#7e91a8;
+    padding-top:20px;
+}
+
+/* MAIN */
+
+.main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+}
+
+.topbar{
+    height:65px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 20px;
+    background:#0b1220;
+}
+
+.status{
+    font-size:12px;
+    color:#4ade80;
+}
+
+.mobile-menu{
+    display:none;
+    font-size:22px;
+    cursor:pointer;
+}
+
+.content{
+    flex:1;
+    overflow:auto;
+    padding:25px;
+    max-width:1100px;
+    width:100%;
+    margin:auto;
+}
+
+/* WELCOME */
+
+.welcome{
+    text-align:center;
+    margin:30px auto;
+}
+
+.orb{
+    width:110px;
+    height:110px;
+    border-radius:50%;
+    margin:0 auto 20px;
+    background:
+        radial-gradient(circle at center,
+        #50eaff 0%,
+        #0086ff 30%,
+        #0d2850 65%,
+        transparent 72%);
+    box-shadow:0 0 35px #008cff55;
+    animation:pulse 3s infinite;
+}
+
+@keyframes pulse{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.06)}
+}
+
+.welcome h1{
+    font-size:30px;
+    margin-bottom:10px;
+}
+
+.welcome p{
+    color:#94a9c1;
+    font-size:14px;
+    line-height:1.7;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin:25px 0;
+}
+
+.card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    padding:17px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.card:hover{
+    border-color:var(--blue);
+    transform:translateY(-2px);
+}
+
+.card-icon{
+    font-size:24px;
+    margin-bottom:10px;
+}
+
+.card h3{
+    font-size:15px;
+    margin-bottom:7px;
+}
+
+.card p{
+    color:#91a5bb;
+    font-size:12px;
+    line-height:1.5;
+}
+
+/* CHAT */
+
+.chat-area{
+    padding-bottom:15px;
+}
+
+.message{
+    display:flex;
+    margin:16px 0;
+    gap:10px;
+}
+
+.message.user{
+    justify-content:flex-end;
+}
+
+.bubble{
+    max-width:85%;
+    padding:14px;
+    border-radius:13px;
+    line-height:1.6;
+    font-size:14px;
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
+}
+
+.user .bubble{
+    background:#123454;
+    border:1px solid #20557b;
+}
+
+.bot .bubble{
+    background:#101827;
+    border:1px solid #20354b;
+}
+
+.avatar{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:#142b42;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.message-actions{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+}
+
+.small-btn{
+    border:1px solid #28415b;
+    background:#0b1422;
+    color:#9fb7ce;
+    padding:5px 9px;
+    border-radius:6px;
+    font-size:11px;
+    cursor:pointer;
+}
+
+/* INPUT */
+
+.input-area{
+    padding:15px 20px 20px;
+    background:#0b1220;
+    border-top:1px solid var(--border);
+}
+
+.input-wrap{
+    max-width:1000px;
+    margin:auto;
+    display:flex;
+    gap:8px;
+    align-items:center;
+    background:#111d2e;
+    border:1px solid #29415a;
+    border-radius:15px;
+    padding:8px;
+}
+
+.input-wrap textarea{
+    flex:1;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:white;
+    resize:none;
+    padding:12px;
+    font-size:15px;
+    min-height:45px;
+    max-height:150px;
+}
+
+.icon-btn{
+    background:#17283d;
+    border:1px solid #29445e;
+    color:white;
+    width:43px;
+    height:43px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:18px;
+}
+
+.send-btn{
+    background:var(--blue);
+    color:#00111d;
+    border:none;
+    font-weight:bold;
+}
+
+.icon-btn:hover{
+    opacity:.8;
+}
+
+.footer-note{
+    text-align:center;
+    color:#647990;
+    font-size:10px;
+    margin-top:10px;
+}
+
+/* TOOLS */
+
+.tool-section{
+    display:none;
+}
+
+.tool-section.show{
+    display:block;
+}
+
+.tool-box{
+    background:var(--panel);
+    border:1px solid var(--border);
+    padding:20px;
+    border-radius:14px;
+    margin-top:15px;
+}
+
+.tool-box h2{
+    margin-bottom:15px;
+}
+
+.tool-box p{
+    color:#91a5bb;
+    font-size:14px;
+    line-height:1.7;
+}
+
+.field{
+    margin:15px 0;
+}
+
+.field label{
+    display:block;
+    margin-bottom:8px;
+    font-size:13px;
+    color:#aac0d6;
+}
+
+.field input,
+.field textarea,
+.field select{
+    width:100%;
+    padding:12px;
+    background:#09111e;
+    border:1px solid #28415b;
+    color:white;
+    border-radius:8px;
+    outline:none;
+}
+
+.field textarea{
+    min-height:110px;
+    resize:vertical;
+}
+
+.action-btn{
+    padding:12px 17px;
+    border:0;
+    background:var(--blue);
+    color:#00111d;
+    border-radius:9px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:8px;
+}
+
+.output{
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
+    margin-top:15px;
+    padding:15px;
+    background:#08111e;
+    border:1px solid #20354b;
+    border-radius:10px;
+    line-height:1.6;
+    display:none;
+}
+
+.output.show{
+    display:block;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+    .sidebar{
+        position:fixed;
+        left:-270px;
+        top:0;
+        bottom:0;
+        z-index:100;
+        transition:.25s;
+    }
+
+    .sidebar.open{
+        left:0;
+    }
+
+    .mobile-menu{
+        display:block;
+    }
+
+    .content{
+        padding:15px;
+    }
+
+    .welcome h1{
+        font-size:24px;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .topbar{
+        padding:0 13px;
+    }
+
+    .bubble{
+        max-width:90%;
+    }
+
+    .input-area{
+        padding:10px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+        JARVIS
+        <small>PERSONAL AI ASSISTANT</small>
+    </div>
+
+    <button class="new-chat" onclick="newChat()">
+        ＋ New Chat
+    </button>
+
+    <div class="nav-title">WORKSPACE</div>
+
+    <div class="nav-item active" onclick="showPage('chat',this)">
+        💬 AI Chat
+    </div>
+
+    <div class="nav-item" onclick="showPage('website',this)">
+        🌐 Website Builder
+    </div>
+
+    <div class="nav-item" onclick="showPage('app',this)">
+        📱 App Planner
+    </div>
+
+    <div class="nav-item" onclick="showPage('game',this)">
+        🎮 Game Creator
+    </div>
+
+    <div class="nav-item" onclick="showPage('video',this)">
+        🎬 Video Creator
+    </div>
+
+    <div class="nav-item" onclick="showPage('exam',this)">
+        📚 ExamHub Tools
+    </div>
+
+    <div class="nav-title">SYSTEM</div>
+
+    <div class="nav-item" onclick="showMemory()">
+        🧠 Memory
+    </div>
+
+    <div class="nav-item" onclick="clearMemory()">
+        🗑 Clear Memory
+    </div>
+
+    <div class="sidebar-bottom">
+        JARVIS AI • Prototype v1.0<br>
+        Free development mode
+    </div>
+
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+    <header class="topbar">
+
+        <div style="display:flex;gap:15px;align-items:center">
+            <span class="mobile-menu" onclick="toggleSidebar()">☰</span>
+            <strong id="pageTitle">JARVIS AI</strong>
+        </div>
+
+        <div class="status" id="status">
+            ● SYSTEM READY
+        </div>
+
+    </header>
+
+    <div class="content" id="content">
+
+        <!-- CHAT PAGE -->
+        <section id="chatPage">
+
+            <div class="welcome" id="welcome">
+
+                <div class="orb"></div>
+
+                <h1>How can I help you?</h1>
+
+                <p>
+                    आपका AI Assistant तैयार है।<br>
+                    अपना काम बताइए।
+                </p>
+
+            </div>
+
+            <div class="cards" id="cards">
+
+                <div class="card" onclick="quickPrompt('Mujhe ek modern website banani hai. Plan banao.')">
+                    <div class="card-icon">🌐</div>
+                    <h3>Build a Website</h3>
+                    <p>Website का structure और development plan बनाएँ।</p>
+                </div>
+
+                <div class="card" onclick="quickPrompt('Mujhe Android app banana hai. Complete development plan banao.')">
+                    <div class="card-icon">📱</div>
+                    <h3>Create an App</h3>
+                    <p>App का design, features और development plan।</p>
+                </div>
+
+                <div class="card" onclick="quickPrompt('Ek mobile game ka idea aur development plan banao.')">
+                    <div class="card-icon">🎮</div>
+                    <h3>Create a Game</h3>
+                    <p>Game idea, gameplay और coding roadmap।</p>
+                </div>
+
+                <div class="card" onclick="quickPrompt('Topic se video banane ka complete workflow batao.')">
+                    <div class="card-icon">🎬</div>
+                    <h3>Create a Video</h3>
+                    <p>Script, scenes, voice और editing plan।</p>
+                </div>
+
+            </div>
+
+            <div id="chatArea" class="chat-area"></div>
+
+        </section>
+
+        <!-- WEBSITE -->
+        <section id="websitePage" class="tool-section">
+
+            <div class="tool-box">
+                <h2>🌐 Website Planner</h2>
+                <p>अपनी website का idea लिखें। Jarvis उसका structure और coding plan बनाएगा।</p>
+
+                <div class="field">
+                    <label>Website का नाम</label>
+                    <input id="websiteName" placeholder="My Website">
+                </div>
+
+                <div class="field">
+                    <label>Website में क्या बनाना है?</label>
+                    <textarea id="websiteIdea" placeholder="Website ke features batao..."></textarea>
+                </div>
+
+                <button class="action-btn" onclick="makePlan('website')">
+                    Generate Website Plan
+                </button>
+
+                <div class="output" id="websiteOutput"></div>
+            </div>
+
+        </section>
+
+        <!-- APP -->
+        <section id="appPage" class="tool-section">
+
+            <div class="tool-box">
+                <h2>📱 App Planner</h2>
+                <p>Android application का blueprint तैयार करें।</p>
+
+                <div class="field">
+                    <label>App Name</label>
+                    <input id="appName" placeholder="My Android App">
+                </div>
+
+                <div class="field">
+                    <label>App Idea</label>
+                    <textarea id="appIdea" placeholder="App kya karega?"></textarea>
+                </div>
+
+                <button class="action-btn" onclick="makePlan('app')">
+                    Generate App Plan
+                </button>
+
+                <div class="output" id="appOutput"></div>
+            </div>
+
+        </section>
+
+        <!-- GAME -->
+        <section id="gamePage" class="tool-section">
+
+            <div class="tool-box">
+                <h2>🎮 Game Creator</h2>
+                <p>Game का concept, levels और development plan बनाएँ।</p>
+
+                <div class="field">
+                    <label>Game Name</label>
+                    <input id="gameName" placeholder="My Game">
+                </div>
+
+                <div class="field">
+                    <label>Game Idea</label>
+                    <textarea id="gameIdea" placeholder="Game ka concept batao..."></textarea>
+                </div>
+
+                <button class="action-btn" onclick="makePlan('game')">
+                    Generate Game Plan
+                </button>
+
+                <div class="output" id="gameOutput"></div>
+            </div>
+
+        </section>
+
+        <!-- VIDEO -->
+        <section id="videoPage" class="tool-section">
+
+            <div class="tool-box">
+                <h2>🎬 Video Creator</h2>
+                <p>Topic से वीडियो बनाने का script और scene plan तैयार करें।</p>
+
+                <div class="field">
+                    <label>Video Topic</label>
+                    <input id="videoTopic" placeholder="Video ka topic">
+                </div>
+
+                <div class="field">
+                    <label>Video Duration</label>
+                    <select id="videoDuration">
+                        <option>30 seconds</option>
+                        <option>1 minute</option>
+                        <option>3 minutes</option>
+                        <option>5 minutes</option>
+                        <option>10 minutes</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Video Style</label>
+                    <select id="videoStyle">
+                        <option>Educational</option>
+                        <option>Documentary</option>
+                        <option>Entertainment</option>
+                        <option>Cinematic</option>
+                        <option>Shorts</option>
+                    </select>
+                </div>
+
+                <button class="action-btn" onclick="makePlan('video')">
+                    Create Video Script
+                </button>
+
+                <div class="output" id="videoOutput"></div>
+            </div>
+
+        </section>
+
+        <!-- EXAMHUB -->
+        <section id="examPage" class="tool-section">
+
+            <div class="tool-box">
+                <h2>📚 ExamHub Assistant</h2>
+
+                <p>
+                    यहाँ ExamHub के लिए tasks और admin instructions तैयार कर सकते हैं।
+                    अभी यह planning mode है। यह आपके live database को modify नहीं करता।
+                </p>
+
+                <div class="field">
+                    <label>Exam Name</label>
+                    <input id="examName" placeholder="Exam name">
+                </div>
+
+                <div class="field">
+                    <label>Admin Task</label>
+                    <textarea id="examTask" placeholder="Jaise 20 questions wala test banana hai..."></textarea>
+                </div>
+
+                <button class="action-btn" onclick="makePlan('exam')">
+                    Create Exam Instructions
+                </button>
+
+                <div class="output" id="examOutput"></div>
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- INPUT -->
+    <footer class="input-area" id="inputArea">
+
+        <div class="input-wrap">
+
+            <button class="icon-btn" onclick="startVoice()" title="Voice Input">
+                🎙
+            </button>
+
+            <textarea
+                id="userInput"
+                rows="1"
+                placeholder="Jarvis ko task batayein..."
+                onkeydown="handleKey(event)"
+            ></textarea>
+
+            <button class="icon-btn" onclick="toggleSpeech()" title="Voice Output">
+                🔊
+            </button>
+
+            <button class="icon-btn send-btn" onclick="sendMessage()">
+                ➤
+            </button>
+
+        </div>
+
+        <div class="footer-note">
+            Prototype: AI API connection अभी नहीं जुड़ी है।
+            AI replies अभी demo/planning mode में हैं।
+        </div>
+
+    </footer>
+
+</main>
+
+</div>
+
+<script>
+
+/* ===========================
+   JARVIS BASIC SYSTEM
+=========================== */
+
+let speechEnabled = true;
+let recognition = null;
+let currentPage = "chat";
+
+const chatArea = document.getElementById("chatArea");
+const userInput = document.getElementById("userInput");
+
+let messages = JSON.parse(localStorage.getItem("jarvis_chat") || "[]");
+
+/* ===========================
+   PAGE NAVIGATION
+=========================== */
+
+function toggleSidebar(){
+    document.getElementById("sidebar").classList.toggle("open");
+}
+
+function showPage(page, element){
+
+    currentPage = page;
+
+    document.getElementById("chatPage").style.display =
+        page === "chat" ? "block" : "none";
+
+    document.getElementById("inputArea").style.display =
+        page === "chat" ? "block" : "none";
+
+    document.querySelectorAll(".tool-section").forEach(s=>{
+        s.classList.remove("show");
+    });
+
+    if(page !== "chat"){
+        document.getElementById(page + "Page").classList.add("show");
+    }
+
+    document.querySelectorAll(".nav-item").forEach(n=>{
+        n.classList.remove("active");
+    });
+
+    if(element) element.classList.add("active");
+
+    const titles = {
+        chat:"JARVIS AI",
+        website:"Website Builder",
+        app:"App Planner",
+        game:"Game Creator",
+        video:"Video Creator",
+        exam:"ExamHub Tools"
+    };
+
+    document.getElementById("pageTitle").innerText =
+        titles[page] || "JARVIS";
+
+    document.getElementById("sidebar").classList.remove("open");
+}
+
+/* ===========================
+   CHAT
+=========================== */
+
+function newChat(){
+
+    messages = [];
+
+    localStorage.removeItem("jarvis_chat");
+
+    chatArea.innerHTML = "";
+
+    document.getElementById("welcome").style.display = "block";
+    document.getElementById("cards").style.display = "grid";
+
+    showPage("chat");
+
+}
+
+function quickPrompt(text){
+    userInput.value = text;
+    sendMessage();
+}
+
+function handleKey(event){
+
+    if(event.key === "Enter" && !event.shiftKey){
+        event.preventDefault();
+        sendMessage();
+    }
+
+}
+
+function sendMessage(){
+
+    const text = userInput.value.trim();
+
+    if(!text) return;
+
+    userInput.value = "";
+
+    document.getElementById("welcome").style.display = "none";
+    document.getElementById("cards").style.display = "none";
+
+    addMessage("user",text);
+
+    document.getElementById("status").innerText = "● PROCESSING";
+
+    setTimeout(()=>{
+
+        const response = generateReply(text);
+
+        addMessage("bot",response);
+
+        document.getElementById("status").innerText = "● SYSTEM READY";
+
+        if(speechEnabled){
+            speak(response);
+        }
+
+    },500);
+
+}
+
+/* ===========================
+   MESSAGE DISPLAY
+=========================== */
+
+function addMessage(type,text){
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "message " + type;
+
+    const avatar = document.createElement("div");
+    avatar.className = "avatar";
+    avatar.textContent = type === "bot" ? "🤖" : "👤";
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.textContent = text;
+
+    if(type === "bot"){
+
+        const actions = document.createElement("div");
+        actions.className = "message-actions";
+
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "small-btn";
+        copyBtn.textContent = "Copy";
+
+        copyBtn.onclick = ()=>{
+            navigator.clipboard.writeText(text);
+            copyBtn.textContent = "Copied!";
+        };
+
+        const speakBtn = document.createElement("button");
+        speakBtn.className = "small-btn";
+        speakBtn.textContent = "Speak";
+
+        speakBtn.onclick = ()=>speak(text);
+
+        actions.appendChild(copyBtn);
+        actions.appendChild(speakBtn);
+
+        bubble.appendChild(actions);
+    }
+
+    if(type === "bot"){
+        wrapper.appendChild(avatar);
+        wrapper.appendChild(bubble);
