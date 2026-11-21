@@ -6,701 +6,1064 @@
 <title>Jarvis AI</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#090e17;color:#edf3ff;font-family:Arial,sans-serif}
-button,input,textarea,select{font:inherit}
-button{cursor:pointer}
-button:disabled{opacity:.5;cursor:not-allowed}
+* {
+  box-sizing: border-box;
+}
 
-.app{display:flex;min-height:100vh}
-.sidebar{width:230px;background:#111a29;padding:15px;border-right:1px solid #26364b}
-.logo{font-size:23px;font-weight:bold;color:#38bdf8;padding:12px 5px 22px}
-.nav{display:block;width:100%;padding:13px;margin:4px 0;background:transparent;color:white;border:0;border-radius:9px;text-align:left}
-.nav:hover,.nav.active{background:#20314b;color:#38bdf8}
-.project-label{margin:20px 0 10px;color:#91a5c0;font-size:12px}
-.project-list button{display:block;width:100%;padding:10px;text-align:left;color:#cbd5e1;background:transparent;border:0;border-radius:8px;overflow-wrap:anywhere}
-.project-list button.active{background:#20314b;color:#38bdf8}
+body {
+  margin: 0;
+  background: #080d18;
+  color: #eaf0ff;
+  font-family: Arial, sans-serif;
+  height: 100dvh;
+  overflow: hidden;
+}
 
-.main{flex:1;min-width:0}
-.topbar{height:60px;border-bottom:1px solid #26364b;display:flex;align-items:center;justify-content:space-between;padding:0 16px}
-.content{max-width:1000px;margin:auto;padding:16px}
-.page{display:none}
-.page.active{display:block}
+button, input, textarea {
+  font: inherit;
+}
 
-.card{background:#111b2b;border:1px solid #28394f;border-radius:13px;padding:16px;margin:12px 0}
-.hero{padding:22px;background:linear-gradient(135deg,#142747,#28204e);border:1px solid #344d78;border-radius:15px}
-h1{font-size:25px}
-.muted{color:#9aaac0;line-height:1.6}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.btn{padding:11px 14px;border:0;border-radius:9px;background:#283951;color:white;margin:4px 2px}
-.primary{background:#395be9}
-.green{background:#15563b}
-.red{background:#642b36}
-input,textarea,select{width:100%;background:#080f1b;border:1px solid #30435a;border-radius:9px;color:white;padding:12px;margin-top:6px}
-label{display:block;margin-top:13px;color:#bdc9da;font-size:13px}
-textarea{min-height:95px;resize:vertical}
+button {
+  cursor: pointer;
+  border: 1px solid #25334c;
+  color: #eaf0ff;
+  background: #131e30;
+  border-radius: 12px;
+  padding: 11px 14px;
+}
 
-.chatbox{display:flex;flex-direction:column;height:calc(100dvh - 105px);min-height:430px}
-.chat-head{background:#111b2b;padding:12px;border:1px solid #28394f;border-radius:10px;margin-bottom:10px}
-.messages{flex:1;overflow:auto;padding:6px}
-.msg{margin:12px 0;max-width:96%}
-.msg.user{margin-left:auto}
-.msg-label{font-size:11px;color:#91a2b9;margin-bottom:4px}
-.bubble{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6;padding:12px;border-radius:12px}
-.user .bubble{background:#294779}
-.ai .bubble{background:#121e2e;border:1px solid #2b3b51}
-.input-area{background:#111b2b;border:1px solid #28394f;padding:10px;border-radius:12px}
-.input-area textarea{border:0;background:transparent;min-height:60px}
-.actions{display:flex;flex-wrap:wrap;gap:5px}
-.actions button{flex:1;min-width:65px}
-.status{font-size:12px;color:#65e5a3}
-.small{font-size:12px}
-.empty{padding:20px;text-align:center;color:#91a2b9}
-@media(max-width:650px){
-.sidebar{width:65px;padding:7px}
-.logo{font-size:15px;text-align:center;padding:10px 0}
-.nav{padding:13px 2px;text-align:center;font-size:18px}
-.nav span,.project-label,.project-list{display:none}
-.content{padding:10px}
-.grid{grid-template-columns:1fr}
+button:hover {
+  background: #20304a;
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.app {
+  height: 100dvh;
+  display: flex;
+}
+
+.sidebar {
+  width: 270px;
+  background: #0c1423;
+  border-right: 1px solid #1d2b40;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: bold;
+  padding: 10px;
+  color: #62c9ff;
+}
+
+.newchat {
+  width: 100%;
+}
+
+.history-title {
+  color: #93a7c5;
+  margin: 12px 4px 4px;
+  font-size: 13px;
+}
+
+.history-list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.history-item {
+  width: 100%;
+  display: block;
+  text-align: left;
+  margin-bottom: 7px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-bottom {
+  display: grid;
+  gap: 8px;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  height: 65px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 18px;
+  border-bottom: 1px solid #1d2b40;
+}
+
+.topbar-title {
+  font-weight: bold;
+  flex: 1;
+}
+
+.status {
+  color: #6de0a7;
+  font-size: 12px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 22px 15px;
+}
+
+.welcome {
+  text-align: center;
+  margin: 12vh auto 25px;
+  max-width: 600px;
+}
+
+.welcome h1 {
+  font-size: 30px;
+  color: #64caff;
+}
+
+.welcome p {
+  color: #91a2bb;
+}
+
+.message {
+  max-width: 850px;
+  margin: 0 auto 18px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.avatar {
+  min-width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #162741;
+}
+
+.bubble {
+  padding: 13px 15px;
+  background: #111d30;
+  border: 1px solid #20304a;
+  border-radius: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.user .bubble {
+  background: #14324d;
+}
+
+.message-actions {
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+}
+
+.message-actions button {
+  padding: 5px 9px;
+  font-size: 12px;
+}
+
+.composer-area {
+  padding: 12px 15px 16px;
+  border-top: 1px solid #1d2b40;
+}
+
+.composer {
+  max-width: 850px;
+  margin: auto;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  background: #111d30;
+  border: 1px solid #2a3a53;
+  border-radius: 16px;
+  padding: 8px;
+}
+
+#messageInput {
+  flex: 1;
+  background: transparent;
+  color: white;
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 10px;
+  max-height: 140px;
+  min-height: 42px;
+}
+
+.send-btn {
+  background: #087bc2;
+  border-color: #087bc2;
+  font-weight: bold;
+}
+
+.send-btn:hover {
+  background: #0998ed;
+}
+
+.footer-note {
+  text-align: center;
+  color: #64748b;
+  font-size: 11px;
+  margin-top: 9px;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #0009;
+  z-index: 20;
+}
+
+.overlay.show {
+  display: block;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-box {
+  width: min(500px, 100%);
+  background: #111d30;
+  border: 1px solid #30415c;
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.modal-box h2 {
+  margin-top: 0;
+}
+
+.modal-box input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0 15px;
+  border: 1px solid #34445c;
+  border-radius: 10px;
+  color: white;
+  background: #08111e;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+#toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #20334c;
+  padding: 12px 18px;
+  border-radius: 12px;
+  display: none;
+  z-index: 50;
+  max-width: 90%;
+  text-align: center;
+}
+
+@media(max-width:700px) {
+  .sidebar {
+    position: fixed;
+    z-index: 25;
+    left: -280px;
+    top: 0;
+    bottom: 0;
+    transition: left .2s;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .mobile-menu {
+    display: inline-block;
+  }
+
+  .topbar {
+    padding: 0 10px;
+  }
+
+  .messages {
+    padding: 15px 10px;
+  }
+
+  .composer-area {
+    padding: 8px;
+  }
+
+  .bubble {
+    font-size: 15px;
+  }
+
+  .welcome h1 {
+    font-size: 25px;
+  }
 }
 </style>
 </head>
 
 <body>
+
 <div class="app">
 
-<aside class="sidebar">
-<div class="logo">⚡ JARVIS</div>
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">⚡ JARVIS AI</div>
 
-<button class="nav active" onclick="page('home')">🏠 <span>Dashboard</span></button>
-<button class="nav" onclick="page('chat')">🤖 <span>AI Chat</span></button>
-<button class="nav" onclick="page('projects')">🌐 <span>Projects</span></button>
-<button class="nav" onclick="page('memory')">🧠 <span>Memory</span></button>
+    <button class="newchat" id="newChatBtn">＋ New Chat</button>
 
-<div class="project-label">MY PROJECTS</div>
-<div class="project-list" id="sidebarProjects"></div>
+    <div class="history-title">CHAT HISTORY</div>
+    <div class="history-list" id="historyList"></div>
 
-<button class="nav" onclick="newProject()">➕ <span>Add Project</span></button>
-</aside>
+    <div class="sidebar-bottom">
+      <button id="settingsBtn">⚙️ Settings</button>
+      <button id="clearHistoryBtn">🗑 Clear History</button>
+    </div>
+  </aside>
 
-<main class="main">
-<header class="topbar">
-<strong id="pageTitle">Dashboard</strong>
-<span class="status" id="status">● Ready</span>
-</header>
+  <main class="main">
 
-<div class="content">
+    <header class="topbar">
+      <button class="mobile-menu" id="menuBtn">☰</button>
+      <div class="topbar-title">Jarvis Assistant</div>
+      <div class="status" id="status">Ready</div>
+    </header>
 
-<!-- HOME -->
-<section class="page active" id="home">
+    <section class="messages" id="messages">
 
-<div class="hero">
-<h1>⚡ Jarvis AI Assistant</h1>
-<p class="muted">आपका AI assistant — websites, coding, apps, games, videos और projects में मदद के लिए।</p>
-<button class="btn primary" onclick="page('chat')">Chat शुरू करें</button>
-<button class="btn" onclick="newProject()">+ Project जोड़ें</button>
-</div>
+      <div class="welcome" id="welcome">
+        <h1>नमस्ते! मैं Jarvis हूँ ⚡</h1>
+        <p>आप मुझसे कुछ भी पूछ सकते हैं।</p>
+      </div>
 
-<div class="grid">
-<div class="card">
-<h3>🌐 Projects</h3>
-<div id="projectCount" style="font-size:28px;color:#38bdf8">0</div>
-</div>
-<div class="card">
-<h3>💬 Messages</h3>
-<div id="messageCount" style="font-size:28px;color:#38bdf8">0</div>
-</div>
-<div class="card">
-<h3>📁 Active Project</h3>
-<div id="activeName">General Assistant</div>
-</div>
-<div class="card">
-<h3>🔌 AI Connection</h3>
-<button class="btn" onclick="testConnection()">Test AI Connection</button>
-</div>
-</div>
+    </section>
 
-<h3>Quick Tasks</h3>
-<div class="grid">
+    <div class="composer-area">
 
-<div class="card">
-<h3>💻 Website</h3>
-<button class="btn primary" onclick="quick('मुझे website बनानी है। पहले requirements पूछो और फिर development plan बनाओ।')">Start</button>
-</div>
+      <div class="composer">
 
-<div class="card">
-<h3>📱 Android App</h3>
-<button class="btn primary" onclick="quick('Android app बनाने की planning शुरू करो और requirements पूछो।')">Start</button>
-</div>
+        <button id="voiceBtn" title="Voice Input">🎤</button>
 
-<div class="card">
-<h3>🎮 Game</h3>
-<button class="btn primary" onclick="quick('Game बनाने में मदद करो। Concept, gameplay और development plan बनाओ।')">Start</button>
-</div>
+        <textarea
+          id="messageInput"
+          placeholder="Jarvis से कुछ पूछें..."
+          rows="1"
+        ></textarea>
 
-<div class="card">
-<h3>🎬 Video</h3>
-<button class="btn primary" onclick="quick('Topic आधारित video की script, scenes, voiceover और subtitles की planning करो।')">Start</button>
-</div>
+        <button class="send-btn" id="sendBtn">➤ Send</button>
+
+      </div>
+
+      <div class="footer-note">
+        Jarvis AI • AI उत्तर गलत भी हो सकते हैं
+      </div>
+
+    </div>
+
+  </main>
 
 </div>
-</section>
 
-<!-- CHAT -->
-<section class="page" id="chat">
-<div class="chatbox">
-<div class="chat-head">
-<strong>🤖 Jarvis AI</strong>
-<div class="muted small" id="chatProject">General Assistant</div>
+<div class="overlay" id="overlay"></div>
+
+<div class="modal" id="settingsModal">
+  <div class="modal-box">
+    <h2>⚙️ Settings</h2>
+
+    <label>Supabase Project URL</label>
+    <input id="supabaseUrl" placeholder="https://YOURPROJECT.supabase.co">
+
+    <label>Supabase Anon / Publishable Key</label>
+    <input id="supabaseKey" placeholder="Public anon key">
+
+    <label>Edge Function Name</label>
+    <input id="functionName" placeholder="jarvis-chat">
+
+    <p style="color:#9aabc3;font-size:12px">
+      Secret Gemini API Key यहाँ न डालें।
+      Gemini Key Supabase Secrets में सुरक्षित रखें।
+    </p>
+
+    <div class="modal-actions">
+      <button id="closeSettingsBtn">Cancel</button>
+      <button id="saveSettingsBtn" class="send-btn">Save</button>
+    </div>
+  </div>
 </div>
 
-<div class="messages" id="messages"></div>
-
-<div class="input-area">
-<textarea id="input" placeholder="Message Jarvis..." onkeydown="inputKey(event)"></textarea>
-<div class="actions">
-<button class="btn green" onclick="voice()">🎤</button>
-<button class="btn" onclick="speak()">🔊</button>
-<button class="btn" onclick="stopSpeak()">⏹</button>
-<button class="btn red" onclick="clearChat()">Clear</button>
-<button class="btn primary" id="sendBtn" onclick="send()">➤ Send</button>
-</div>
-</div>
-</div>
-</section>
-
-<!-- PROJECTS -->
-<section class="page" id="projects">
-<h2>🌐 My Projects</h2>
-<p class="muted">हर website या project की अलग memory और chat होगी।</p>
-<button class="btn primary" onclick="newProject()">+ Add Project</button>
-<div id="projectCards"></div>
-</section>
-
-<!-- PROJECT EDIT -->
-<section class="page" id="editor">
-<h2 id="editorTitle">Add Project</h2>
-<div class="card">
-<input type="hidden" id="editId">
-
-<label>Project Name</label>
-<input id="pName" placeholder="ExamHub">
-
-<label>Website URL</label>
-<input id="pURL" placeholder="https://example.com">
-
-<label>Type</label>
-<select id="pType">
-<option>Website</option>
-<option>Android App</option>
-<option>Game</option>
-<option>AI Project</option>
-<option>YouTube / Video</option>
-<option>Other</option>
-</select>
-
-<label>Technology</label>
-<input id="pTech" placeholder="HTML, JavaScript, Supabase">
-
-<label>Description</label>
-<textarea id="pDescription" placeholder="Project का विवरण"></textarea>
-
-<label>Memory / Progress</label>
-<textarea id="pMemory" placeholder="क्या पूरा हुआ, क्या बाकी है, पुराने errors..."></textarea>
-
-<button class="btn primary" onclick="saveProject()">Save Project</button>
-<button class="btn" onclick="page('projects')">Cancel</button>
-</div>
-</section>
-
-<!-- MEMORY -->
-<section class="page" id="memory">
-<h2>🧠 Jarvis Memory</h2>
-<p class="muted">यह memory इस browser/device में save होगी।</p>
-
-<div class="card">
-<label>Project चुनें</label>
-<select id="memorySelect" onchange="loadMemory()"></select>
-
-<label>Project Memory</label>
-<textarea id="memoryText" style="min-height:230px"></textarea>
-
-<button class="btn primary" onclick="saveMemory()">Save Memory</button>
-</div>
-
-<div class="card">
-<h3>General Memory</h3>
-<p class="muted">सभी projects के लिए common instructions</p>
-<textarea id="generalMemory" placeholder="Jarvis को क्या हमेशा याद रखना चाहिए?"></textarea>
-<button class="btn primary" onclick="saveGeneralMemory()">Save General Memory</button>
-</div>
-</section>
-
-</div>
-</main>
-</div>
+<div id="toast"></div>
 
 <script>
-/* ==============================
+(() => {
+"use strict";
+
+/* ===============================
    CONFIGURATION
 ================================ */
 
-const SUPABASE_URL = "https://aeflfnlpkbnlhbkghwav.supabase.co";
+const DEFAULT_URL =
+  "https://aeflfnlpkbnlhbkghwav.supabase.co";
 
-/* यहाँ अपनी Supabase public anon/publishable key डालें */
-const SUPABASE_KEY = "sb_publishable_xo0AHkCiQ5GLjDtX5K2mzg_O-2vV_Jc";
+const DEFAULT_FUNCTION =
+  "jarvis-chat";
 
-const AI_URL = SUPABASE_URL + "/functions/v1/jarvis-ai";
+/* ===============================
+   ELEMENTS
+================================ */
 
-/* ==============================
+const $ = id => document.getElementById(id);
+
+const messagesEl = $("messages");
+const inputEl = $("messageInput");
+const sendBtn = $("sendBtn");
+const statusEl = $("status");
+const historyList = $("historyList");
+const welcome = $("welcome");
+
+let sending = false;
+let currentChatId = null;
+let chats = loadChats();
+
+/* ===============================
    STORAGE
 ================================ */
 
-const K_PROJECTS = "jarvis_v2_projects";
-const K_CHATS = "jarvis_v2_chats";
-const K_ACTIVE = "jarvis_v2_active";
-const K_GENERAL = "jarvis_v2_general_memory";
-
-let projects = [];
-let chats = {};
-let active = null;
-let busy = false;
-let lastAnswer = "";
-
-function load(key, fallback) {
+function loadChats() {
   try {
-    const x = localStorage.getItem(key);
-    return x ? JSON.parse(x) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function saveAll() {
-  localStorage.setItem(K_PROJECTS, JSON.stringify(projects));
-  localStorage.setItem(K_CHATS, JSON.stringify(chats));
-
-  if(active) localStorage.setItem(K_ACTIVE, active);
-  else localStorage.removeItem(K_ACTIVE);
-}
-
-function currentProject() {
-  return projects.find(x => x.id === active) || null;
-}
-
-function keyChat() {
-  return active || "general";
-}
-
-function history() {
-  if(!chats[keyChat()]) chats[keyChat()] = [];
-  return chats[keyChat()];
-}
-
-/* ==============================
-   PAGE NAVIGATION
-================================ */
-
-function page(id) {
-  document.querySelectorAll(".page").forEach(x => x.classList.remove("active"));
-  document.querySelectorAll(".nav").forEach(x => x.classList.remove("active"));
-
-  const target = document.getElementById(id);
-  if(target) target.classList.add("active");
-
-  const names = {
-    home:"Dashboard",
-    chat:"AI Chat",
-    projects:"My Projects",
-    editor:"Project Editor",
-    memory:"Memory"
-  };
-
-  document.getElementById("pageTitle").textContent = names[id] || id;
-
-  if(id === "chat") renderChat();
-}
-
-/* ==============================
-   PROJECT SYSTEM
-================================ */
-
-function newProject() {
-  document.getElementById("editId").value = "";
-  document.getElementById("pName").value = "";
-  document.getElementById("pURL").value = "";
-  document.getElementById("pType").value = "Website";
-  document.getElementById("pTech").value = "";
-  document.getElementById("pDescription").value = "";
-  document.getElementById("pMemory").value = "";
-  document.getElementById("editorTitle").textContent = "Add New Project";
-  page("editor");
-}
-
-function saveProject() {
-  const name = document.getElementById("pName").value.trim();
-
-  if(!name) {
-    alert("Project name डालें!");
-    return;
-  }
-
-  const id = document.getElementById("editId").value;
-
-  const data = {
-    name:name,
-    url:document.getElementById("pURL").value.trim(),
-    type:document.getElementById("pType").value,
-    tech:document.getElementById("pTech").value.trim(),
-    description:document.getElementById("pDescription").value.trim(),
-    memory:document.getElementById("pMemory").value.trim(),
-    updated:new Date().toISOString()
-  };
-
-  if(id) {
-    const p = projects.find(x => x.id === id);
-    if(p) Object.assign(p,data);
-  } else {
-    data.id = "project_" + Date.now();
-    projects.push(data);
-    active = data.id;
-  }
-
-  saveAll();
-  refresh();
-  page("projects");
-  alert("Project save हो गया!");
-}
-
-function editProject(id) {
-  const p = projects.find(x => x.id === id);
-  if(!p) return;
-
-  document.getElementById("editId").value = p.id;
-  document.getElementById("pName").value = p.name || "";
-  document.getElementById("pURL").value = p.url || "";
-  document.getElementById("pType").value = p.type || "Website";
-  document.getElementById("pTech").value = p.tech || "";
-  document.getElementById("pDescription").value = p.description || "";
-  document.getElementById("pMemory").value = p.memory || "";
-
-  document.getElementById("editorTitle").textContent = "Edit Project";
-  page("editor");
-}
-
-function deleteProject(id) {
-  const p = projects.find(x => x.id === id);
-  if(!p) return;
-
-  if(!confirm("Delete project " + p.name + "?")) return;
-
-  projects = projects.filter(x => x.id !== id);
-  delete chats[id];
-
-  if(active === id) active = projects.length ? projects[0].id : null;
-
-  saveAll();
-  refresh();
-  page("projects");
-}
-
-function openProject(id) {
-  active = id;
-  saveAll();
-  refresh();
-  page("chat");
-}
-
-function renderProjects() {
-  const side = document.getElementById("sidebarProjects");
-  const cards = document.getElementById("projectCards");
-
-  side.innerHTML = "";
-  cards.innerHTML = "";
-
-  if(projects.length === 0) {
-    cards.innerHTML = '<div class="empty">कोई project नहीं। Add Project दबाएँ।</div>';
-  }
-
-  projects.forEach(p => {
-    const b = document.createElement("button");
-    b.textContent = "🌐 " + p.name;
-    if(p.id === active) b.classList.add("active");
-    b.onclick = () => openProject(p.id);
-    side.appendChild(b);
-
-    const card = document.createElement("div");
-    card.className = "card";
-
-    const title = document.createElement("h3");
-    title.textContent = p.name;
-
-    const info = document.createElement("p");
-    info.className = "muted";
-    info.textContent =
-      p.type + "\n" + (p.url || "URL not added") +
-      "\nTech: " + (p.tech || "Not specified") +
-      "\n" + (p.description || "");
-
-    const open = document.createElement("button");
-    open.className = "btn primary";
-    open.textContent = "Open";
-    open.onclick = () => openProject(p.id);
-
-    const edit = document.createElement("button");
-    edit.className = "btn";
-    edit.textContent = "Edit";
-    edit.onclick = () => editProject(p.id);
-
-    const del = document.createElement("button");
-    del.className = "btn red";
-    del.textContent = "Delete";
-    del.onclick = () => deleteProject(p.id);
-
-    card.append(title,info,open,edit,del);
-    cards.appendChild(card);
-  });
-}
-
-/* ==============================
-   MEMORY
-================================ */
-
-function renderMemory() {
-  const select = document.getElementById("memorySelect");
-  select.innerHTML = "";
-
-  projects.forEach(p => {
-    const option = document.createElement("option");
-    option.value = p.id;
-    option.textContent = p.name;
-    select.appendChild(option);
-  });
-
-  if(active) select.value = active;
-  loadMemory();
-
-  document.getElementById("generalMemory").value =
-    localStorage.getItem(K_GENERAL) || "";
-}
-
-function loadMemory() {
-  const p = projects.find(x => x.id === document.getElementById("memorySelect").value);
-  document.getElementById("memoryText").value = p ? (p.memory || "") : "";
-}
-
-function saveMemory() {
-  const p = projects.find(x => x.id === document.getElementById("memorySelect").value);
-  if(!p) {
-    alert("पहले project बनाओ।");
-    return;
-  }
-
-  p.memory = document.getElementById("memoryText").value;
-  saveAll();
-  refresh();
-  alert("Memory saved!");
-}
-
-function saveGeneralMemory() {
-  localStorage.setItem(K_GENERAL, document.getElementById("generalMemory").value);
-  alert("General memory saved!");
-}
-
-/* ==============================
-   CHAT
-================================ */
-
-function renderChat() {
-  const box = document.getElementById("messages");
-  box.innerHTML = "";
-
-  const p = currentProject();
-  document.getElementById("chatProject").textContent =
-    p ? "Project: " + p.name : "General Assistant";
-
-  const h = history();
-
-  if(h.length === 0) {
-    addMessage("assistant", p
-      ? "नमस्ते! मैं " + p.name + " project का assistant हूँ। क्या काम करना है?"
-      : "नमस्ते! मैं Jarvis हूँ। अपना काम बताइए।"
+    const data = JSON.parse(
+      localStorage.getItem("jarvis_chats") || "[]"
     );
-  } else {
-    h.forEach(m => addMessage(m.role,m.content));
-  }
 
-  box.scrollTop = box.scrollHeight;
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
 }
 
-function addMessage(role,text) {
-  const box = document.getElementById("messages");
+function saveChats() {
+  try {
+    localStorage.setItem(
+      "jarvis_chats",
+      JSON.stringify(chats)
+    );
+  } catch (e) {
+    toast("History save नहीं हो सकी");
+  }
+}
 
-  const outer = document.createElement("div");
-  outer.className = "msg " + (role === "user" ? "user" : "ai");
+function getSettings() {
+  return {
+    url: localStorage.getItem("jarvis_url") || DEFAULT_URL,
+    key: localStorage.getItem("jarvis_key") || "",
+    functionName:
+      localStorage.getItem("jarvis_function") ||
+      DEFAULT_FUNCTION
+  };
+}
 
-  const label = document.createElement("div");
-  label.className = "msg-label";
-  label.textContent = role === "user" ? "YOU" : "JARVIS";
+/* ===============================
+   UTILITIES
+================================ */
+
+function toast(message) {
+  const el = $("toast");
+  el.textContent = message;
+  el.style.display = "block";
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer = setTimeout(() => {
+    el.style.display = "none";
+  }, 3000);
+}
+
+function setStatus(text) {
+  statusEl.textContent = text;
+}
+
+function scrollBottom() {
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function createId() {
+  return Date.now().toString() +
+    Math.random().toString(16).slice(2);
+}
+
+function closeSidebar() {
+  $("sidebar").classList.remove("open");
+  $("overlay").classList.remove("show");
+}
+
+function escapeText(text) {
+  return String(text ?? "");
+}
+
+/* ===============================
+   CHAT MANAGEMENT
+================================ */
+
+function getCurrentChat() {
+  return chats.find(c => c.id === currentChatId);
+}
+
+function createNewChat() {
+  currentChatId = createId();
+
+  chats.unshift({
+    id: currentChatId,
+    title: "New Chat",
+    messages: [],
+    createdAt: Date.now()
+  });
+
+  saveChats();
+  renderChat();
+  renderHistory();
+
+  inputEl.focus();
+  closeSidebar();
+}
+
+function saveMessage(role, text) {
+  let chat = getCurrentChat();
+
+  if (!chat) {
+    createNewChat();
+    chat = getCurrentChat();
+  }
+
+  chat.messages.push({
+    role,
+    content: text,
+    time: Date.now()
+  });
+
+  if (
+    chat.title === "New Chat" &&
+    role === "user"
+  ) {
+    chat.title = text.slice(0, 40);
+  }
+
+  saveChats();
+  renderHistory();
+}
+
+function openChat(id) {
+  currentChatId = id;
+  renderChat();
+  closeSidebar();
+}
+
+function deleteChat(id) {
+  chats = chats.filter(c => c.id !== id);
+
+  if (currentChatId === id) {
+    currentChatId = null;
+  }
+
+  saveChats();
+  renderHistory();
+  renderChat();
+
+  toast("Chat deleted");
+}
+
+function clearHistory() {
+  if (!confirm("सभी Chat History हटानी है?")) {
+    return;
+  }
+
+  chats = [];
+  currentChatId = null;
+
+  saveChats();
+  renderHistory();
+  renderChat();
+
+  toast("History साफ हो गई");
+}
+
+/* ===============================
+   RENDER CHAT
+================================ */
+
+function addMessageUI(role, text) {
+  const row = document.createElement("div");
+  row.className = "message " + role;
+
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.textContent = role === "user" ? "👤" : "⚡";
+
+  const content = document.createElement("div");
 
   const bubble = document.createElement("div");
   bubble.className = "bubble";
-  bubble.textContent = text;
+  bubble.textContent = escapeText(text);
 
-  outer.append(label,bubble);
-  box.appendChild(outer);
-}
+  content.appendChild(bubble);
 
-function quick(text) {
-  page("chat");
-  document.getElementById("input").value = text;
-  send();
-}
+  if (role === "assistant") {
+    const actions = document.createElement("div");
+    actions.className = "message-actions";
 
-function inputKey(event) {
-  if(event.key === "Enter" && !event.shiftKey) {
-    event.preventDefault();
-    send();
+    const copyBtn = document.createElement("button");
+    copyBtn.textContent = "📋 Copy";
+
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(text);
+        toast("Copied");
+      } catch {
+        toast("Copy नहीं हो सका");
+      }
+    });
+
+    actions.appendChild(copyBtn);
+    content.appendChild(actions);
   }
+
+  row.appendChild(avatar);
+  row.appendChild(content);
+
+  messagesEl.appendChild(row);
 }
 
-/* ==============================
-   AI REQUEST
-================================ */
+function renderChat() {
+  messagesEl.innerHTML = "";
 
-async function send() {
-  if(busy) return;
+  const chat = getCurrentChat();
 
-  const input = document.getElementById("input");
-  const message = input.value.trim();
+  if (!chat || !chat.messages.length) {
+    const w = document.createElement("div");
+    w.className = "welcome";
+    w.innerHTML =
+      "<h1>नमस्ते! मैं Jarvis हूँ ⚡</h1>" +
+      "<p>आप मुझसे कुछ भी पूछ सकते हैं।</p>";
 
-  if(!message) {
-    input.focus();
+    messagesEl.appendChild(w);
     return;
   }
 
-  input.value = "";
+  chat.messages.forEach(msg => {
+    addMessageUI(msg.role, msg.content);
+  });
 
-  const h = history();
-  h.push({role:"user",content:message});
-  saveAll();
-
-  addMessage("user",message);
-
-  const box = document.getElementById("messages");
-  box.scrollTop = box.scrollHeight;
-
-  busy = true;
-  document.getElementById("sendBtn").disabled = true;
-  document.getElementById("status").textContent = "● Thinking...";
-
-  try {
-    const answer = await ask(message);
-
-    lastAnswer = answer;
-
-    history().push({role:"assistant",content:answer});
-    saveAll();
-
-    addMessage("assistant",answer);
-  } catch(e) {
-    addMessage("assistant","ERROR: " + e.message);
-  }
-
-  busy = false;
-  document.getElementById("sendBtn").disabled = false;
-  document.getElementById("status").textContent = "● Ready";
-
-  box.scrollTop = box.scrollHeight;
-  refresh();
+  scrollBottom();
 }
 
-async function ask(message) {
-  if(SUPABASE_KEY === "PASTE_PUBLIC_KEY_HERE") {
-    throw new Error("Supabase public key अभी code में नहीं डाली गई!");
+function renderHistory() {
+  historyList.innerHTML = "";
+
+  chats.forEach(chat => {
+    const btn = document.createElement("button");
+    btn.className = "history-item";
+    btn.textContent = chat.title || "New Chat";
+
+    btn.addEventListener("click", () => {
+      openChat(chat.id);
+    });
+
+    btn.addEventListener("contextmenu", e => {
+      e.preventDefault();
+
+      if (confirm("इस Chat को Delete करें?")) {
+        deleteChat(chat.id);
+      }
+    });
+
+    historyList.appendChild(btn);
+  });
+}
+
+/* ===============================
+   GEMINI / SUPABASE REQUEST
+================================ */
+
+async function sendToAI(userText) {
+  const settings = getSettings();
+
+  if (!settings.url || !settings.key) {
+    throw new Error(
+      "Settings में Supabase URL और Public Key सेट करें।"
+    );
   }
 
-  const p = currentProject();
-  const generalMemory = localStorage.getItem(K_GENERAL) || "";
+  const endpoint =
+    settings.url.replace(/\/+$/, "") +
+    "/functions/v1/" +
+    settings.functionName;
 
-  const systemPrompt = `
-You are Jarvis AI, a helpful assistant.
+  const chat = getCurrentChat();
 
-Reply in the user's language.
-Help with coding, websites, Android apps, games,
-video planning, project planning and debugging.
+  const history = chat.messages
+    .slice(-20)
+    .map(m => ({
+      role: m.role === "assistant" ? "assistant" : "user",
+      content: m.content
+    }));
 
-Never claim to have completed actions that you did not execute.
-Do not request passwords or secret keys.
-Ask before sensitive, destructive or publishing actions.
+  const response = await fetch(endpoint, {
+    method: "POST",
 
-GENERAL MEMORY:
-${generalMemory}
-
-ACTIVE PROJECT:
-${p ? `
-Project Name: ${p.name}
-URL: ${p.url || "Not provided"}
-Type: ${p.type || ""}
-Technology: ${p.tech || ""}
-Description: ${p.description || ""}
-Project Memory: ${p.memory || ""}
-` : "General assistant mode. No project selected."}
-
-Keep each project's memory separate.
-`;
-
-  /* Current message history excludes the new message
-     to avoid sending it twice */
-  const past = history().slice(0,-1).slice(-16);
-
-  const response = await fetch(AI_URL,{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      "apikey":SUPABASE_KEY,
-      "Authorization":"Bearer " + SUPABASE_KEY
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + settings.key,
+      "apikey": settings.key
     },
-    body:JSON.stringify({
-      message:message,
-      history:past,
-      systemPrompt:systemPrompt,
-      project:p
+
+    body: JSON.stringify({
+      message: userText,
+      history: history
     })
   });
 
   const raw = await response.text();
 
-  let data;
+  let data = {};
+
   try {
     data = JSON.parse(raw);
   } catch {
-    throw new Error("Server ने invalid response दिया: " + raw.slice(0,200));
+    data = { reply: raw };
   }
 
-  if(!response.ok) {
-    throw new Error(data.error || data.message || "HTTP Error " + response.status);
+  if (!response.ok) {
+    const message =
+      data.error ||
+      data.message ||
+      raw ||
+      "Server Error";
+
+    throw new Error(
+      "HTTP " + response.status + ": " + message
+    );
   }
 
-  if(data.reply) return data.reply;
-  if(data.text) return data.text;
+  const reply =
+    data.reply ||
+    data.response ||
+    data.message ||
+    data.text ||
+    data.answer ||
+    data.output ||
+    data.result?.text ||
+    data.candidates?.[0]?.content?.parts?.[0]?.text;
 
-  if(data.candidates?.[0]?.content?.parts) {
-    return data.candidates[0].content.parts
-      .map(x => x.text || "")
-      .join("");
+  if (!reply) {
+    throw new Error(
+      "Server से जवाब खाली आया। Function Response: " +
+      raw.slice(0, 300)
+    );
   }
 
-  throw new Error("AI reply नहीं मिला।");
+  return String(reply);
 }
 
-/* ==============================
-   CONNECTION TEST
+/* ===============================
+   SEND MESSAGE
 ================================ */
 
-async function testConnection() {
-  document.getElementById("status").textContent = "● Testing...";
+async function sendMessage() {
+  if (sending) return;
+
+  const text = inputEl.value.trim();
+
+  if (!text) {
+    toast("पहले अपना Message लिखें");
+    inputEl.focus();
+    return;
+  }
+
+  const settings = getSettings();
+
+  if (!settings.key) {
+    openSettings();
+    toast("पहले Supabase Public Key सेट करें");
+    return;
+  }
+
+  if (!currentChatId) {
+    createNewChat();
+  }
+
+  sending = true;
+  sendBtn.disabled = true;
+  inputEl.disabled = true;
+  setStatus("Thinking...");
+
+  saveMessage("user", text);
+  addMessageUI("user", text);
+
+  inputEl.value = "";
+  inputEl.style.height = "42px";
+
+  const loading = document.createElement("div");
+  loading.className = "message";
+  loading.id = "loadingMessage";
+
+  loading.innerHTML =
+    '<div class="avatar">⚡</div>' +
+    '<div class="bubble">Jarvis सोच रहा है...</div>';
+
+  messagesEl.appendChild(loading);
+  scrollBottom();
 
   try {
-    const result = await ask("Reply only: Jarvis connection suc
+    const reply = await sendToAI(text);
+
+    $("loadingMessage")?.remove();
+
+    saveMessage("assistant", reply);
+    addMessageUI("assistant", reply);
+
+    setStatus("Ready");
+
+  } catch (error) {
+    $("loadingMessage")?.remove();
+
+    const errorText =
+      "⚠️ " + (error.message || "Unknown Error");
+
+    addMessageUI("assistant", errorText);
+
+    saveMessage("assistant", errorText);
+
+    setStatus("Error");
+
+    console.error("JARVIS ERROR:", error);
+
+  } finally {
+    sending = false;
+    sendBtn.disabled = false;
+    inputEl.disabled = false;
+    inputEl.focus();
+    scrollBottom();
+  }
+}
+
+/* ===============================
+   SETTINGS
+================================ */
+
+function openSettings() {
+  const settings = getSettings();
+
+  $("supabaseUrl").value = settings.url;
+  $("supabaseKey").value = settings.key;
+  $("functionName").value = settings.functionName;
+
+  $("settingsModal").classList.add("show");
+}
+
+function closeSettings() {
+  $("settingsModal").classList.remove("show");
+}
+
+function saveSettings() {
+  const url = $("supabaseUrl").value.trim();
+  const key = $("supabaseKey").value.trim();
+  const functionName =
+    $("functionName").value.trim();
+
+  if (!url || !key || !functionName) {
+    toast("सभी Settings भरें");
+    return;
+  }
+
+  if (!url.startsWith("https://")) {
+    toast("Supabase URL सही नहीं है");
+    return;
+  }
+
+  localStorage.setItem("jarvis_url", url);
+  localStorage.setItem("jarvis_key", key);
+  localStorage.setItem("jarvis_function", functionName);
+
+  closeSettings();
+  toast("Settings Saved ✓");
+}
+
+/* ===============================
+   VOICE INPUT
+================================ */
+
+function voiceInput() {
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    toast("इस Browser में Voice Input उपलब्ध नहीं है");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+
+  recognition.lang = "hi-IN";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  $("voiceBtn").disabled = true;
+  setStatus("Listening...");
+
+  recognition.onresult = event => {
+    const spoken =
+      event.results[0][0].transcript;
+
+    inputEl.value +=
+      (inputEl.value ? " " : "") + spoken;
+
+    inputEl.focus();
+  };
+
+  recognition.onerror = event => {
+    toast("Voice Error: " + event.error);
+  };
+
+  recognition.onend = () => {
+    $("voiceBtn").disabled = false;
+    setStatus("Ready");
+  };
+
+  try {
+    recognition.start();
+  } catch (e) {
+    $("voiceBtn").disabled = false;
+    toast("Voice शुरू नहीं हो सका");
+  }
+}
+
+/* ===============================
+   BUTTON EVENTS
+================================ */
+
+$("sendBtn").addEventListener("click", sendMessage);
+
+inputEl.addEventListener("keydown", event => {
+  if (
+    event.key === "Enter" &&
+    !event.shiftKey
+  ) {
+    event.preventDefault();
+    sendMessage();
+  }
+});
+
+inputEl.addEventListener("input", () => {
+  inputEl.style.height = "42px";
+
+  inputEl.style.height =
+    Math.min(inputEl.scrollHeight, 140) + "px";
+});
+
+$("newChatBtn").addEventListener(
+  "click",
+  createNewChat
+);
+
+$("settingsBtn").addEventListener(
+  "click",
+  openSettings
+);
+
+$("saveSettingsBtn").addEventListener(
+  "click",
+  saveSettings
+);
+
+$("closeSettingsBtn").addEventListener(
+  "click",
+  closeSettings
+);
+
+$("clearHistoryBtn").addEventListener(
+  "click",
+  clearHistory
+);
+
+$("voiceBtn").addEventListener(
+  "click",
+  voiceInput
+);
+
+$("menuBtn").addEventListener("click", () => {
+  $("sidebar").classList.add("open");
+  $("overlay").classList.add("show");
+});
+
+$("overlay").addEventListener("click", () => {
+  closeSidebar();
+});
+
+/* ===============================
+   STARTUP
+================================ */
+
+function initialize() {
+  renderHistory();
+
+  if (chats.length) {
+    currentChatId = chats[0].id;
+    renderChat();
+  } else {
+    currentChatId = null;
+    renderChat();
+  }
+
+  setStatus("Ready");
+
+  console.log("Jarvis initialized successfully");
+}
+
+initialize();
+
+})();
+</script>
+
+</body>
+   </html>
+   
