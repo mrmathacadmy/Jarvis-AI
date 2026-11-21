@@ -3,1012 +3,704 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JARVIS AI</title>
+<title>Jarvis AI</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-
-:root{
- --bg:#070b14;
- --panel:#101827;
- --border:#20354b;
- --blue:#00c8ff;
- --text:#eaf3ff;
- --muted:#91a5bb;
-}
-
-body{
- font-family:Arial,sans-serif;
- background:var(--bg);
- color:var(--text);
- min-height:100vh;
-}
+*{box-sizing:border-box}
+body{margin:0;background:#090e17;color:#edf3ff;font-family:Arial,sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
 
 .app{display:flex;min-height:100vh}
+.sidebar{width:230px;background:#111a29;padding:15px;border-right:1px solid #26364b}
+.logo{font-size:23px;font-weight:bold;color:#38bdf8;padding:12px 5px 22px}
+.nav{display:block;width:100%;padding:13px;margin:4px 0;background:transparent;color:white;border:0;border-radius:9px;text-align:left}
+.nav:hover,.nav.active{background:#20314b;color:#38bdf8}
+.project-label{margin:20px 0 10px;color:#91a5c0;font-size:12px}
+.project-list button{display:block;width:100%;padding:10px;text-align:left;color:#cbd5e1;background:transparent;border:0;border-radius:8px;overflow-wrap:anywhere}
+.project-list button.active{background:#20314b;color:#38bdf8}
 
-.sidebar{
- width:250px;
- background:#0b1220;
- border-right:1px solid var(--border);
- padding:20px;
- display:flex;
- flex-direction:column;
- flex-shrink:0;
-}
+.main{flex:1;min-width:0}
+.topbar{height:60px;border-bottom:1px solid #26364b;display:flex;align-items:center;justify-content:space-between;padding:0 16px}
+.content{max-width:1000px;margin:auto;padding:16px}
+.page{display:none}
+.page.active{display:block}
 
-.logo{
- font-size:26px;
- font-weight:bold;
- color:var(--blue);
- letter-spacing:3px;
- margin-bottom:28px;
-}
+.card{background:#111b2b;border:1px solid #28394f;border-radius:13px;padding:16px;margin:12px 0}
+.hero{padding:22px;background:linear-gradient(135deg,#142747,#28204e);border:1px solid #344d78;border-radius:15px}
+h1{font-size:25px}
+.muted{color:#9aaac0;line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.btn{padding:11px 14px;border:0;border-radius:9px;background:#283951;color:white;margin:4px 2px}
+.primary{background:#395be9}
+.green{background:#15563b}
+.red{background:#642b36}
+input,textarea,select{width:100%;background:#080f1b;border:1px solid #30435a;border-radius:9px;color:white;padding:12px;margin-top:6px}
+label{display:block;margin-top:13px;color:#bdc9da;font-size:13px}
+textarea{min-height:95px;resize:vertical}
 
-.logo small{
- display:block;
- font-size:10px;
- color:#8ca6c2;
- margin-top:5px;
- letter-spacing:2px;
-}
-
-.new-chat{
- padding:13px;
- background:#14253b;
- border:1px solid #25415e;
- border-radius:10px;
- color:white;
- cursor:pointer;
- margin-bottom:20px;
-}
-
-.nav-title{
- font-size:11px;
- color:#8296ad;
- margin:14px 0 8px;
-}
-
-.nav-item{
- padding:12px;
- border-radius:9px;
- margin-bottom:5px;
- cursor:pointer;
- color:#b9c8d9;
-}
-
-.nav-item:hover,.nav-item.active{
- background:#14253b;
- color:var(--blue);
-}
-
-.sidebar-bottom{
- margin-top:auto;
- font-size:12px;
- color:#7e91a8;
- padding-top:20px;
-}
-
-.main{
- flex:1;
- display:flex;
- flex-direction:column;
- min-width:0;
-}
-
-.topbar{
- height:62px;
- border-bottom:1px solid var(--border);
- display:flex;
- align-items:center;
- justify-content:space-between;
- padding:0 20px;
- background:#0b1220;
-}
-
-.status{font-size:11px;color:#4ade80}
-.mobile-menu{display:none;cursor:pointer;font-size:22px}
-
-.content{
- flex:1;
- overflow:auto;
- padding:22px;
- max-width:1050px;
- width:100%;
- margin:auto;
-}
-
-.welcome{text-align:center;margin:35px auto 25px}
-
-.orb{
- width:105px;
- height:105px;
- border-radius:50%;
- margin:0 auto 20px;
- background:radial-gradient(circle,#50eaff,#0086ff 35%,#0d2850 65%,transparent 72%);
- box-shadow:0 0 35px #008cff55;
- animation:pulse 3s infinite;
-}
-
-@keyframes pulse{
- 0%,100%{transform:scale(1)}
- 50%{transform:scale(1.06)}
-}
-
-.welcome h1{font-size:29px;margin-bottom:10px}
-.welcome p{color:var(--muted);font-size:14px;line-height:1.7}
-
-.cards{
- display:grid;
- grid-template-columns:repeat(2,1fr);
- gap:12px;
- margin:25px 0;
-}
-
-.card{
- background:var(--panel);
- border:1px solid var(--border);
- padding:17px;
- border-radius:12px;
- cursor:pointer;
- transition:.2s;
-}
-
-.card:hover{border-color:var(--blue);transform:translateY(-2px)}
-.card-icon{font-size:24px;margin-bottom:10px}
-.card h3{font-size:15px;margin-bottom:7px}
-.card p{color:var(--muted);font-size:12px;line-height:1.5}
-
-.message{
- display:flex;
- margin:17px 0;
- gap:9px;
- align-items:flex-start;
-}
-
-.message.user{justify-content:flex-end}
-
-.bubble{
- max-width:90%;
- padding:14px;
- border-radius:13px;
- line-height:1.65;
- font-size:14px;
- white-space:pre-wrap;
- overflow-wrap:anywhere;
-}
-
-.user .bubble{background:#123454;border:1px solid #20557b}
-.bot .bubble{background:#101827;border:1px solid #20354b}
-
-.avatar{
- width:30px;
- height:30px;
- border-radius:50%;
- background:#142b42;
- display:flex;
- align-items:center;
- justify-content:center;
- flex-shrink:0;
-}
-
-.message-actions{display:flex;gap:7px;margin-top:10px}
-
-.small-btn{
- border:1px solid #28415b;
- background:#0b1422;
- color:#9fb7ce;
- padding:5px 9px;
- border-radius:6px;
- font-size:11px;
- cursor:pointer;
-}
-
-.tool-section{display:none}
-.tool-section.show{display:block}
-
-.tool-box{
- background:var(--panel);
- border:1px solid var(--border);
- padding:20px;
- border-radius:14px;
- margin-top:15px;
-}
-
-.tool-box h2{margin-bottom:12px}
-.tool-box p{color:var(--muted);font-size:14px;line-height:1.7}
-
-.field{margin:15px 0}
-
-.field label{
- display:block;
- margin-bottom:8px;
- font-size:13px;
- color:#aac0d6;
-}
-
-.field input,.field textarea,.field select{
- width:100%;
- padding:12px;
- background:#09111e;
- border:1px solid #28415b;
- color:white;
- border-radius:8px;
- outline:none;
- font-size:14px;
-}
-
-.field textarea{min-height:110px;resize:vertical}
-
-.action-btn{
- padding:12px 17px;
- border:0;
- background:var(--blue);
- color:#00111d;
- border-radius:9px;
- font-weight:bold;
- cursor:pointer;
- margin-top:5px;
-}
-
-.action-btn:disabled{opacity:.5}
-
-.output{
- white-space:pre-wrap;
- overflow-wrap:anywhere;
- margin-top:15px;
- padding:15px;
- background:#08111e;
- border:1px solid #20354b;
- border-radius:10px;
- line-height:1.6;
- display:none;
-}
-
-.output.show{display:block}
-
-.input-area{
- padding:13px 18px 18px;
- background:#0b1220;
- border-top:1px solid var(--border);
-}
-
-.input-wrap{
- max-width:1000px;
- margin:auto;
- display:flex;
- gap:8px;
- align-items:center;
- background:#111d2e;
- border:1px solid #29415a;
- border-radius:15px;
- padding:8px;
-}
-
-.input-wrap textarea{
- flex:1;
- background:transparent;
- border:none;
- outline:none;
- color:white;
- resize:none;
- padding:12px;
- font-size:15px;
- min-height:44px;
- max-height:130px;
-}
-
-.icon-btn{
- background:#17283d;
- border:1px solid #29445e;
- color:white;
- width:43px;
- height:43px;
- border-radius:10px;
- cursor:pointer;
- font-size:18px;
- flex-shrink:0;
-}
-
-.send-btn{background:var(--blue);color:#00111d;border:none;font-weight:bold}
-
-.footer-note{
- text-align:center;
- color:#647990;
- font-size:10px;
- margin-top:9px;
-}
-
-@media(max-width:700px){
- .sidebar{
-  position:fixed;
-  left:-270px;
-  top:0;
-  bottom:0;
-  z-index:100;
-  transition:.25s;
- }
- .sidebar.open{left:0}
- .mobile-menu{display:block}
- .content{padding:14px}
- .welcome h1{font-size:24px}
- .cards{grid-template-columns:1fr}
- .topbar{padding:0 12px}
- .bubble{max-width:90%}
- .input-area{padding:9px}
+.chatbox{display:flex;flex-direction:column;height:calc(100dvh - 105px);min-height:430px}
+.chat-head{background:#111b2b;padding:12px;border:1px solid #28394f;border-radius:10px;margin-bottom:10px}
+.messages{flex:1;overflow:auto;padding:6px}
+.msg{margin:12px 0;max-width:96%}
+.msg.user{margin-left:auto}
+.msg-label{font-size:11px;color:#91a2b9;margin-bottom:4px}
+.bubble{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6;padding:12px;border-radius:12px}
+.user .bubble{background:#294779}
+.ai .bubble{background:#121e2e;border:1px solid #2b3b51}
+.input-area{background:#111b2b;border:1px solid #28394f;padding:10px;border-radius:12px}
+.input-area textarea{border:0;background:transparent;min-height:60px}
+.actions{display:flex;flex-wrap:wrap;gap:5px}
+.actions button{flex:1;min-width:65px}
+.status{font-size:12px;color:#65e5a3}
+.small{font-size:12px}
+.empty{padding:20px;text-align:center;color:#91a2b9}
+@media(max-width:650px){
+.sidebar{width:65px;padding:7px}
+.logo{font-size:15px;text-align:center;padding:10px 0}
+.nav{padding:13px 2px;text-align:center;font-size:18px}
+.nav span,.project-label,.project-list{display:none}
+.content{padding:10px}
+.grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 
 <body>
-
 <div class="app">
 
-<aside class="sidebar" id="sidebar">
+<aside class="sidebar">
+<div class="logo">⚡ JARVIS</div>
 
-<div class="logo">JARVIS<small>PERSONAL AI ASSISTANT</small></div>
+<button class="nav active" onclick="page('home')">🏠 <span>Dashboard</span></button>
+<button class="nav" onclick="page('chat')">🤖 <span>AI Chat</span></button>
+<button class="nav" onclick="page('projects')">🌐 <span>Projects</span></button>
+<button class="nav" onclick="page('memory')">🧠 <span>Memory</span></button>
 
-<button class="new-chat" onclick="newChat()">＋ New Chat</button>
+<div class="project-label">MY PROJECTS</div>
+<div class="project-list" id="sidebarProjects"></div>
 
-<div class="nav-title">WORKSPACE</div>
-
-<div class="nav-item active" onclick="showPage('chat',this)">💬 AI Chat</div>
-<div class="nav-item" onclick="showPage('website',this)">🌐 Website Builder</div>
-<div class="nav-item" onclick="showPage('app',this)">📱 App Planner</div>
-<div class="nav-item" onclick="showPage('game',this)">🎮 Game Creator</div>
-<div class="nav-item" onclick="showPage('video',this)">🎬 Video Creator</div>
-<div class="nav-item" onclick="showPage('exam',this)">📚 ExamHub Tools</div>
-
-<div class="nav-title">SYSTEM</div>
-<div class="nav-item" onclick="showMemory()">🧠 Chat Memory</div>
-<div class="nav-item" onclick="clearMemory()">🗑 Clear Chat</div>
-
-<div class="sidebar-bottom">
-JARVIS AI • Version 2.0<br>
-Gemini AI Connected
-</div>
-
+<button class="nav" onclick="newProject()">➕ <span>Add Project</span></button>
 </aside>
 
 <main class="main">
-
 <header class="topbar">
-<div style="display:flex;gap:15px;align-items:center">
-<span class="mobile-menu" onclick="toggleSidebar()">☰</span>
-<strong id="pageTitle">JARVIS AI</strong>
-</div>
-<div class="status" id="status">● SYSTEM READY</div>
+<strong id="pageTitle">Dashboard</strong>
+<span class="status" id="status">● Ready</span>
 </header>
 
 <div class="content">
 
-<section id="chatPage">
+<!-- HOME -->
+<section class="page active" id="home">
 
-<div class="welcome" id="welcome">
-<div class="orb"></div>
-<h1>How can I help you?</h1>
-<p>आपका AI Assistant तैयार है। अपना काम बताइए।</p>
+<div class="hero">
+<h1>⚡ Jarvis AI Assistant</h1>
+<p class="muted">आपका AI assistant — websites, coding, apps, games, videos और projects में मदद के लिए।</p>
+<button class="btn primary" onclick="page('chat')">Chat शुरू करें</button>
+<button class="btn" onclick="newProject()">+ Project जोड़ें</button>
 </div>
 
-<div class="cards" id="cards">
-
-<div class="card" onclick="quickPrompt('Mujhe ek modern website banane mein help karo. Complete code aur steps batao.')">
-<div class="card-icon">🌐</div>
-<h3>Build a Website</h3>
-<p>Website design, features और code।</p>
+<div class="grid">
+<div class="card">
+<h3>🌐 Projects</h3>
+<div id="projectCount" style="font-size:28px;color:#38bdf8">0</div>
+</div>
+<div class="card">
+<h3>💬 Messages</h3>
+<div id="messageCount" style="font-size:28px;color:#38bdf8">0</div>
+</div>
+<div class="card">
+<h3>📁 Active Project</h3>
+<div id="activeName">General Assistant</div>
+</div>
+<div class="card">
+<h3>🔌 AI Connection</h3>
+<button class="btn" onclick="testConnection()">Test AI Connection</button>
+</div>
 </div>
 
-<div class="card" onclick="quickPrompt('Mujhe Android app banana hai. Complete development plan aur code mein help karo.')">
-<div class="card-icon">📱</div>
-<h3>Create an App</h3>
-<p>App structure और development।</p>
+<h3>Quick Tasks</h3>
+<div class="grid">
+
+<div class="card">
+<h3>💻 Website</h3>
+<button class="btn primary" onclick="quick('मुझे website बनानी है। पहले requirements पूछो और फिर development plan बनाओ।')">Start</button>
 </div>
 
-<div class="card" onclick="quickPrompt('Ek mobile game develop karne mein help karo. Game concept aur code batao.')">
-<div class="card-icon">🎮</div>
-<h3>Create a Game</h3>
-<p>Game idea, mechanics और code।</p>
+<div class="card">
+<h3>📱 Android App</h3>
+<button class="btn primary" onclick="quick('Android app बनाने की planning शुरू करो और requirements पूछो।')">Start</button>
 </div>
 
-<div class="card" onclick="quickPrompt('Topic se video banane ke liye script aur scenes taiyar karo.')">
-<div class="card-icon">🎬</div>
-<h3>Create a Video</h3>
-<p>Script, scenes और production workflow।</p>
+<div class="card">
+<h3>🎮 Game</h3>
+<button class="btn primary" onclick="quick('Game बनाने में मदद करो। Concept, gameplay और development plan बनाओ।')">Start</button>
 </div>
 
+<div class="card">
+<h3>🎬 Video</h3>
+<button class="btn primary" onclick="quick('Topic आधारित video की script, scenes, voiceover और subtitles की planning करो।')">Start</button>
 </div>
 
-<div id="chatArea"></div>
-
-</section>
-
-<!-- WEBSITE PAGE -->
-
-<section id="websitePage" class="tool-section">
-<div class="tool-box">
-<h2>🌐 Website Builder</h2>
-<p>Website का idea लिखें। AI requirements, structure, design और code में मदद करेगा।</p>
-
-<div class="field">
-<label>Website Name</label>
-<input id="websiteName" placeholder="Website name">
-</div>
-
-<div class="field">
-<label>Website Idea / Features</label>
-<textarea id="websiteIdea" placeholder="Website mein kya features chahiye?"></textarea>
-</div>
-
-<button class="action-btn" onclick="makePlan('website')">Generate with AI</button>
-<div class="output" id="websiteOutput"></div>
 </div>
 </section>
 
-<!-- APP PAGE -->
-
-<section id="appPage" class="tool-section">
-<div class="tool-box">
-<h2>📱 Android App Planner</h2>
-<p>App का concept और features लिखें।</p>
-
-<div class="field">
-<label>App Name</label>
-<input id="appName" placeholder="App name">
+<!-- CHAT -->
+<section class="page" id="chat">
+<div class="chatbox">
+<div class="chat-head">
+<strong>🤖 Jarvis AI</strong>
+<div class="muted small" id="chatProject">General Assistant</div>
 </div>
 
-<div class="field">
-<label>App Idea</label>
-<textarea id="appIdea" placeholder="App kya karega?"></textarea>
+<div class="messages" id="messages"></div>
+
+<div class="input-area">
+<textarea id="input" placeholder="Message Jarvis..." onkeydown="inputKey(event)"></textarea>
+<div class="actions">
+<button class="btn green" onclick="voice()">🎤</button>
+<button class="btn" onclick="speak()">🔊</button>
+<button class="btn" onclick="stopSpeak()">⏹</button>
+<button class="btn red" onclick="clearChat()">Clear</button>
+<button class="btn primary" id="sendBtn" onclick="send()">➤ Send</button>
 </div>
-
-<button class="action-btn" onclick="makePlan('app')">Generate with AI</button>
-<div class="output" id="appOutput"></div>
 </div>
-</section>
-
-<!-- GAME PAGE -->
-
-<section id="gamePage" class="tool-section">
-<div class="tool-box">
-<h2>🎮 Game Creator</h2>
-<p>अपने game का idea लिखें। AI concept, gameplay और coding में मदद करेगा।</p>
-
-<div class="field">
-<label>Game Name</label>
-<input id="gameName" placeholder="Game name">
-</div>
-
-<div class="field">
-<label>Game Idea</label>
-<textarea id="gameIdea" placeholder="Game ka concept, levels aur features..."></textarea>
-</div>
-
-<button class="action-btn" onclick="makePlan('game')">Generate with AI</button>
-<div class="output" id="gameOutput"></div>
 </div>
 </section>
 
-<!-- VIDEO PAGE -->
+<!-- PROJECTS -->
+<section class="page" id="projects">
+<h2>🌐 My Projects</h2>
+<p class="muted">हर website या project की अलग memory और chat होगी।</p>
+<button class="btn primary" onclick="newProject()">+ Add Project</button>
+<div id="projectCards"></div>
+</section>
 
-<section id="videoPage" class="tool-section">
-<div class="tool-box">
-<h2>🎬 Video Creator</h2>
-<p>Topic से AI video script, scene-by-scene plan और voice-over text बनाएं।</p>
+<!-- PROJECT EDIT -->
+<section class="page" id="editor">
+<h2 id="editorTitle">Add Project</h2>
+<div class="card">
+<input type="hidden" id="editId">
 
-<div class="field">
-<label>Video Topic</label>
-<input id="videoTopic" placeholder="Video topic">
-</div>
+<label>Project Name</label>
+<input id="pName" placeholder="ExamHub">
 
-<div class="field">
-<label>Duration</label>
-<select id="videoDuration">
-<option>30 seconds</option>
-<option>1 minute</option>
-<option>3 minutes</option>
-<option>5 minutes</option>
-<option>10 minutes</option>
+<label>Website URL</label>
+<input id="pURL" placeholder="https://example.com">
+
+<label>Type</label>
+<select id="pType">
+<option>Website</option>
+<option>Android App</option>
+<option>Game</option>
+<option>AI Project</option>
+<option>YouTube / Video</option>
+<option>Other</option>
 </select>
-</div>
 
-<div class="field">
-<label>Style</label>
-<select id="videoStyle">
-<option>Educational</option>
-<option>Documentary</option>
-<option>Entertainment</option>
-<option>Cinematic</option>
-<option>YouTube Shorts</option>
-</select>
-</div>
+<label>Technology</label>
+<input id="pTech" placeholder="HTML, JavaScript, Supabase">
 
-<button class="action-btn" onclick="makePlan('video')">Generate Video Script</button>
-<div class="output" id="videoOutput"></div>
+<label>Description</label>
+<textarea id="pDescription" placeholder="Project का विवरण"></textarea>
+
+<label>Memory / Progress</label>
+<textarea id="pMemory" placeholder="क्या पूरा हुआ, क्या बाकी है, पुराने errors..."></textarea>
+
+<button class="btn primary" onclick="saveProject()">Save Project</button>
+<button class="btn" onclick="page('projects')">Cancel</button>
 </div>
 </section>
 
-<!-- EXAM PAGE -->
+<!-- MEMORY -->
+<section class="page" id="memory">
+<h2>🧠 Jarvis Memory</h2>
+<p class="muted">यह memory इस browser/device में save होगी।</p>
 
-<section id="examPage" class="tool-section">
-<div class="tool-box">
-<h2>📚 ExamHub Assistant</h2>
-<p>Exam और question बनाने की instructions तैयार करें। यह अभी database में बदलाव नहीं करता।</p>
+<div class="card">
+<label>Project चुनें</label>
+<select id="memorySelect" onchange="loadMemory()"></select>
 
-<div class="field">
-<label>Exam Name</label>
-<input id="examName" placeholder="Exam name">
+<label>Project Memory</label>
+<textarea id="memoryText" style="min-height:230px"></textarea>
+
+<button class="btn primary" onclick="saveMemory()">Save Memory</button>
 </div>
 
-<div class="field">
-<label>Task</label>
-<textarea id="examTask" placeholder="Exam, questions, options, duration, marks etc."></textarea>
-</div>
-
-<button class="action-btn" onclick="makePlan('exam')">Generate with AI</button>
-<div class="output" id="examOutput"></div>
+<div class="card">
+<h3>General Memory</h3>
+<p class="muted">सभी projects के लिए common instructions</p>
+<textarea id="generalMemory" placeholder="Jarvis को क्या हमेशा याद रखना चाहिए?"></textarea>
+<button class="btn primary" onclick="saveGeneralMemory()">Save General Memory</button>
 </div>
 </section>
 
 </div>
-
-<footer class="input-area" id="inputArea">
-
-<div class="input-wrap">
-
-<button class="icon-btn" onclick="startVoice()" title="Voice input">🎙</button>
-
-<textarea id="userInput" rows="1"
-placeholder="Jarvis ko task batayein..."
-onkeydown="handleKey(event)"></textarea>
-
-<button class="icon-btn" onclick="toggleSpeech()" title="Voice output">🔊</button>
-
-<button class="icon-btn send-btn" onclick="sendMessage()">➤</button>
-
-</div>
-
-<div class="footer-note">
-Jarvis AI • Gemini powered • AI responses may need verification
-</div>
-
-</footer>
-
 </main>
 </div>
-window.showSection = showSection;
-window.openAddProject = openAddProject;
-window.saveProject = saveProject;
-window.selectProject = selectProject;
-window.editProject = editProject;
-window.deleteProject = deleteProject;
-window.saveMemory = saveMemory;
-window.loadMemoryProject = loadMemoryProject;
-window.sendMessage = sendMessage;
-window.quickTask = quickTask;
-window.startVoice = startVoice;
-window.speakLastReply = speakLastReply;
-window.stopSpeaking = stopSpeaking;
-window.clearChat = clearChat;
-initialize();
+
 <script>
+/* ==============================
+   CONFIGURATION
+================================ */
 
-/* =====================================
-   SUPABASE CONNECTION
-===================================== */
+const SUPABASE_URL = "https://aeflfnlpkbnlhbkghwav.supabase.co";
 
-const SUPABASE_URL =
-https://jiqewyflnbhutrocacyt.supabase.cohttps://
+/* यहाँ अपनी Supabase public anon/publishable key डालें */
+const SUPABASE_KEY = "sb_publishable_xo0AHkCiQ5GLjDtX5K2mzg_O-2vV_Jc";
 
-/*
-Paste your Supabase publishable/anon public key below.
-Never paste service_role key here.
-*/
+const AI_URL = SUPABASE_URL + "/functions/v1/jarvis-ai";
 
-const SUPABASE_ANON_KEY =
-"sb_publishable_xo0AHkCiQ5GLjDtX5K2mzg_O-2vV_Jc";
+/* ==============================
+   STORAGE
+================================ */
 
-const EDGE_FUNCTION =
-SUPABASE_URL + "/functions/v1/jarvis-ai";
+const K_PROJECTS = "jarvis_v2_projects";
+const K_CHATS = "jarvis_v2_chats";
+const K_ACTIVE = "jarvis_v2_active";
+const K_GENERAL = "jarvis_v2_general_memory";
 
-/* =====================================
-   STATE
-===================================== */
+let projects = [];
+let chats = {};
+let active = null;
+let busy = false;
+let lastAnswer = "";
 
-let speechEnabled = true;
-let recognition = null;
-let currentPage = "chat";
-
-const userInput = document.getElementById("userInput");
-const chatArea = document.getElementById("chatArea");
-
-let messages = [];
-
-try{
- messages = JSON.parse(localStorage.getItem("jarvis_chat") || "[]");
- if(!Array.isArray(messages)) messages=[];
-}catch(e){
- messages=[];
-}
-
-/* =====================================
-   NAVIGATION
-===================================== */
-
-function toggleSidebar(){
- document.getElementById("sidebar").classList.toggle("open");
-}
-
-function showPage(page,element){
-
- currentPage=page;
-
- document.getElementById("chatPage").style.display=
- page==="chat"?"block":"none";
-
- document.getElementById("inputArea").style.display=
- page==="chat"?"block":"none";
-
- document.querySelectorAll(".tool-section").forEach(s=>{
-  s.classList.remove("show");
- });
-
- if(page!=="chat"){
-  document.getElementById(page+"Page").classList.add("show");
- }
-
- document.querySelectorAll(".nav-item").forEach(n=>{
-  n.classList.remove("active");
- });
-
- if(element)element.classList.add("active");
-
- const titles={
-  chat:"JARVIS AI",
-  website:"Website Builder",
-  app:"App Planner",
-  game:"Game Creator",
-  video:"Video Creator",
-  exam:"ExamHub Assistant"
- };
-
- document.getElementById("pageTitle").textContent=
- titles[page]||"JARVIS AI";
-
- document.getElementById("sidebar").classList.remove("open");
-}
-
-/* =====================================
-   CHAT
-===================================== */
-
-function newChat(){
-
- messages=[];
- localStorage.removeItem("jarvis_chat");
- chatArea.innerHTML="";
-
- document.getElementById("welcome").style.display="block";
- document.getElementById("cards").style.display="grid";
-
- showPage("chat");
-
-}
-
-function quickPrompt(text){
- showPage("chat");
- userInput.value=text;
- sendMessage();
-}
-
-function handleKey(event){
- if(event.key==="Enter"&&!event.shiftKey){
-  event.preventDefault();
-  sendMessage();
- }
-}
-
-/* =====================================
-   SEND MESSAGE
-===================================== */
-
-async function sendMessage(){
-
- const text=userInput.value.trim();
-
- if(!text)return;
-
- userInput.value="";
-
- document.getElementById("welcome").style.display="none";
- document.getElementById("cards").style.display="none";
-
- addMessage("user",text);
-
- setStatus("● AI THINKING");
-
- try{
-
-  const reply=await callJarvisAI(text);
-
-  addMessage("bot",reply);
-
-  setStatus("● SYSTEM READY");
-
-  if(speechEnabled){
-   speak(reply);
+function load(key, fallback) {
+  try {
+    const x = localStorage.getItem(key);
+    return x ? JSON.parse(x) : fallback;
+  } catch {
+    return fallback;
   }
-
- }catch(error){
-
-  addMessage(
-   "bot",
-   "AI connection error:\n\n"+error.message+
-   "\n\nSupabase function aur API configuration check karein."
-  );
-
-  setStatus("● CONNECTION ERROR");
-
- }
-
 }
 
-/* =====================================
-   CALL REAL AI
-===================================== */
+function saveAll() {
+  localStorage.setItem(K_PROJECTS, JSON.stringify(projects));
+  localStorage.setItem(K_CHATS, JSON.stringify(chats));
 
-async function callJarvisAI(message){
-
- if(
-  !SUPABASE_ANON_KEY ||
-  SUPABASE_ANON_KEY.includes("PASTE_YOUR")
- ){
-  throw new Error("Supabase public key index.html mein add nahi ki gayi.");
- }
-
- /*
- History excludes the latest user message.
- Latest message is sent separately.
- */
-
- const history=messages
-  .slice(0,-1)
-  .filter(m=>m.type==="user"||m.type==="bot")
-  .slice(-8)
-  .map(m=>({
-   role:m.type==="bot"?"model":"user",
-   text:m.text
-  }));
-
- const response=await fetch(EDGE_FUNCTION,{
-  method:"POST",
-  headers:{
-   "Content-Type":"application/json",
-   "apikey":SUPABASE_ANON_KEY,
-   "Authorization":"Bearer "+SUPABASE_ANON_KEY
-  },
-  body:JSON.stringify({
-   message:message,
-   history:history
-  })
- });
-
- let data;
-
- try{
-  data=await response.json();
- }catch(e){
-  throw new Error("Server returned invalid response.");
- }
-
- if(!response.ok){
-  throw new Error(
-   data.details||
-   data.error||
-   "HTTP error "+response.status
-  );
- }
-
- if(!data.reply){
-  throw new Error("AI response empty.");
- }
-
- return data.reply;
-
+  if(active) localStorage.setItem(K_ACTIVE, active);
+  else localStorage.removeItem(K_ACTIVE);
 }
 
-/* =====================================
-   DISPLAY MESSAGE
-===================================== */
+function currentProject() {
+  return projects.find(x => x.id === active) || null;
+}
 
-function addMessage(type,text){
+function keyChat() {
+  return active || "general";
+}
 
- const wrapper=document.createElement("div");
- wrapper.className="message "+type;
+function history() {
+  if(!chats[keyChat()]) chats[keyChat()] = [];
+  return chats[keyChat()];
+}
 
- const avatar=document.createElement("div");
- avatar.className="avatar";
- avatar.textContent=type==="bot"?"🤖":"👤";
+/* ==============================
+   PAGE NAVIGATION
+================================ */
 
- const bubble=document.createElement("div");
- bubble.className="bubble";
+function page(id) {
+  document.querySelectorAll(".page").forEach(x => x.classList.remove("active"));
+  document.querySelectorAll(".nav").forEach(x => x.classList.remove("active"));
 
- const textNode=document.createElement("div");
- textNode.textContent=text;
+  const target = document.getElementById(id);
+  if(target) target.classList.add("active");
 
- bubble.appendChild(textNode);
-
- if(type==="bot"){
-
-  const actions=document.createElement("div");
-  actions.className="message-actions";
-
-  const copyBtn=document.createElement("button");
-  copyBtn.className="small-btn";
-  copyBtn.textContent="Copy";
-
-  copyBtn.onclick=async()=>{
-   try{
-    await navigator.clipboard.writeText(text);
-    copyBtn.textContent="Copied!";
-   }catch(e){
-    copyBtn.textContent="Copy failed";
-   }
+  const names = {
+    home:"Dashboard",
+    chat:"AI Chat",
+    projects:"My Projects",
+    editor:"Project Editor",
+    memory:"Memory"
   };
 
-  const speakBtn=document.createElement("button");
-  speakBtn.className="small-btn";
-  speakBtn.textContent="Speak";
+  document.getElementById("pageTitle").textContent = names[id] || id;
 
-  speakBtn.onclick=()=>speak(text);
-
-  actions.appendChild(copyBtn);
-  actions.appendChild(speakBtn);
-
-  bubble.appendChild(actions);
- }
-
- if(type==="bot"){
-  wrapper.appendChild(avatar);
-  wrapper.appendChild(bubble);
- }else{
-  wrapper.appendChild(bubble);
- }
-
- chatArea.appendChild(wrapper);
-
- wrapper.scrollIntoView({behavior:"smooth",block:"end"});
-
- messages.push({type,text});
-
- saveMemory();
-
+  if(id === "chat") renderChat();
 }
 
-/* =====================================
+/* ==============================
+   PROJECT SYSTEM
+================================ */
+
+function newProject() {
+  document.getElementById("editId").value = "";
+  document.getElementById("pName").value = "";
+  document.getElementById("pURL").value = "";
+  document.getElementById("pType").value = "Website";
+  document.getElementById("pTech").value = "";
+  document.getElementById("pDescription").value = "";
+  document.getElementById("pMemory").value = "";
+  document.getElementById("editorTitle").textContent = "Add New Project";
+  page("editor");
+}
+
+function saveProject() {
+  const name = document.getElementById("pName").value.trim();
+
+  if(!name) {
+    alert("Project name डालें!");
+    return;
+  }
+
+  const id = document.getElementById("editId").value;
+
+  const data = {
+    name:name,
+    url:document.getElementById("pURL").value.trim(),
+    type:document.getElementById("pType").value,
+    tech:document.getElementById("pTech").value.trim(),
+    description:document.getElementById("pDescription").value.trim(),
+    memory:document.getElementById("pMemory").value.trim(),
+    updated:new Date().toISOString()
+  };
+
+  if(id) {
+    const p = projects.find(x => x.id === id);
+    if(p) Object.assign(p,data);
+  } else {
+    data.id = "project_" + Date.now();
+    projects.push(data);
+    active = data.id;
+  }
+
+  saveAll();
+  refresh();
+  page("projects");
+  alert("Project save हो गया!");
+}
+
+function editProject(id) {
+  const p = projects.find(x => x.id === id);
+  if(!p) return;
+
+  document.getElementById("editId").value = p.id;
+  document.getElementById("pName").value = p.name || "";
+  document.getElementById("pURL").value = p.url || "";
+  document.getElementById("pType").value = p.type || "Website";
+  document.getElementById("pTech").value = p.tech || "";
+  document.getElementById("pDescription").value = p.description || "";
+  document.getElementById("pMemory").value = p.memory || "";
+
+  document.getElementById("editorTitle").textContent = "Edit Project";
+  page("editor");
+}
+
+function deleteProject(id) {
+  const p = projects.find(x => x.id === id);
+  if(!p) return;
+
+  if(!confirm("Delete project " + p.name + "?")) return;
+
+  projects = projects.filter(x => x.id !== id);
+  delete chats[id];
+
+  if(active === id) active = projects.length ? projects[0].id : null;
+
+  saveAll();
+  refresh();
+  page("projects");
+}
+
+function openProject(id) {
+  active = id;
+  saveAll();
+  refresh();
+  page("chat");
+}
+
+function renderProjects() {
+  const side = document.getElementById("sidebarProjects");
+  const cards = document.getElementById("projectCards");
+
+  side.innerHTML = "";
+  cards.innerHTML = "";
+
+  if(projects.length === 0) {
+    cards.innerHTML = '<div class="empty">कोई project नहीं। Add Project दबाएँ।</div>';
+  }
+
+  projects.forEach(p => {
+    const b = document.createElement("button");
+    b.textContent = "🌐 " + p.name;
+    if(p.id === active) b.classList.add("active");
+    b.onclick = () => openProject(p.id);
+    side.appendChild(b);
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const title = document.createElement("h3");
+    title.textContent = p.name;
+
+    const info = document.createElement("p");
+    info.className = "muted";
+    info.textContent =
+      p.type + "\n" + (p.url || "URL not added") +
+      "\nTech: " + (p.tech || "Not specified") +
+      "\n" + (p.description || "");
+
+    const open = document.createElement("button");
+    open.className = "btn primary";
+    open.textContent = "Open";
+    open.onclick = () => openProject(p.id);
+
+    const edit = document.createElement("button");
+    edit.className = "btn";
+    edit.textContent = "Edit";
+    edit.onclick = () => editProject(p.id);
+
+    const del = document.createElement("button");
+    del.className = "btn red";
+    del.textContent = "Delete";
+    del.onclick = () => deleteProject(p.id);
+
+    card.append(title,info,open,edit,del);
+    cards.appendChild(card);
+  });
+}
+
+/* ==============================
    MEMORY
-===================================== */
+================================ */
 
-function saveMemory(){
- try{
-  localStorage.setItem("jarvis_chat",JSON.stringify(messages.slice(-100)));
- }catch(e){
-  console.log("Memory save failed");
- }
+function renderMemory() {
+  const select = document.getElementById("memorySelect");
+  select.innerHTML = "";
+
+  projects.forEach(p => {
+    const option = document.createElement("option");
+    option.value = p.id;
+    option.textContent = p.name;
+    select.appendChild(option);
+  });
+
+  if(active) select.value = active;
+  loadMemory();
+
+  document.getElementById("generalMemory").value =
+    localStorage.getItem(K_GENERAL) || "";
 }
 
-function showMemory(){
-
- alert(
-  "Local chat memory\n\n"+
-  "Saved messages: "+messages.length+
-  "\n\nMemory browser/device par save hoti hai."
- );
-
+function loadMemory() {
+  const p = projects.find(x => x.id === document.getElementById("memorySelect").value);
+  document.getElementById("memoryText").value = p ? (p.memory || "") : "";
 }
 
-function clearMemory(){
+function saveMemory() {
+  const p = projects.find(x => x.id === document.getElementById("memorySelect").value);
+  if(!p) {
+    alert("पहले project बनाओ।");
+    return;
+  }
 
- if(!confirm("Chat history delete karni hai?"))return;
-
- messages=[];
- localStorage.removeItem("jarvis_chat");
- chatArea.innerHTML="";
-
- document.getElementById("welcome").style.display="block";
- document.getElementById("cards").style.display="grid";
-
- alert("Chat memory clear ho gayi.");
-
+  p.memory = document.getElementById("memoryText").value;
+  saveAll();
+  refresh();
+  alert("Memory saved!");
 }
 
-/* =====================================
-   VOICE INPUT
-===================================== */
-
-function startVoice(){
-
- const SpeechRecognition=
- window.SpeechRecognition||
- window.webkitSpeechRecognition;
-
- if(!SpeechRecognition){
-  alert("Voice recognition supported nahi hai. Chrome browser try karein.");
-  return;
- }
-
- recognition=new SpeechRecognition();
-
- recognition.lang="hi-IN";
- recognition.continuous=false;
- recognition.interimResults=false;
-
- setStatus("● LISTENING");
-
- recognition.onresult=function(event){
-  userInput.value=event.results[0][0].transcript;
-  setStatus("● SYSTEM READY");
- };
-
- recognition.onerror=function(event){
-  setStatus("● VOICE ERROR");
-  console.log(event.error);
- };
-
- recognition.onend=function(){
-  setStatus("● SYSTEM READY");
- };
-
- try{
-  recognition.start();
- }catch(e){
-  alert("Voice start nahi ho paya. Dobara try karein.");
- }
-
+function saveGeneralMemory() {
+  localStorage.setItem(K_GENERAL, document.getElementById("generalMemory").value);
+  alert("General memory saved!");
 }
 
-/* =====================================
-   VOICE OUTPUT
-===================================== */
+/* ==============================
+   CHAT
+================================ */
 
-function toggleSpeech(){
+function renderChat() {
+  const box = document.getElementById("messages");
+  box.innerHTML = "";
 
- speechEnabled=!speechEnabled;
+  const p = currentProject();
+  document.getElementById("chatProject").textContent =
+    p ? "Project: " + p.name : "General Assistant";
 
- if(!speechEnabled){
-  window.speechSynthesis.cancel();
- }
+  const h = history();
 
- alert(speechEnabled?"Voice ON":"Voice OFF");
+  if(h.length === 0) {
+    addMessage("assistant", p
+      ? "नमस्ते! मैं " + p.name + " project का assistant हूँ। क्या काम करना है?"
+      : "नमस्ते! मैं Jarvis हूँ। अपना काम बताइए।"
+    );
+  } else {
+    h.forEach(m => addMessage(m.role,m.content));
+  }
 
+  box.scrollTop = box.scrollHeight;
 }
 
-function speak(text){
+function addMessage(role,text) {
+  const box = document.getElementById("messages");
 
- if(!("speechSynthesis"in window))return;
+  const outer = document.createElement("div");
+  outer.className = "msg " + (role === "user" ? "user" : "ai");
 
- window.speechSynthesis.cancel();
+  const label = document.createElement("div");
+  label.className = "msg-label";
+  label.textContent = role === "user" ? "YOU" : "JARVIS";
 
- const clean=text
-  .replace(/[*#]/g,"")
-  .replace(/https?:\/\/\S+/g,"");
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.textContent = text;
 
- const utterance=new SpeechSynthesisUtterance(clean);
-
- utterance.lang="hi-IN";
- utterance.rate=1;
- utterance.pitch=1;
-
- window.speechSynthesis.speak(utterance);
-
+  outer.append(label,bubble);
+  box.appendChild(outer);
 }
 
-/* =====================================
-   AI PROJECT PLANNER
-===================================== */
+function quick(text) {
+  page("chat");
+  document.getElementById("input").value = text;
+  send();
+}
 
-async function makePlan(type){
+function inputKey(event) {
+  if(event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    send();
+  }
+}
 
- let prompt="";
+/* ==============================
+   AI REQUEST
+================================ */
 
- if(type==="website"){
+async function send() {
+  if(busy) return;
 
-  const name=document.ge
+  const input = document.getElementById("input");
+  const message = input.value.trim();
+
+  if(!message) {
+    input.focus();
+    return;
+  }
+
+  input.value = "";
+
+  const h = history();
+  h.push({role:"user",content:message});
+  saveAll();
+
+  addMessage("user",message);
+
+  const box = document.getElementById("messages");
+  box.scrollTop = box.scrollHeight;
+
+  busy = true;
+  document.getElementById("sendBtn").disabled = true;
+  document.getElementById("status").textContent = "● Thinking...";
+
+  try {
+    const answer = await ask(message);
+
+    lastAnswer = answer;
+
+    history().push({role:"assistant",content:answer});
+    saveAll();
+
+    addMessage("assistant",answer);
+  } catch(e) {
+    addMessage("assistant","ERROR: " + e.message);
+  }
+
+  busy = false;
+  document.getElementById("sendBtn").disabled = false;
+  document.getElementById("status").textContent = "● Ready";
+
+  box.scrollTop = box.scrollHeight;
+  refresh();
+}
+
+async function ask(message) {
+  if(SUPABASE_KEY === "PASTE_PUBLIC_KEY_HERE") {
+    throw new Error("Supabase public key अभी code में नहीं डाली गई!");
+  }
+
+  const p = currentProject();
+  const generalMemory = localStorage.getItem(K_GENERAL) || "";
+
+  const systemPrompt = `
+You are Jarvis AI, a helpful assistant.
+
+Reply in the user's language.
+Help with coding, websites, Android apps, games,
+video planning, project planning and debugging.
+
+Never claim to have completed actions that you did not execute.
+Do not request passwords or secret keys.
+Ask before sensitive, destructive or publishing actions.
+
+GENERAL MEMORY:
+${generalMemory}
+
+ACTIVE PROJECT:
+${p ? `
+Project Name: ${p.name}
+URL: ${p.url || "Not provided"}
+Type: ${p.type || ""}
+Technology: ${p.tech || ""}
+Description: ${p.description || ""}
+Project Memory: ${p.memory || ""}
+` : "General assistant mode. No project selected."}
+
+Keep each project's memory separate.
+`;
+
+  /* Current message history excludes the new message
+     to avoid sending it twice */
+  const past = history().slice(0,-1).slice(-16);
+
+  const response = await fetch(AI_URL,{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "apikey":SUPABASE_KEY,
+      "Authorization":"Bearer " + SUPABASE_KEY
+    },
+    body:JSON.stringify({
+      message:message,
+      history:past,
+      systemPrompt:systemPrompt,
+      project:p
+    })
+  });
+
+  const raw = await response.text();
+
+  let data;
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    throw new Error("Server ने invalid response दिया: " + raw.slice(0,200));
+  }
+
+  if(!response.ok) {
+    throw new Error(data.error || data.message || "HTTP Error " + response.status);
+  }
+
+  if(data.reply) return data.reply;
+  if(data.text) return data.text;
+
+  if(data.candidates?.[0]?.content?.parts) {
+    return data.candidates[0].content.parts
+      .map(x => x.text || "")
+      .join("");
+  }
+
+  throw new Error("AI reply नहीं मिला।");
+}
+
+/* ==============================
+   CONNECTION TEST
+================================ */
+
+async function testConnection() {
+  document.getElementById("status").textContent = "● Testing...";
+
+  try {
+    const result = await ask("Reply only: Jarvis connection suc
