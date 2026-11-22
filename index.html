@@ -1,1069 +1,702 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jarvis AI</title>
+<meta name="theme-color" content="#10131c">
+<title>JARVIS AI Assistant</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+:root{
+ --bg:#0c0f16;--panel:#151923;--panel2:#1c2230;
+ --border:#2a3040;--text:#edf1f8;--muted:#98a2b7;
+ --accent:#6d8cff;--accent2:#8b5cf6;
 }
-
-body {
-  margin: 0;
-  background: #080d18;
-  color: #eaf0ff;
-  font-family: Arial, sans-serif;
-  height: 100dvh;
-  overflow: hidden;
+body{
+ margin:0;background:var(--bg);color:var(--text);
+ font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+ height:100dvh;overflow:hidden
 }
-
-button, input, textarea {
-  font: inherit;
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.app{height:100dvh;display:flex}
+.sidebar{
+ width:265px;background:#10141d;border-right:1px solid var(--border);
+ display:flex;flex-direction:column;padding:14px;flex-shrink:0
 }
-
-button {
-  cursor: pointer;
-  border: 1px solid #25334c;
-  color: #eaf0ff;
-  background: #131e30;
-  border-radius: 12px;
-  padding: 11px 14px;
+.brand{display:flex;align-items:center;gap:10px;padding:8px 4px 20px}
+.logo{
+ width:40px;height:40px;border-radius:13px;
+ background:linear-gradient(135deg,var(--accent),var(--accent2));
+ display:grid;place-items:center;font-weight:900;font-size:19px
 }
-
-button:hover {
-  background: #20304a;
+.brand-name{font-size:18px;font-weight:800}
+.brand-sub{font-size:11px;color:var(--muted)}
+.new-chat{
+ background:var(--panel2);border:1px solid var(--border);
+ padding:12px;border-radius:12px;color:white;text-align:left
 }
-
-button:disabled {
-  opacity: .5;
-  cursor: not-allowed;
+.side-label{font-size:11px;color:var(--muted);margin:20px 6px 9px}
+.history{flex:1;overflow:auto}
+.history-item{
+ padding:10px;border-radius:9px;cursor:pointer;font-size:13px;
+ color:#cbd3e2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
 }
-
-.app {
-  height: 100dvh;
-  display: flex;
+.history-item:hover,.history-item.active{background:var(--panel2)}
+.side-bottom{border-top:1px solid var(--border);padding-top:12px}
+.settings-btn{width:100%;padding:11px;background:none;color:white;border:0;text-align:left}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{
+ height:62px;border-bottom:1px solid var(--border);
+ display:flex;align-items:center;justify-content:space-between;
+ padding:0 18px;gap:10px
 }
-
-.sidebar {
-  width: 270px;
-  background: #0c1423;
-  border-right: 1px solid #1d2b40;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.top-title{font-weight:700}
+.status{font-size:12px;color:#75d9a2}
+.top-actions{display:flex;gap:8px}
+.small-btn{
+ background:var(--panel2);border:1px solid var(--border);
+ color:var(--text);padding:8px 12px;border-radius:9px
 }
-
-.logo {
-  font-size: 23px;
-  font-weight: bold;
-  padding: 10px;
-  color: #62c9ff;
+.content{flex:1;overflow:auto;padding:22px}
+.welcome{max-width:850px;margin:30px auto}
+.hero{text-align:center;padding:15px 0 25px}
+.hero-logo{
+ width:65px;height:65px;margin:auto;border-radius:22px;
+ display:grid;place-items:center;font-size:29px;
+ background:linear-gradient(135deg,var(--accent),var(--accent2))
 }
-
-.newchat {
-  width: 100%;
+.hero h1{font-size:30px;margin:14px 0 8px}
+.hero p{color:var(--muted);margin:0}
+.cards{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px
 }
-
-.history-title {
-  color: #93a7c5;
-  margin: 12px 4px 4px;
-  font-size: 13px;
+.card{
+ background:var(--panel);border:1px solid var(--border);
+ border-radius:15px;padding:16px;cursor:pointer;transition:.15s
 }
-
-.history-list {
-  overflow-y: auto;
-  flex: 1;
+.card:hover{border-color:var(--accent);transform:translateY(-1px)}
+.card-icon{font-size:23px}
+.card h3{font-size:15px;margin:9px 0 5px}
+.card p{font-size:12px;color:var(--muted);margin:0;line-height:1.5}
+.messages{max-width:850px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.msg{display:flex;gap:10px;align-items:flex-start}
+.avatar{
+ width:32px;height:32px;flex-shrink:0;border-radius:10px;
+ display:grid;place-items:center;font-size:14px;
+ background:var(--panel2)
 }
-
-.history-item {
-  width: 100%;
-  display: block;
-  text-align: left;
-  margin-bottom: 7px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.msg.user .avatar{background:#30416b}
+.bubble{
+ max-width:calc(100% - 42px);padding:13px 15px;border-radius:14px;
+ background:var(--panel);border:1px solid var(--border);
+ line-height:1.65;font-size:14px;overflow-wrap:anywhere
 }
-
-.sidebar-bottom {
-  display: grid;
-  gap: 8px;
+.msg.user .bubble{background:#1d2943}
+.bubble pre{overflow:auto;background:#080b11;padding:12px;border-radius:10px}
+.bubble code{font-family:monospace}
+.bubble table{border-collapse:collapse;display:block;overflow:auto}
+.bubble td,.bubble th{border:1px solid var(--border);padding:7px}
+.bubble a{color:#9cb2ff}
+.typing{color:var(--muted);font-size:13px}
+.composer-wrap{padding:12px 18px 18px}
+.composer{max-width:850px;margin:auto}
+.inputbox{
+ background:var(--panel);border:1px solid var(--border);
+ border-radius:17px;padding:10px
 }
-
-.main {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
+textarea{
+ width:100%;resize:none;min-height:48px;max-height:180px;
+ border:0;outline:0;background:transparent;color:var(--text);
+ padding:8px;font-size:15px
 }
-
-.topbar {
-  height: 65px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 18px;
-  border-bottom: 1px solid #1d2b40;
+.controls{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.control-left,.control-right{display:flex;gap:7px;align-items:center}
+.tool-btn{
+ border:1px solid var(--border);background:var(--panel2);
+ color:var(--text);padding:8px 11px;border-radius:10px;font-size:13px
 }
-
-.topbar-title {
-  font-weight: bold;
-  flex: 1;
+.send{
+ background:var(--accent);border:0;color:white;
+ width:39px;height:39px;border-radius:11px;font-weight:800
 }
-
-.status {
-  color: #6de0a7;
-  font-size: 12px;
+.send:disabled{opacity:.4}
+.hint{text-align:center;font-size:11px;color:var(--muted);margin-top:8px}
+.mode-badge{
+ font-size:11px;color:#b7c5ff;background:#202b4b;
+ border-radius:20px;padding:5px 9px
 }
-
-.messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 22px 15px;
+.overlay{
+ position:fixed;inset:0;background:#0009;display:none;
+ align-items:center;justify-content:center;padding:15px;z-index:10
 }
-
-.welcome {
-  text-align: center;
-  margin: 12vh auto 25px;
-  max-width: 600px;
+.modal{
+ width:100%;max-width:480px;background:var(--panel);
+ border:1px solid var(--border);border-radius:18px;padding:20px
 }
-
-.welcome h1 {
-  font-size: 30px;
-  color: #64caff;
+.modal h2{margin-top:0}
+.field{margin:13px 0}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+.field input{
+ width:100%;padding:11px;border:1px solid var(--border);
+ background:#0b0e14;color:white;border-radius:9px;outline:0
 }
-
-.welcome p {
-  color: #91a2bb;
-}
-
-.message {
-  max-width: 850px;
-  margin: 0 auto 18px;
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-
-.avatar {
-  min-width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: #162741;
-}
-
-.bubble {
-  padding: 13px 15px;
-  background: #111d30;
-  border: 1px solid #20304a;
-  border-radius: 14px;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  width: fit-content;
-  max-width: 100%;
-}
-
-.user .bubble {
-  background: #14324d;
-}
-
-.message-actions {
-  margin-top: 6px;
-  display: flex;
-  gap: 6px;
-}
-
-.message-actions button {
-  padding: 5px 9px;
-  font-size: 12px;
-}
-
-.composer-area {
-  padding: 12px 15px 16px;
-  border-top: 1px solid #1d2b40;
-}
-
-.composer {
-  max-width: 850px;
-  margin: auto;
-  display: flex;
-  gap: 8px;
-  align-items: flex-end;
-  background: #111d30;
-  border: 1px solid #2a3a53;
-  border-radius: 16px;
-  padding: 8px;
-}
-
-#messageInput {
-  flex: 1;
-  background: transparent;
-  color: white;
-  border: none;
-  outline: none;
-  resize: none;
-  padding: 10px;
-  max-height: 140px;
-  min-height: 42px;
-}
-
-.send-btn {
-  background: #087bc2;
-  border-color: #087bc2;
-  font-weight: bold;
-}
-
-.send-btn:hover {
-  background: #0998ed;
-}
-
-.footer-note {
-  text-align: center;
-  color: #64748b;
-  font-size: 11px;
-  margin-top: 9px;
-}
-
-.mobile-menu {
-  display: none;
-}
-
-.overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: #0009;
-  z-index: 20;
-}
-
-.overlay.show {
-  display: block;
-}
-
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 30;
-  inset: 0;
-  align-items: center;
-  justify-content: center;
-  padding: 15px;
-}
-
-.modal.show {
-  display: flex;
-}
-
-.modal-box {
-  width: min(500px, 100%);
-  background: #111d30;
-  border: 1px solid #30415c;
-  border-radius: 18px;
-  padding: 20px;
-}
-
-.modal-box h2 {
-  margin-top: 0;
-}
-
-.modal-box input {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0 15px;
-  border: 1px solid #34445c;
-  border-radius: 10px;
-  color: white;
-  background: #08111e;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-}
-
-#toast {
-  position: fixed;
-  bottom: 90px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #20334c;
-  padding: 12px 18px;
-  border-radius: 12px;
-  display: none;
-  z-index: 50;
-  max-width: 90%;
-  text-align: center;
-}
-
-@media(max-width:700px) {
-  .sidebar {
-    position: fixed;
-    z-index: 25;
-    left: -280px;
-    top: 0;
-    bottom: 0;
-    transition: left .2s;
-  }
-
-  .sidebar.open {
-    left: 0;
-  }
-
-  .mobile-menu {
-    display: inline-block;
-  }
-
-  .topbar {
-    padding: 0 10px;
-  }
-
-  .messages {
-    padding: 15px 10px;
-  }
-
-  .composer-area {
-    padding: 8px;
-  }
-
-  .bubble {
-    font-size: 15px;
-  }
-
-  .welcome h1 {
-    font-size: 25px;
-  }
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.primary{background:var(--accent);border:0;color:white;padding:10px 15px;border-radius:9px}
+.mobile-menu{display:none}
+@media(max-width:700px){
+ .sidebar{position:fixed;left:-280px;top:0;bottom:0;z-index:5;transition:.2s}
+ .sidebar.open{left:0}
+ .mobile-menu{display:inline-block}
+ .content{padding:14px}
+ .hero h1{font-size:25px}
+ .cards{grid-template-columns:1fr}
+ .topbar{padding:0 10px}
+ .composer-wrap{padding:8px}
+ .bubble{font-size:14px}
 }
 </style>
 </head>
 
 <body>
-
 <div class="app">
 
-  <aside class="sidebar" id="sidebar">
-    <div class="logo">⚡ JARVIS AI</div>
-
-    <button class="newchat" id="newChatBtn">＋ New Chat</button>
-
-    <div class="history-title">CHAT HISTORY</div>
-    <div class="history-list" id="historyList"></div>
-
-    <div class="sidebar-bottom">
-      <button id="settingsBtn">⚙️ Settings</button>
-      <button id="clearHistoryBtn">🗑 Clear History</button>
-    </div>
-  </aside>
-
-  <main class="main">
-
-    <header class="topbar">
-      <button class="mobile-menu" id="menuBtn">☰</button>
-      <div class="topbar-title">Jarvis Assistant</div>
-      <div class="status" id="status">Ready</div>
-    </header>
-
-    <section class="messages" id="messages">
-
-      <div class="welcome" id="welcome">
-        <h1>नमस्ते! मैं Jarvis हूँ ⚡</h1>
-        <p>आप मुझसे कुछ भी पूछ सकते हैं।</p>
-      </div>
-
-    </section>
-
-    <div class="composer-area">
-
-      <div class="composer">
-
-        <button id="voiceBtn" title="Voice Input">🎤</button>
-
-        <textarea
-          id="messageInput"
-          placeholder="Jarvis से कुछ पूछें..."
-          rows="1"
-        ></textarea>
-
-        <button class="send-btn" id="sendBtn">➤ Send</button>
-
-      </div>
-
-      <div class="footer-note">
-        Jarvis AI • AI उत्तर गलत भी हो सकते हैं
-      </div>
-
-    </div>
-
-  </main>
-
-</div>
-
-<div class="overlay" id="overlay"></div>
-
-<div class="modal" id="settingsModal">
-  <div class="modal-box">
-    <h2>⚙️ Settings</h2>
-
-    <label>Supabase Project URL</label>
-    <input id="supabaseUrl" placeholder="https://YOURPROJECT.supabase.co">
-
-    <label>Supabase Anon / Publishable Key</label>
-    <input id="supabaseKey" placeholder="Public anon key">
-
-    <label>Edge Function Name</label>
-    <input id="functionName" placeholder="jarvis-chat">
-
-    <p style="color:#9aabc3;font-size:12px">
-      Secret Gemini API Key यहाँ न डालें।
-      Gemini Key Supabase Secrets में सुरक्षित रखें।
-    </p>
-
-    <div class="modal-actions">
-      <button id="closeSettingsBtn">Cancel</button>
-      <button id="saveSettingsBtn" class="send-btn">Save</button>
-    </div>
+<aside class="sidebar" id="sidebar">
+ <div class="brand">
+  <div class="logo">J</div>
+  <div>
+   <div class="brand-name">JARVIS AI</div>
+   <div class="brand-sub">Your personal AI assistant</div>
   </div>
+ </div>
+
+ <button class="new-chat" id="newChat">＋ New Chat</button>
+
+ <div class="side-label">RECENT CHATS</div>
+ <div class="history" id="historyList"></div>
+
+ <div class="side-bottom">
+  <button class="settings-btn" id="settingsBtn">⚙ Settings</button>
+ </div>
+</aside>
+
+<main class="main">
+ <header class="topbar">
+  <div style="display:flex;align-items:center;gap:10px">
+   <button class="small-btn mobile-menu" id="menuBtn">☰</button>
+   <div class="top-title" id="topTitle">JARVIS Assistant</div>
+  </div>
+  <div class="top-actions">
+   <span class="status" id="status">● Ready</span>
+   <button class="small-btn" id="clearBtn">Clear</button>
+  </div>
+ </header>
+
+ <section class="content" id="content">
+  <div class="welcome" id="welcome">
+   <div class="hero">
+    <div class="hero-logo">✦</div>
+    <h1>Namaste! Main Jarvis hoon.</h1>
+    <p>AI Assistant · Social Media Manager</p>
+   </div>
+
+   <div class="cards">
+    <div class="card" data-prompt="Mere niche ke liye 10 viral hone ki sambhavana wale naye content ideas do. Har idea ke saath hook aur format batao.">
+     <div class="card-icon">🔥</div>
+     <h3>Content Ideas</h3>
+     <p>Naye content ideas, hooks aur formats</p>
+    </div>
+
+    <div class="card" data-prompt="Mere liye ek engaging Instagram Reel ki complete script banao. Hook, scenes, voiceover, ending aur CTA shamil karo. Pehle niche aur topic poochho agar zaroori ho.">
+     <div class="card-icon">🎬</div>
+     <h3>Reel Script Maker</h3>
+     <p>Hooks, scripts, scene planning aur CTA</p>
+    </div>
+
+    <div class="card" data-prompt="Mere social media post ke liye engaging caption, title, relevant hashtags aur CTA banao.">
+     <div class="card-icon">✍️</div>
+     <h3>Caption & Hashtags</h3>
+     <p>Captions, titles aur relevant hashtags</p>
+    </div>
+
+    <div class="card" data-prompt="Mere niche ke liye 30 din ka social media content calendar banao. Har din topic, format, hook aur CTA do.">
+     <div class="card-icon">🗓️</div>
+     <h3>30-Day Planner</h3>
+     <p>Daily content planning calendar</p>
+    </div>
+
+    <div class="card" data-prompt="Mujhe social media growth coach ki tarah guide karo. Mere account ko grow karne ke liye practical strategy, content pillars, consistency aur analytics plan banao.">
+     <div class="card-icon">📈</div>
+     <h3>Growth Coach</h3>
+     <p>Growth strategy aur analytics improvement</p>
+    </div>
+
+    <div class="card" data-prompt="Mere video ke liye 10 attention-grabbing thumbnail text ideas, title ideas aur thumbnail concept banao.">
+     <div class="card-icon">🖼️</div>
+     <h3>Thumbnail Ideas</h3>
+     <p>Titles aur thumbnail concepts</p>
+    </div>
+   </div>
+  </div>
+
+  <div class="messages" id="messages"></div>
+ </section>
+
+ <div class="composer-wrap">
+  <div class="composer">
+   <div class="inputbox">
+    <textarea id="input" placeholder="Jarvis se kuch bhi poochho..." rows="1"></textarea>
+    <div class="controls">
+     <div class="control-left">
+      <button class="tool-btn" id="socialBtn">📱 Social Mode</button>
+      <button class="tool-btn" id="voiceBtn">🎤 Voice</button>
+     </div>
+     <div class="control-right">
+      <button class="send" id="sendBtn">➤</button>
+     </div>
+    </div>
+   </div>
+   <div class="hint">Jarvis AI galti kar sakta hai. Important information verify karein.</div>
+  </div>
+ </div>
+</main>
 </div>
 
-<div id="toast"></div>
+<div class="overlay" id="settingsOverlay">
+ <div class="modal">
+  <h2>⚙️ Settings</h2>
+  <div class="field">
+   <label>Supabase Project URL</label>
+   <input id="supabaseUrl" placeholder="https://yourproject.supabase.co">
+  </div>
+  <div class="field">
+   <label>Supabase Anon / Publishable Key</label>
+   <input id="supabaseKey" placeholder="Your public project key">
+  </div>
+  <div class="field">
+   <label>Edge Function Name</label>
+   <input id="functionName" placeholder="rapid-worker">
+  </div>
+  <p style="font-size:12px;color:var(--muted)">
+    Gemini API key yahan mat daalein. Gemini key Supabase Function Secret mein hi rahe.
+  </p>
+  <div class="modal-actions">
+   <button class="small-btn" id="cancelSettings">Cancel</button>
+   <button class="primary" id="saveSettings">Save Settings</button>
+  </div>
+ </div>
+</div>
 
 <script>
-(() => {
 "use strict";
 
-/* ===============================
-   CONFIGURATION
-================================ */
-
-const DEFAULT_URL =
-  "https://aeflfnlpkbnlhbkghwav.supabase.co";
-
-const DEFAULT_FUNCTION =
-  "jarvis-chat";
-
-/* ===============================
-   ELEMENTS
-================================ */
+/* ==============================
+   JARVIS FRONTEND
+   ============================== */
 
 const $ = id => document.getElementById(id);
 
-const messagesEl = $("messages");
-const inputEl = $("messageInput");
-const sendBtn = $("sendBtn");
-const statusEl = $("status");
-const historyList = $("historyList");
-const welcome = $("welcome");
+const STORAGE = {
+ settings:"jarvis_settings_v2",
+ chats:"jarvis_chats_v2",
+ active:"jarvis_active_v2",
+ memory:"jarvis_memory_v2"
+};
 
-let sending = false;
-let currentChatId = null;
-let chats = loadChats();
+const defaults = {
+ url:"https://jiqewyflnbhutrocacyt.supabase.co",
+ key:"",
+ functionName:"rapid-worker"
+};
 
-/* ===============================
-   STORAGE
-================================ */
+let settings = load(STORAGE.settings,defaults);
+let chats = load(STORAGE.chats,[]);
+let activeChatId = load(STORAGE.active,null);
+let socialMode = false;
+let busy = false;
+let recognition = null;
 
-function loadChats() {
-  try {
-    const data = JSON.parse(
-      localStorage.getItem("jarvis_chats") || "[]"
-    );
-
-    return Array.isArray(data) ? data : [];
-  } catch {
-    return [];
-  }
+function load(key,fallback){
+ try{
+  const value=localStorage.getItem(key);
+  return value ? JSON.parse(value) : fallback;
+ }catch(e){return fallback}
 }
 
-function saveChats() {
-  try {
-    localStorage.setItem(
-      "jarvis_chats",
-      JSON.stringify(chats)
-    );
-  } catch (e) {
-    toast("History save नहीं हो सकी");
-  }
+function save(key,value){
+ try{localStorage.setItem(key,JSON.stringify(value))}
+ catch(e){console.warn("Storage error",e)}
 }
 
-function getSettings() {
-  return {
-    url: localStorage.getItem("jarvis_url") || DEFAULT_URL,
-    key: localStorage.getItem("jarvis_key") || "",
-    functionName:
-      localStorage.getItem("jarvis_function") ||
-      DEFAULT_FUNCTION
+function id(){
+ return Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+}
+
+function getChat(){
+ return chats.find(c=>c.id===activeChatId);
+}
+
+function newChat(){
+ const chat={
+  id:id(),
+  title:"New Chat",
+  messages:[],
+  createdAt:Date.now()
+ };
+ chats.unshift(chat);
+ activeChatId=chat.id;
+ saveAll();
+ render();
+ $("input").focus();
+}
+
+function saveAll(){
+ save(STORAGE.chats,chats);
+ save(STORAGE.active,activeChatId);
+}
+
+function updateTitle(chat){
+ if(chat.title==="New Chat" && chat.messages.length){
+  const first=chat.messages.find(m=>m.role==="user");
+  if(first)chat.title=first.content.slice(0,40);
+ }
+}
+
+function renderHistory(){
+ const list=$("historyList");
+ list.innerHTML="";
+ chats.forEach(chat=>{
+  const item=document.createElement("div");
+  item.className="history-item"+(chat.id===activeChatId?" active":"");
+  item.textContent=chat.title||"Chat";
+  item.title=chat.title;
+  item.onclick=()=>{
+   activeChatId=chat.id;
+   saveAll();
+   render();
+   $("sidebar").classList.remove("open");
   };
+  list.appendChild(item);
+ });
 }
 
-/* ===============================
-   UTILITIES
-================================ */
+function render(){
+ renderHistory();
+ const chat=getChat();
+ $("messages").innerHTML="";
+ $("welcome").style.display=chat && chat.messages.length?"none":"block";
+ $("topTitle").textContent=socialMode?"Social Media Manager":"JARVIS Assistant";
 
-function toast(message) {
-  const el = $("toast");
-  el.textContent = message;
-  el.style.display = "block";
-
-  clearTimeout(window.toastTimer);
-
-  window.toastTimer = setTimeout(() => {
-    el.style.display = "none";
-  }, 3000);
+ if(chat){
+  chat.messages.forEach(m=>addMessageUI(m.role,m.content,false));
+ }
+ $("content").scrollTop=$("content").scrollHeight;
 }
 
-function setStatus(text) {
-  statusEl.textContent = text;
+function escapeHTML(str){
+ return String(str).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
 }
 
-function scrollBottom() {
-  messagesEl.scrollTop = messagesEl.scrollHeight;
+/* Simple markdown rendering */
+function markdown(text){
+ let s=escapeHTML(text);
+
+ s=s.replace(/```([\s\S]*?)```/g,
+  '<pre><code>$1</code></pre>');
+
+ s=s.replace(/`([^`]+)`/g,'<code>$1</code>');
+ s=s.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+ s=s.replace(/\*([^*]+)\*/g,'<em>$1</em>');
+ s=s.replace(/^### (.*)$/gm,'<h3>$1</h3>');
+ s=s.replace(/^## (.*)$/gm,'<h2>$1</h2>');
+ s=s.replace(/^# (.*)$/gm,'<h1>$1</h1>');
+ s=s.replace(/^\s*[-*] (.*)$/gm,'• $1');
+ s=s.replace(/^\s*\d+\. (.*)$/gm,'$&');
+ s=s.replace(/\n/g,'<br>');
+ return s;
 }
 
-function createId() {
-  return Date.now().toString() +
-    Math.random().toString(16).slice(2);
+function addMessageUI(role,content,scroll=true){
+ const wrap=document.createElement("div");
+ wrap.className="msg "+(role==="user"?"user":"assistant");
+
+ const avatar=document.createElement("div");
+ avatar.className="avatar";
+ avatar.textContent=role==="user"?"👤":"✦";
+
+ const bubble=document.createElement("div");
+ bubble.className="bubble";
+ bubble.innerHTML=markdown(content);
+
+ wrap.append(avatar,bubble);
+ $("messages").appendChild(wrap);
+
+ if(scroll)$("content").scrollTop=$("content").scrollHeight;
 }
 
-function closeSidebar() {
-  $("sidebar").classList.remove("open");
-  $("overlay").classList.remove("show");
+function setStatus(text,color){
+ $("status").textContent="● "+text;
+ if(color)$("status").style.color=color;
 }
 
-function escapeText(text) {
-  return String(text ?? "");
+function setBusy(value){
+ busy=value;
+ $("sendBtn").disabled=value;
+ $("sendBtn").textContent=value?"…":"➤";
+ $("input").disabled=value;
 }
 
-/* ===============================
-   CHAT MANAGEMENT
-================================ */
-
-function getCurrentChat() {
-  return chats.find(c => c.id === currentChatId);
+function addTyping(){
+ const el=document.createElement("div");
+ el.id="typing";
+ el.className="typing";
+ el.textContent="Jarvis soch raha hai…";
+ $("messages").appendChild(el);
+ $("content").scrollTop=$("content").scrollHeight;
 }
 
-function createNewChat() {
-  currentChatId = createId();
-
-  chats.unshift({
-    id: currentChatId,
-    title: "New Chat",
-    messages: [],
-    createdAt: Date.now()
-  });
-
-  saveChats();
-  renderChat();
-  renderHistory();
-
-  inputEl.focus();
-  closeSidebar();
+function removeTyping(){
+ const el=$("typing");
+ if(el)el.remove();
 }
 
-function saveMessage(role, text) {
-  let chat = getCurrentChat();
+/* Browser local memory */
+function getMemory(){
+ return load(STORAGE.memory,"");
+}
 
-  if (!chat) {
-    createNewChat();
-    chat = getCurrentChat();
+function saveMemory(text){
+ save(STORAGE.memory,text);
+}
+
+function memoryPrompt(){
+ const memory=getMemory();
+ return memory?
+ "\n\n[User ki saved memory/context: "+memory+
+ "\nIs information ko relevant hone par use karo.]"
+ :"";
+}
+
+/* Function request */
+async function sendToAI(message){
+ const base=settings.url.trim().replace(/\/+$/,"");
+ const fn=settings.functionName.trim();
+
+ if(!base || !settings.key || !fn){
+  throw new Error("Settings incomplete. Supabase URL, key aur Function Name Settings mein bharo.");
+ }
+
+ const endpoint=base+"/functions/v1/"+fn;
+
+ const chat=getChat();
+ const history=(chat?.messages||[])
+  .slice(-20)
+  .map(m=>({role:m.role,content:m.content}));
+
+ let finalMessage=message;
+
+ if(socialMode){
+  finalMessage=
+  "[SOCIAL MEDIA MANAGER MODE]\n"+
+  "Tum expert social media content strategist ho. Content engaging, original, audience-specific aur truthful ho. Viral hone ki guarantee mat do. Platform policies aur copyright ka dhyan rakho. Practical outputs do.\n"+
+  message;
+ }
+
+ finalMessage+=memoryPrompt();
+
+ const response=await fetch(endpoint,{
+  method:"POST",
+  headers:{
+   "Content-Type":"application/json",
+   "apikey":settings.key,
+   "Authorization":"Bearer "+settings.key
+  },
+  body:JSON.stringify({
+   message:finalMessage,
+   history:history
+  })
+ });
+
+ let data;
+ const text=await response.text();
+ try{data=JSON.parse(text)}
+ catch(e){data={error:text}}
+
+ if(!response.ok){
+  throw new Error(
+   "HTTP "+response.status+": "+
+   (data.error||data.message||data.details||response.statusText)
+  );
+ }
+
+ const reply=data.reply||data.response||data.message;
+ if(!reply)throw new Error("AI response mein reply nahi mila.");
+
+ return String(reply);
+}
+
+/* Send message */
+async function sendMessage(text){
+ text=(text||$("input").value).trim();
+ if(!text||busy)return;
+
+ if(!getChat())newChat();
+
+ const chat=getChat();
+ chat.messages.push({role:"user",content:text});
+ updateTitle(chat);
+ saveAll();
+
+ $("input").value="";
+ $("input").style.height="auto";
+ render();
+ addTyping();
+ setBusy(true);
+ setStatus("Connecting…","#f5c66a");
+
+ try{
+  const reply=await sendToAI(text);
+  removeTyping();
+
+  chat.messages.push({role:"assistant",content:reply});
+  saveAll();
+  addMessageUI("assistant",reply);
+  setStatus("Ready","#75d9a2");
+
+ }catch(error){
+  removeTyping();
+  const err="⚠️ "+error.message;
+  chat.messages.push({role:"assistant",content:err});
+  saveAll();
+  addMessageUI("assistant",err);
+  setStatus("Error","#ff7373");
+  console.error(error);
+ }finally{
+  setBusy(false);
+  $("input").focus();
+ }
+}
+
+/* Preset tools */
+document.querySelectorAll(".card").forEach(card=>{
+ card.addEventListener("click",()=>{
+  const prompt=card.dataset.prompt;
+  if(prompt){
+   if(!getChat())newChat();
+   $("input").value=prompt;
+   $("input").focus();
   }
-
-  chat.messages.push({
-    role,
-    content: text,
-    time: Date.now()
-  });
-
-  if (
-    chat.title === "New Chat" &&
-    role === "user"
-  ) {
-    chat.title = text.slice(0, 40);
-  }
-
-  saveChats();
-  renderHistory();
-}
-
-function openChat(id) {
-  currentChatId = id;
-  renderChat();
-  closeSidebar();
-}
-
-function deleteChat(id) {
-  chats = chats.filter(c => c.id !== id);
-
-  if (currentChatId === id) {
-    currentChatId = null;
-  }
-
-  saveChats();
-  renderHistory();
-  renderChat();
-
-  toast("Chat deleted");
-}
-
-function clearHistory() {
-  if (!confirm("सभी Chat History हटानी है?")) {
-    return;
-  }
-
-  chats = [];
-  currentChatId = null;
-
-  saveChats();
-  renderHistory();
-  renderChat();
-
-  toast("History साफ हो गई");
-}
-
-/* ===============================
-   RENDER CHAT
-================================ */
-
-function addMessageUI(role, text) {
-  const row = document.createElement("div");
-  row.className = "message " + role;
-
-  const avatar = document.createElement("div");
-  avatar.className = "avatar";
-  avatar.textContent = role === "user" ? "👤" : "⚡";
-
-  const content = document.createElement("div");
-
-  const bubble = document.createElement("div");
-  bubble.className = "bubble";
-  bubble.textContent = escapeText(text);
-
-  content.appendChild(bubble);
-
-  if (role === "assistant") {
-    const actions = document.createElement("div");
-    actions.className = "message-actions";
-
-    const copyBtn = document.createElement("button");
-    copyBtn.textContent = "📋 Copy";
-
-    copyBtn.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(text);
-        toast("Copied");
-      } catch {
-        toast("Copy नहीं हो सका");
-      }
-    });
-
-    actions.appendChild(copyBtn);
-    content.appendChild(actions);
-  }
-
-  row.appendChild(avatar);
-  row.appendChild(content);
-
-  messagesEl.appendChild(row);
-}
-
-function renderChat() {
-  messagesEl.innerHTML = "";
-
-  const chat = getCurrentChat();
-
-  if (!chat || !chat.messages.length) {
-    const w = document.createElement("div");
-    w.className = "welcome";
-    w.innerHTML =
-      "<h1>नमस्ते! मैं Jarvis हूँ ⚡</h1>" +
-      "<p>आप मुझसे कुछ भी पूछ सकते हैं।</p>";
-
-    messagesEl.appendChild(w);
-    return;
-  }
-
-  chat.messages.forEach(msg => {
-    addMessageUI(msg.role, msg.content);
-  });
-
-  scrollBottom();
-}
-
-function renderHistory() {
-  historyList.innerHTML = "";
-
-  chats.forEach(chat => {
-    const btn = document.createElement("button");
-    btn.className = "history-item";
-    btn.textContent = chat.title || "New Chat";
-
-    btn.addEventListener("click", () => {
-      openChat(chat.id);
-    });
-
-    btn.addEventListener("contextmenu", e => {
-      e.preventDefault();
-
-      if (confirm("इस Chat को Delete करें?")) {
-        deleteChat(chat.id);
-      }
-    });
-
-    historyList.appendChild(btn);
-  });
-}
-
-/* ===============================
-   GEMINI / SUPABASE REQUEST
-================================ */
-
-async function sendToAI(userText) {
-  const settings = getSettings();
-
-  if (!settings.url || !settings.key) {
-    throw new Error(
-      "Settings में Supabase URL और Public Key सेट करें।"
-    );
-  }
-
-  const endpoint =
-    settings.url.replace(/\/+$/, "") +
-    "/functions/v1/" +
-    settings.functionName;
-
-  const chat = getCurrentChat();
-
-  const history = chat.messages
-    .slice(-20)
-    .map(m => ({
-      role: m.role === "assistant" ? "assistant" : "user",
-      content: m.content
-    }));
-
-  const response = await fetch(endpoint, {
-    method: "POST",
-
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + settings.key,
-      "apikey": settings.key
-    },
-
-    body: JSON.stringify({
-      message: userText,
-      history: history
-    })
-  });
-
-  const raw = await response.text();
-
-  let data = {};
-
-  try {
-    data = JSON.parse(raw);
-  } catch {
-    data = { reply: raw };
-  }
-
-  if (!response.ok) {
-    const message =
-      data.error ||
-      data.message ||
-      raw ||
-      "Server Error";
-
-    throw new Error(
-      "HTTP " + response.status + ": " + message
-    );
-  }
-
-  const reply =
-    data.reply ||
-    data.response ||
-    data.message ||
-    data.text ||
-    data.answer ||
-    data.output ||
-    data.result?.text ||
-    data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-  if (!reply) {
-    throw new Error(
-      "Server से जवाब खाली आया। Function Response: " +
-      raw.slice(0, 300)
-    );
-  }
-
-  return String(reply);
-}
-
-/* ===============================
-   SEND MESSAGE
-================================ */
-
-async function sendMessage() {
-  if (sending) return;
-
-  const text = inputEl.value.trim();
-
-  if (!text) {
-    toast("पहले अपना Message लिखें");
-    inputEl.focus();
-    return;
-  }
-
-  const settings = getSettings();
-
-  if (!settings.key) {
-    openSettings();
-    toast("पहले Supabase Public Key सेट करें");
-    return;
-  }
-
-  if (!currentChatId) {
-    createNewChat();
-  }
-
-  sending = true;
-  sendBtn.disabled = true;
-  inputEl.disabled = true;
-  setStatus("Thinking...");
-
-  saveMessage("user", text);
-  addMessageUI("user", text);
-
-  inputEl.value = "";
-  inputEl.style.height = "42px";
-
-  const loading = document.createElement("div");
-  loading.className = "message";
-  loading.id = "loadingMessage";
-
-  loading.innerHTML =
-    '<div class="avatar">⚡</div>' +
-    '<div class="bubble">Jarvis सोच रहा है...</div>';
-
-  messagesEl.appendChild(loading);
-  scrollBottom();
-
-  try {
-    const reply = await sendToAI(text);
-
-    $("loadingMessage")?.remove();
-
-    saveMessage("assistant", reply);
-    addMessageUI("assistant", reply);
-
-    setStatus("Ready");
-
-  } catch (error) {
-    $("loadingMessage")?.remove();
-
-    const errorText =
-      "⚠️ " + (error.message || "Unknown Error");
-
-    addMessageUI("assistant", errorText);
-
-    saveMessage("assistant", errorText);
-
-    setStatus("Error");
-
-    console.error("JARVIS ERROR:", error);
-
-  } finally {
-    sending = false;
-    sendBtn.disabled = false;
-    inputEl.disabled = false;
-    inputEl.focus();
-    scrollBottom();
-  }
-}
-
-/* ===============================
-   SETTINGS
-================================ */
-
-function openSettings() {
-  const settings = getSettings();
-
-  $("supabaseUrl").value = settings.url;
-  $("supabaseKey").value = settings.key;
-  $("functionName").value = settings.functionName;
-
-  $("settingsModal").classList.add("show");
-}
-
-function closeSettings() {
-  $("settingsModal").classList.remove("show");
-}
-
-function saveSettings() {
-  const url = $("supabaseUrl").value.trim();
-  const key = $("supabaseKey").value.trim();
-  const functionName =
-    $("functionName").value.trim();
-
-  if (!url || !key || !functionName) {
-    toast("सभी Settings भरें");
-    return;
-  }
-
-  if (!url.startsWith("https://")) {
-    toast("Supabase URL सही नहीं है");
-    return;
-  }
-
-  localStorage.setItem("jarvis_url", url);
-  localStorage.setItem("jarvis_key", key);
-  localStorage.setItem("jarvis_function", functionName);
-
-  closeSettings();
-  toast("Settings Saved ✓");
-}
-
-/* ===============================
-   VOICE INPUT
-================================ */
-
-function voiceInput() {
-  const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
-
-  if (!SpeechRecognition) {
-    toast("इस Browser में Voice Input उपलब्ध नहीं है");
-    return;
-  }
-
-  const recognition = new SpeechRecognition();
-
-  recognition.lang = "hi-IN";
-  recognition.interimResults = false;
-  recognition.maxAlternatives = 1;
-
-  $("voiceBtn").disabled = true;
-  setStatus("Listening...");
-
-  recognition.onresult = event => {
-    const spoken =
-      event.results[0][0].transcript;
-
-    inputEl.value +=
-      (inputEl.value ? " " : "") + spoken;
-
-    inputEl.focus();
-  };
-
-  recognition.onerror = event => {
-    toast("Voice Error: " + event.error);
-  };
-
-  recognition.onend = () => {
-    $("voiceBtn").disabled = false;
-    setStatus("Ready");
-  };
-
-  try {
-    recognition.start();
-  } catch (e) {
-    $("voiceBtn").disabled = false;
-    toast("Voice शुरू नहीं हो सका");
-  }
-}
-
-/* ===============================
-   BUTTON EVENTS
-================================ */
-
-$("sendBtn").addEventListener("click", sendMessage);
-
-inputEl.addEventListener("keydown", event => {
-  if (
-    event.key === "Enter" &&
-    !event.shiftKey
-  ) {
-    event.preventDefault();
-    sendMessage();
-  }
+ });
 });
 
-inputEl.addEventListener("input", () => {
-  inputEl.style.height = "42px";
+/* Buttons */
+$("sendBtn").onclick=()=>sendMessage();
 
-  inputEl.style.height =
-    Math.min(inputEl.scrollHeight, 140) + "px";
+$("input").addEventListener("keydown",e=>{
+ if(e.key==="Enter"&&!e.shiftKey){
+  e.preventDefault();
+  sendMessage();
+ }
 });
 
-$("newChatBtn").addEventListener(
-  "click",
-  createNewChat
-);
-
-$("settingsBtn").addEventListener(
-  "click",
-  openSettings
-);
-
-$("saveSettingsBtn").addEventListener(
-  "click",
-  saveSettings
-);
-
-$("closeSettingsBtn").addEventListener(
-  "click",
-  closeSettings
-);
-
-$("clearHistoryBtn").addEventListener(
-  "click",
-  clearHistory
-);
-
-$("voiceBtn").addEventListener(
-  "click",
-  voiceInput
-);
-
-$("menuBtn").addEventListener("click", () => {
-  $("sidebar").classList.add("open");
-  $("overlay").classList.add("show");
+$("input").addEventListener("input",()=>{
+ const el=$("input");
+ el.style.height="auto";
+ el.style.height=Math.min(el.scrollHeight,180)+"px";
 });
 
-$("overlay").addEventListener("click", () => {
-  closeSidebar();
-});
+$("newChat").onclick=()=>{
+ socialMode=false;
+ newChat();
+};
 
-/* ===============================
-   STARTUP
-================================ */
+$("clearBtn").onclick=()=>{
+ const chat=getChat();
+ if(!chat)return;
+ if(!confirm("Is chat ke messages clear karein?"))return;
+ chat.messages=[];
+ chat.title="New Chat";
+ saveAll();
+ render();
+};
 
-function initialize() {
-  renderHistory();
+$("socialBtn").onclick=()=>{
+ socialMode=!socialMode;
+ $("socialBtn").textContent=socialMode?"📱 Social Mode: ON":"📱 Social Mode";
+ $("socialBtn").style.borderColor=socialMode?"var(--accent)":"var(--border)";
+ $("topTitle").textContent=socialMode?"Social Media Manager":"JARVIS Assistant";
+ $("input").placeholder=socialMode?
+ "Social media content, Reel, caption ya growth strategy poochho…":
+ "Jarvis se kuch bhi poochho…";
+};
 
-  if (chats.length) {
-    currentChatId = chats[0].id;
-    renderChat();
-  } else {
-    currentChatId = null;
-    renderChat();
-  }
-
-  setStatus("Ready");
-
-  console.log("Jarvis initialized successfully");
+/* Settings */
+function openSettings(){
+ $("supabaseUrl").value=settings.url||"";
+ $("supabaseKey").value=settings.key||"";
+ $("functionName").value=settings.functionName||"rapid-worker";
+ $("settingsOverlay").style.display="flex";
 }
 
-initialize();
+$("settingsBtn").onclick=openSettings;
+$("cancelSettings").onclick=()=> $("settingsOverlay").style.display="none";
 
-})();
-</script>
+$("settingsOverlay").onclick=e=>{
+ if(e.target===$("settingsOverlay"))
+ $("settingsOverlay").style.display="none";
+};
 
-</body>
-   </html>
-   
+$("saveSettings").onclick=()=>{
+ settings={
+  url:$("supabaseUrl").value.trim(),
+  key:$("supabaseKey").value.trim(),
+  functionName:$("functionName").value.trim()||"rapid-worker"
+ };
+ save(STORAGE.settings,settings);
+ $("settingsOverlay").style.display="none";
+ setStatus("Settings saved","#75d9a2");
+ alert("Settings save ho gayi!");
+};
+
+/* Voice input */
+$("voiceBtn").onclick=()=>{
+ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+
+ if(!SpeechRecognition){
+  alert("Voice input is browser mein supported nahi hai. Chrome mein try karein.");
+  return;
+ }
+
+ if(recognition){
+  try{recognition.stop()}catch(e){}
+  recognition=null;
+ }
+
+ recognition=new SpeechRecognition();
+ recognition.lang="hi-IN";
+ recognition.interimResults=false;
+ recognition.continuous=false;
+
+ recognition.onstart=()=>setStatus("Listening…","#f5c66a");
+ recognition.onresult=e=>{
+  const result=e.results[0][0].transcript;
+  $("input").value=result;
+  $("input").focus();
+  setStatus("Ready","#75d9a2");
+ };
+ recognition.onerror=e=>{
+  setStatus("Voice error","#ff7373");
+  console.error(e.error);
+ };
+ recognition.onend=()=>setStatus("Ready","#75d9a2");
+
+ try{recognition.start()}
+ catch(e){console.log(e)}
+};
+
+/* Mobile sidebar */
+$("menuBtn").on
