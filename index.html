@@ -3,467 +3,690 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Jarvis AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jarvis AI - Creator & Developer</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#080d18;color:#edf3ff;font-family:Arial,sans-serif}
-button,input,textarea,select{font:inherit}
-button{cursor:pointer}
-.layout{display:flex;min-height:100vh}
-.sidebar{width:220px;background:#101827;padding:15px;position:fixed;height:100vh;overflow:auto}
-.logo{font-size:23px;font-weight:bold;margin:10px 0 22px}
-.logo span{color:#39caff}
-.navbtn{display:block;width:100%;padding:13px;margin:5px 0;text-align:left;background:#172338;border:1px solid #263851;color:white;border-radius:10px}
-.navbtn:hover{background:#254267}
-.main{margin-left:220px;padding:20px;width:calc(100% - 220px)}
-.page{display:none}
-.page.show{display:block}
-.card{background:#111c2f;border:1px solid #273952;border-radius:15px;padding:16px;margin-bottom:15px}
-h1{font-size:23px}
-h2{font-size:19px;margin-top:0}
-p{color:#b5c4da;line-height:1.6}
-input,textarea,select{width:100%;padding:12px;background:#091221;color:white;border:1px solid #30425c;border-radius:9px;margin:7px 0}
-textarea{min-height:100px}
-.btn{background:#287bff;border:0;border-radius:9px;padding:12px;color:white;margin:5px 0}
-.btn2{background:#30435e}
-.full{width:100%}
-.chatbox{height:45vh;min-height:250px;overflow:auto;border:1px solid #2c3f5b;background:#07101e;border-radius:12px;padding:10px}
-.msg{padding:10px;margin:8px 0;border-radius:10px;white-space:pre-wrap;overflow-wrap:anywhere}
-.user{background:#1d3c65;margin-left:15%}
-.ai{background:#17243a;margin-right:10%}
-.row{display:flex;gap:8px}
-.row>*{flex:1;min-width:0}
-.output{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}
-#errbox{background:#421e29;color:#ffb4c0;padding:10px;border-radius:8px;display:none;margin-bottom:12px}
-#toast{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);background:#263c59;padding:12px;border-radius:10px;display:none;z-index:99}
-@media(max-width:700px){
-.sidebar{width:64px;padding:6px}
-.logo{font-size:12px;text-align:center}
-.navbtn{font-size:0;padding:12px 5px;text-align:center}
-.navbtn b{font-size:19px}
-.main{margin-left:64px;width:calc(100% - 64px);padding:10px}
-h1{font-size:20px}
-.row{flex-wrap:wrap}
+:root {
+  --bg:#0b1020;
+  --panel:#131b2e;
+  --panel2:#19243a;
+  --text:#f3f6ff;
+  --muted:#9caac5;
+  --blue:#5b8cff;
+  --border:#263450;
+  --green:#38d996;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial, sans-serif;
+}
+button,input,textarea,select { font:inherit; }
+button {
+  border:0;
+  cursor:pointer;
+  border-radius:10px;
+  padding:12px 15px;
+  background:var(--blue);
+  color:white;
+  font-weight:bold;
+}
+button:hover { opacity:.88; }
+button.secondary { background:var(--panel2); border:1px solid var(--border); }
+button.danger { background:#8f3545; }
+input,textarea,select {
+  width:100%;
+  padding:13px;
+  border-radius:10px;
+  background:#0b1325;
+  color:white;
+  border:1px solid var(--border);
+  outline:none;
+}
+textarea { min-height:130px; resize:vertical; }
+input:focus,textarea:focus,select:focus {
+  border-color:var(--blue);
+}
+.app {
+  display:flex;
+  min-height:100vh;
+}
+.sidebar {
+  width:245px;
+  flex-shrink:0;
+  background:#0d1528;
+  border-right:1px solid var(--border);
+  padding:18px;
+  position:fixed;
+  top:0;bottom:0;
+  overflow-y:auto;
+}
+.logo {
+  font-size:23px;
+  font-weight:bold;
+  margin-bottom:22px;
+}
+.logo span { color:var(--blue); }
+.nav {
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+.nav button {
+  text-align:left;
+  background:transparent;
+  color:var(--muted);
+  padding:12px;
+}
+.nav button.active,
+.nav button:hover {
+  background:var(--panel2);
+  color:white;
+}
+.main {
+  margin-left:245px;
+  width:calc(100% - 245px);
+  padding:24px;
+}
+.topbar {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:25px;
+}
+.status {
+  color:var(--green);
+  font-size:13px;
+}
+.page { display:none; }
+.page.show { display:block; }
+h1 { font-size:26px; margin:0 0 10px; }
+h2 { font-size:19px; }
+.subtitle { color:var(--muted); margin-bottom:22px; }
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:15px;
+}
+.card {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:18px;
+}
+.card h3 { margin-top:0; }
+.small { font-size:13px; color:var(--muted); }
+.actions {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.form {
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+}
+.output {
+  margin-top:20px;
+  background:#080e1b;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:15px;
+  min-height:80px;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  line-height:1.65;
+  font-size:14px;
+}
+.output:empty { display:none; }
+.loading { color:#8db0ff; }
+.builder-icon { font-size:26px; }
+.project {
+  border-bottom:1px solid var(--border);
+  padding:14px 0;
+}
+.chatbox {
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.chatmessages {
+  height:55vh;
+  overflow-y:auto;
+  border:1px solid var(--border);
+  background:#080e1b;
+  border-radius:12px;
+  padding:15px;
+}
+.message {
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:10px;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+.message.user { background:#203456; }
+.message.ai { background:#152239; }
+.mobilebar { display:none; }
+label { font-size:13px; color:var(--muted); }
+hr { border-color:var(--border); }
+@media(max-width:800px) {
+  .sidebar {
+    width:100%;
+    height:auto;
+    position:relative;
+    border-right:0;
+    border-bottom:1px solid var(--border);
+    padding:12px;
+  }
+  .nav {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:5px;
+  }
+  .nav button {
+    font-size:12px;
+    text-align:center;
+    padding:9px 4px;
+  }
+  .app { display:block; }
+  .main {
+    width:100%;
+    margin:0;
+    padding:16px;
+  }
+  .grid { grid-template-columns:1fr; }
+  .topbar { margin-bottom:18px; }
+  h1 { font-size:22px; }
 }
 </style>
 </head>
+
 <body>
+<div class="app">
 
-<div class="layout">
+<!-- SIDEBAR -->
 <aside class="sidebar">
-<div class="logo">JARVIS<span> AI</span></div>
+  <div class="logo">⚡ JARVIS <span>AI</span></div>
 
-<button class="navbtn" onclick="openPage('chat')"><b>💬</b> Chat</button>
-<button class="navbtn" onclick="openPage('studio')"><b>🚀</b> Creator Studio</button>
-<button class="navbtn" onclick="openPage('video')"><b>🎬</b> Video Studio</button>
-<button class="navbtn" onclick="openPage('ads')"><b>📢</b> Ads Studio</button>
-<button class="navbtn" onclick="openPage('accounts')"><b>🔗</b> Accounts</button>
-<button class="navbtn" onclick="openPage('queue')"><b>📅</b> Queue</button>
-<button class="navbtn" onclick="openPage('settings')"><b>⚙️</b> Settings</button>
-<button class="navbtn" onclick="newChat()"><b>➕</b> New Chat</button>
+  <div class="nav">
+    <button onclick="openPage('home')" class="active" id="nav-home">🏠 Home</button>
+    <button onclick="openPage('chat')" id="nav-chat">💬 AI Chat</button>
+    <button onclick="openPage('website')" id="nav-website">🌐 Website</button>
+    <button onclick="openPage('appbuilder')" id="nav-appbuilder">📱 Apps</button>
+    <button onclick="openPage('game')" id="nav-game">🎮 Games</button>
+    <button onclick="openPage('code')" id="nav-code">💻 Code Studio</button>
+    <button onclick="openPage('content')" id="nav-content">✍️ Content</button>
+    <button onclick="openPage('video')" id="nav-video">🎬 Videos</button>
+    <button onclick="openPage('ads')" id="nav-ads">📢 Ads</button>
+    <button onclick="openPage('projects')" id="nav-projects">📂 Projects</button>
+    <button onclick="openPage('connections')" id="nav-connections">🔗 Connections</button>
+    <button onclick="openPage('settings')" id="nav-settings">⚙️ Settings</button>
+  </div>
 </aside>
 
+<!-- MAIN -->
 <main class="main">
-<div id="errbox"></div>
-<h1 id="heading">Jarvis AI</h1>
+  <div class="topbar">
+    <div>
+      <strong>Creator + Developer Assistant</strong>
+      <div class="small">Your all-in-one AI workspace</div>
+    </div>
+    <div class="status" id="status">● Ready</div>
+  </div>
 
-<section id="chat" class="page show">
-<div class="card">
-<h2>AI Chat</h2>
-<div id="chatbox" class="chatbox"></div>
-<form id="chatForm">
-<textarea id="message" placeholder="Jarvis ko message likho..." required></textarea>
-<button type="submit" class="btn full" id="sendBtn">Send Message ➤</button>
-</form>
-</div>
+<!-- HOME -->
+<section class="page show" id="page-home">
+  <h1>Welcome to Jarvis AI</h1>
+  <div class="subtitle">Create, develop and plan everything from one place.</div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="builder-icon">🌐</div>
+      <h3>Website Builder</h3>
+      <p class="small">Generate websites and frontend code.</p>
+      <button onclick="openPage('website')">Start Building</button>
+    </div>
+
+    <div class="card">
+      <div class="builder-icon">📱</div>
+      <h3>App Builder</h3>
+      <p class="small">Plan apps, UI, features and code.</p>
+      <button onclick="openPage('appbuilder')">Build App</button>
+    </div>
+
+    <div class="card">
+      <div class="builder-icon">🎮</div>
+      <h3>Game Builder</h3>
+      <p class="small">Create game concepts and prototypes.</p>
+      <button onclick="openPage('game')">Create Game</button>
+    </div>
+
+    <div class="card">
+      <div class="builder-icon">💻</div>
+      <h3>Code Studio</h3>
+      <p class="small">Write, explain, fix and improve code.</p>
+      <button onclick="openPage('code')">Open Code Studio</button>
+    </div>
+
+    <div class="card">
+      <div class="builder-icon">✍️</div>
+      <h3>Content Studio</h3>
+      <p class="small">Ideas, posts, captions and calendars.</p>
+      <button onclick="openPage('content')">Create Content</button>
+    </div>
+
+    <div class="card">
+      <div class="builder-icon">🎬</div>
+      <h3>Video Studio</h3>
+      <p class="small">Scripts, scenes and video concepts.</p>
+      <button onclick="openPage('video')">Create Video</button>
+    </div>
+
+    <div class="card">
+      <div class="builder-icon">📢</div>
+      <h3>Ads Studio</h3>
+      <p class="small">Promotional content and campaigns.</p>
+      <button onclick="openPage('ads')">Create Advertisement</button>
+    </div>
+
+    <div class="card">
+      <div class="builder-icon">💬</div>
+      <h3>AI Chat</h3>
+      <p class="small">Ask Jarvis anything.</p>
+      <button onclick="openPage('chat')">Chat Now</button>
+    </div>
+  </div>
 </section>
 
-<section id="studio" class="page">
-<div class="card">
-<h2>Creator Studio</h2>
-<p>Content ideas generate karo.</p>
-<input id="niche" placeholder="Channel topic / niche">
-<button class="btn full" onclick="ideas()">Generate Ideas</button>
-<div id="ideasOut" class="output"></div>
-</div>
-<div class="card">
-<h2>30-Day Planner</h2>
-<input id="plannerNiche" placeholder="Channel niche">
-<button class="btn full" onclick="planner()">Create Planner</button>
-<div id="plannerOut" class="output"></div>
-</div>
-<div class="card">
-<h2>Growth Coach</h2>
-<textarea id="growthText" placeholder="Apne channel ki details"></textarea>
-<button class="btn full" onclick="growth()">Growth Plan</button>
-<div id="growthOut" class="output"></div>
-</div>
+<!-- CHAT -->
+<section class="page" id="page-chat">
+  <h1>AI Chat</h1>
+  <div class="subtitle">Chat with Jarvis AI</div>
+
+  <div class="chatbox">
+    <div class="chatmessages" id="chatMessages"></div>
+
+    <form id="chatForm">
+      <textarea id="chatInput" placeholder="Message Jarvis..." rows="3" required></textarea>
+      <div class="actions">
+        <button type="submit">Send Message ➤</button>
+        <button type="button" class="secondary" onclick="clearChat()">Clear Chat</button>
+      </div>
+    </form>
+  </div>
 </section>
 
-<section id="video" class="page">
-<div class="card">
-<h2>AI Video Studio</h2>
-<input id="topic" placeholder="Video topic">
-<select id="platform">
-<option>YouTube Long Video</option>
-<option>YouTube Shorts</option>
-<option>Instagram Reel</option>
-<option>Facebook Reel</option>
-<option>Advertisement</option>
-</select>
-<select id="duration">
-<option>30 seconds</option><option>60 seconds</option>
-<option>3 minutes</option><option>5 minutes</option>
-<option>10 minutes</option>
-</select>
-<select id="style">
-<option>Faceless cinematic</option>
-<option>Documentary</option><option>Educational</option>
-<option>Funny</option><option>Motivational</option>
-</select>
-<button class="btn full" onclick="videoPlan()">Generate Script</button>
-<div id="videoOut" class="output"></div>
-<button class="btn btn2 full" onclick="saveVideo()">Save Project</button>
-</div>
+<!-- WEBSITE BUILDER -->
+<section class="page" id="page-website">
+  <h1>🌐 Website Builder</h1>
+  <div class="subtitle">Describe your website and Jarvis will create its code and design plan.</div>
+
+  <div class="card form">
+    <label>Website name</label>
+    <input id="webName" placeholder="Example: My Business Website">
+
+    <label>Website type</label>
+    <select id="webType">
+      <option>Business Website</option>
+      <option>Portfolio</option>
+      <option>Blog</option>
+      <option>E-commerce UI</option>
+      <option>Educational Website</option>
+      <option>Dashboard</option>
+      <option>Landing Page</option>
+      <option>Social Media Website</option>
+      <option>Custom</option>
+    </select>
+
+    <label>Features and requirements</label>
+    <textarea id="webPrompt" placeholder="Describe pages, features, design, colors, login, dashboard etc."></textarea>
+
+    <button onclick="buildWebsite()">Generate Website Code</button>
+  </div>
+
+  <div class="output" id="webOutput"></div>
+  <div class="actions" id="webActions" style="display:none">
+    <button class="secondary" onclick="copyOutput('webOutput')">Copy Code</button>
+    <button onclick="saveProject('Website','webOutput')">Save Project</button>
+  </div>
 </section>
 
-<section id="ads" class="page">
-<div class="card">
-<h2>Ads Studio</h2>
-<input id="product" placeholder="Product / business name">
-<textarea id="productDetails" placeholder="Product details, features, audience"></textarea>
-<select id="adPlatform">
-<option>All platforms</option><option>YouTube</option>
-<option>Instagram</option><option>Facebook</option>
-</select>
-<button class="btn full" onclick="makeAd()">Generate Ad</button>
-<div id="adOut" class="output"></div>
-<button class="btn btn2 full" onclick="saveAd()">Save Campaign</button>
-</div>
+<!-- APP BUILDER -->
+<section class="page" id="page-appbuilder">
+  <h1>📱 App Builder</h1>
+  <div class="subtitle">Create app plans, screens, features and source code.</div>
+
+  <div class="card form">
+    <label>App name</label>
+    <input id="appName" placeholder="My App">
+
+    <label>Platform</label>
+    <select id="appPlatform">
+      <option>Android</option>
+      <option>Android and iOS</option>
+      <option>Web App</option>
+      <option>Cross-platform</option>
+    </select>
+
+    <label>App type</label>
+    <select id="appType">
+      <option>Social Media</option>
+      <option>Education</option>
+      <option>Business</option>
+      <option>Shopping</option>
+      <option>Utility</option>
+      <option>Entertainment</option>
+      <option>AI App</option>
+      <option>Custom</option>
+    </select>
+
+    <label>Features and requirements</label>
+    <textarea id="appPrompt" placeholder="Describe screens, features, user flow, login and design..."></textarea>
+
+    <button onclick="buildApp()">Generate App Plan & Code</button>
+  </div>
+
+  <div class="output" id="appOutput"></div>
+  <div class="actions" id="appActions" style="display:none">
+    <button class="secondary" onclick="copyOutput('appOutput')">Copy</button>
+    <button onclick="saveProject('App','appOutput')">Save Project</button>
+  </div>
 </section>
 
-<section id="accounts" class="page">
-<div class="card">
-<h2>Connect Accounts</h2>
-<p>Abhi account connection configure nahi hua hai. OAuth setup backend par hoga.</p>
-<button class="btn full" onclick="connect('YouTube')">Connect YouTube</button>
-<button class="btn full" onclick="connect('Instagram')">Connect Instagram</button>
-<button class="btn full" onclick="connect('Facebook')">Connect Facebook</button>
-<button class="btn full" onclick="connect('Website/API')">Connect Website / API</button>
-</div>
+<!-- GAME BUILDER -->
+<section class="page" id="page-game">
+  <h1>🎮 Game Builder</h1>
+  <div class="subtitle">Create game concepts, gameplay and prototype code.</div>
+
+  <div class="card form">
+    <label>Game name</label>
+    <input id="gameName" placeholder="My Game">
+
+    <label>Game type</label>
+    <select id="gameType">
+      <option>2D Platformer</option>
+      <option>Racing</option>
+      <option>Adventure</option>
+      <option>Puzzle</option>
+      <option>Arcade</option>
+      <option>Strategy</option>
+      <option>3D Game Concept</option>
+      <option>Custom</option>
+    </select>
+
+    <label>Platform</label>
+    <select id="gamePlatform">
+      <option>Browser HTML Game</option>
+      <option>Android</option>
+      <option>PC</option>
+      <option>Unity</option>
+      <option>Godot</option>
+    </select>
+
+    <label>Gameplay description</label>
+    <textarea id="gamePrompt" placeholder="Player, enemies, levels, controls, scoring, mechanics..."></textarea>
+
+    <button onclick="buildGame()">Generate Game</button>
+  </div>
+
+  <div class="output" id="gameOutput"></div>
+  <div class="actions" id="gameActions" style="display:none">
+    <button class="secondary" onclick="copyOutput('gameOutput')">Copy Code</button>
+    <button onclick="saveProject('Game','gameOutput')">Save Project</button>
+  </div>
 </section>
 
-<section id="queue" class="page">
-<div class="card">
-<h2>Saved Projects</h2>
-<button class="btn btn2" onclick="showQueue()">Refresh</button>
-<div id="queueOut"></div>
-</div>
+<!-- CODE STUDIO -->
+<section class="page" id="page-code">
+  <h1>💻 Code Studio</h1>
+  <div class="subtitle">Coding assistant for writing, explaining, debugging and improving code.</div>
+
+  <div class="card form">
+    <label>Task</label>
+    <select id="codeTask">
+      <option>Write new code</option>
+      <option>Explain code</option>
+      <option>Debug code</option>
+      <option>Improve code</option>
+      <option>Convert code to another language</option>
+      <option>Create complete project</option>
+    </select>
+
+    <label>Programming language</label>
+    <select id="codeLanguage">
+      <option>HTML CSS JavaScript</option>
+      <option>JavaScript</option>
+      <option>Python</option>
+      <option>Java</option>
+      <option>Kotlin</option>
+      <option>C++</option>
+      <option>TypeScript</option>
+      <option>React</option>
+      <option>Flutter Dart</option>
+      <option>PHP</option>
+      <option>SQL</option>
+      <option>Other</option>
+    </select>
+
+    <label>Your instructions or existing code</label>
+    <textarea id="codePrompt" placeholder="Describe what you want to code or paste code to fix..."></textarea>
+
+    <button onclick="runCodeStudio()">Run Code Assistant</button>
+  </div>
+
+  <div class="output" id="codeOutput"></div>
+  <div class="actions" id="codeActions" style="display:none">
+    <button class="secondary" onclick="copyOutput('codeOutput')">Copy Code</button>
+    <button onclick="saveProject('Code','codeOutput')">Save Project</button>
+  </div>
 </section>
 
-<section id="settings" class="page">
-<div class="card">
-<h2>Supabase Settings</h2>
-<label>Project URL</label>
-<input id="url" placeholder="https://yourproject.supabase.co">
-<label>Public anon key</label>
-<input id="key" placeholder="Supabase public key">
-<label>Function Name</label>
-<input id="fn" value="rapid-worker">
-<button class="btn full" onclick="saveSettings()">Save Settings</button>
-<button class="btn full btn2" onclick="testConnection()">Test Connection</button>
-</div>
+<!-- CONTENT -->
+<section class="page" id="page-content">
+  <h1>✍️ Content Studio</h1>
+  <div class="subtitle">Ideas, posts, captions, content calendars and more.</div>
+
+  <div class="card form">
+    <label>Platform</label>
+    <select id="contentPlatform">
+      <option>YouTube</option>
+      <option>Instagram</option>
+      <option>Facebook</option>
+      <option>Blog</option>
+      <option>Website</option>
+      <option>Multiple Platforms</option>
+    </select>
+
+    <label>Content type</label>
+    <select id="contentType">
+      <option>Content Ideas</option>
+      <option>Caption</option>
+      <option>Post</option>
+      <option>SEO Article</option>
+      <option>30-Day Content Calendar</option>
+      <option>Video Titles</option>
+      <option>Hashtags</option>
+      <option>Growth Strategy</option>
+    </select>
+
+    <label>Topic / niche</label>
+    <textarea id="contentPrompt" placeholder="Your niche, target audience and goals..."></textarea>
+
+    <button onclick="buildContent()">Generate Content</button>
+  </div>
+
+  <div class="output" id="contentOutput"></div>
+  <div class="actions" id="contentActions" style="display:none">
+    <button class="secondary" onclick="copyOutput('contentOutput')">Copy</button>
+    <button onclick="saveProject('Content','contentOutput')">Save Project</button>
+  </div>
 </section>
+
+<!-- VIDEO -->
+<section class="page" id="page-video">
+  <h1>🎬 Video Studio</h1>
+  <div class="subtitle">Video ideas, scripts, scenes and production plans.</div>
+
+  <div class="card form">
+    <label>Platform</label>
+    <select id="videoPlatform">
+      <option>YouTube Long Video</option>
+      <option>YouTube Shorts</option>
+      <option>Instagram Reel</option>
+      <option>Facebook Video</option>
+      <option>Short Film</option>
+      <option>Advertisement</option>
+    </select>
+
+    <label>Video type</label>
+    <select id="videoType">
+      <option>Video Idea</option>
+      <option>Complete Script</option>
+      <option>Scene-by-Scene Storyboard</option>
+      <option>Voice Over</option>
+      <option>Short Video</option>
+      <option>Documentary</option>
+      <option>Story</option>
+    </select>
+
+    <label>Topic</label>
+    <textarea id="videoPrompt" placeholder="Video topic, duration, audience, tone, characters..."></textarea>
+
+    <button onclick="buildVideo()">Generate Video Content</button>
+  </div>
+
+  <div class="output" id="videoOutput"></div>
+  <div class="actions" id="videoActions" style="display:none">
+    <button class="secondary" onclick="copyOutput('videoOutput')">Copy</button>
+    <button onclick="saveProject('Video','videoOutput')">Save Project</button>
+  </div>
+</section>
+
+<!-- ADS -->
+<section class="page" id="page-ads">
+  <h1>📢 Ads Studio</h1>
+  <div class="subtitle">Create advertising concepts, copy and campaigns.</div>
+
+  <div class="card form">
+    <label>Product / service</label>
+    <input id="adProduct" placeholder="Product or service name">
+
+    <label>Platform</label>
+    <select id="adPlatform">
+      <option>Instagram</option>
+      <option>YouTube</option>
+      <option>Facebook</option>
+      <option>Google</option>
+      <option>Website</option>
+      <option>Multiple Platforms</option>
+    </select>
+
+    <label>Advertisement type</label>
+    <select id="adType">
+      <option>Ad Ideas</option>
+      <option>Video Advertisement Script</option>
+      <option>Image Ad Copy</option>
+      <option>Campaign Plan</option>
+      <option>Product Promotion</option>
+      <option>Marketing Strategy</option>
+    </select>
+
+    <label>Audience and details</label>
+    <textarea id="adPrompt" placeholder="Target audience, product details, offer, tone and goals..."></textarea>
+
+    <button onclick="buildAds()">Generate Advertisement</button>
+  </div>
+
+  <div class="output" id="adsOutput"></div>
+  <div class="actions" id="adsActions" style="display:none">
+    <button class="secondary" onclick="copyOutput('adsOutput')">Copy</button>
+    <button onclick="saveProject('Advertisement','adsOutput')">Save Project</button>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="page" id="page-projects">
+  <h1>📂 My Projects</h1>
+  <div class="subtitle">Projects saved in this browser.</div>
+  <div class="card" id="projectList"></div>
+  <div class="actions">
+    <button class="secondary" onclick="refreshProjects()">Refresh</button>
+    <button class="danger" onclick="deleteAllProjects()">Delete All Projects</button>
+  </div>
+</section>
+
+<!-- CONNECTIONS -->
+<section class="page" id="page-connections">
+  <h1>🔗 Connections</h1>
+  <div class="subtitle">Account integrations will be added through secure OAuth connections.</div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>▶️ YouTube</h3>
+      <p class="small">Channel connection and publishing integration.</p>
+      <button class="secondary" onclick="connectionInfo('YouTube')">Setup Information</button>
+    </div>
+
+    <div class="card">
+      <h3>📸 Instagram</h3>
+      <p class="small">Account connection and publishing integration.</p>
+      <button class="secondary" onclick="connectionInfo('Instagram')">Setup Information</button>
+    </div>
+
+    <div class="card">
+      <h3>📘 Facebook</h3>
+      <p class="small">Page connection and publishing integration.</p>
+      <button class="secondary" onclick="connectionInfo('Facebook')">Setup Information</button>
+    </div>
+  </div>
+
+  <div class="output" id="connectionOutput"></div>
+</section>
+
+<!-- SETTINGS -->
+<section class="page" id="page-settings">
+  <h1>⚙️ Settings</h1>
+  <div class="subtitle">Connect Jarvis to your Supabase backend.</div>
+
+  <div class="card form">
+    <label>Supabase Project URL</label>
+    <input id="supabaseUrl" placeholder="https://YOURPROJECT.supabase.co">
+
+    <label>Supabase Anon / Publishable Key</label>
+    <input id="supabaseKey" placeholder="Public anon key">
+
+    <label>Edge Function Name</label>
+    <input id="functionName" value="rapid-worker">
+
+    <div class="actions">
+      <button onclick="saveSettings()">Save Settings</button>
+      <button class="secondary" onclick="testConnection()">Test Connection</button>
+    </div>
+
+    <div class="small">
+      Never put your Gemini API key or Supabase service-role key in this website.
+    </div>
+  </div>
+
+  <div class="output" id="settingsOutput"></div>
+</section>
+
 </main>
 </div>
-<div id="toast"></div>
 
 <script>
-/* JARVIS MAIN SCRIPT */
-var cfg={};
-var historyMessages=[];
-var savedProjects=[];
-var currentVideo="";
-var currentAd="";
-var isSending=false;
+/* =========================
+   JARVIS CONFIGURATION
+========================= */
 
-function el(id){return document.getElementById(id)}
+const DEFAULT_URL = "https://jiqewyflnbhutrocacyt.supabase.co";
+const DEFAULT_FUNCTION = "rapid-worker";
 
-function notify(t){
- el("toast").innerText=t;
- el("toast").style.display="block";
- window.setTimeout(function(){el("toast").style.display="none"},2500);
-}
-
-function showError(t){
- el("errbox").style.display="block";
- el("errbox").innerText="ERROR: "+t;
-}
-function hideError(){
- el("errbox").style.display="none";
-}
-
-function openPage(name){
- var pages=document.querySelectorAll(".page");
- for(var i=0;i<pages.length;i++){pages[i].classList.remove("show")}
- var target=el(name);
- if(target){target.classList.add("show")}
- var titles={
- chat:"Jarvis AI Chat",studio:"Creator Studio",
- video:"AI Video Studio",ads:"Ads Studio",
- accounts:"Account Connections",queue:"Saved Projects",
- settings:"Settings"
- };
- el("heading").innerText=titles[name]||"Jarvis";
- hideError();
-}
-
-function loadSettings(){
- try{
-  cfg=JSON.parse(localStorage.getItem("jarvis_cfg")||"{}");
- }catch(e){cfg={}}
- el("url").value=cfg.url||"https://jiqewyflnbhutrocacyt.supabase.co";
- el("key").value=cfg.key||"";
- el("fn").value=cfg.fn||"rapid-worker";
-}
-
-function saveSettings(){
- cfg={
-  url:el("url").value.trim().replace(/\/$/,""),
-  key:el("key").value.trim(),
-  fn:el("fn").value.trim()
- };
- localStorage.setItem("jarvis_cfg",JSON.stringify(cfg));
- notify("Settings saved");
-}
-
-function backendReady(){
- if(!cfg.url||!cfg.key||!cfg.fn){
-  throw new Error("Settings mein Supabase URL, public key aur function name bharna zaroori hai.");
- }
-}
-
-async function callAI(message){
- backendReady();
- var endpoint=cfg.url+"/functions/v1/"+cfg.fn;
- var res=await fetch(endpoint,{
-  method:"POST",
-  headers:{
-   "Content-Type":"application/json",
-   "apikey":cfg.key,
-   "Authorization":"Bearer "+cfg.key
-  },
-  body:JSON.stringify({
-   message:message,
-   history:historyMessages.slice(-16)
-  })
- });
- var raw=await res.text();
- var data;
- try{data=JSON.parse(raw)}catch(e){data={reply:raw}}
- if(!res.ok){
-  throw new Error("HTTP "+res.status+": "+(data.error||data.message||raw));
- }
- var reply=data.reply||data.text||data.message;
- if(!reply)throw new Error("Backend se reply nahi mila.");
- return reply;
-}
-
-/* Chat form */
-el("chatForm").addEventListener("submit",async function(event){
- event.preventDefault();
- sendMessage();
-});
-
-async function sendMessage(){
- if(isSending)return;
- var text=el("message").value.trim();
- if(!text)return;
-
- isSending=true;
- el("sendBtn").disabled=true;
- el("sendBtn").innerText="Sending...";
- el("message").value="";
- addChat("user",text);
- historyMessages.push({role:"user",content:text});
- hideError();
-
- try{
-  var reply=await callAI(text);
-  addChat("assistant",reply);
-  historyMessages.push({role:"assistant",content:reply});
-  localStorage.setItem("jarvis_history",JSON.stringify(historyMessages));
- }catch(e){
-  showError(e.message);
-  addChat("assistant","Request failed: "+e.message);
- }finally{
-  isSending=false;
-  el("sendBtn").disabled=false;
-  el("sendBtn").innerText="Send Message ➤";
- }
-}
-
-function addChat(role,text){
- var d=document.createElement("div");
- d.className="msg "+(role==="user"?"user":"ai");
- d.textContent=text;
- el("chatbox").appendChild(d);
- el("chatbox").scrollTop=el("chatbox").scrollHeight;
-}
-
-function newChat(){
- historyMessages=[];
- el("chatbox").innerHTML="";
- localStorage.removeItem("jarvis_history");
- openPage("chat");
- notify("New chat");
-}
-
-function restoreChat(){
- try{
-  historyMessages=JSON.parse(localStorage.getItem("jarvis_history")||"[]");
-  historyMessages.forEach(function(m){addChat(m.role,m.content)});
- }catch(e){historyMessages=[]}
-}
-
-/* AI tools */
-async function runPrompt(prompt,outputId){
- el(outputId).innerText="Jarvis is working...";
- try{
-  var result=await callAI(prompt);
-  el(outputId).innerText=result;
-  return result;
- }catch(e){
-  el(outputId).innerText="Error: "+e.message;
-  showError(e.message);
-  return "";
- }
-}
-
-function ideas(){
- var n=el("niche").value.trim();
- if(!n)return notify("Topic enter karo");
- runPrompt("Generate 20 unique content ideas for "+n+". Give title, hook and format. Hindi/Hinglish.", "ideasOut");
-}
-
-function planner(){
- var n=el("plannerNiche").value.trim();
- if(!n)return notify("Niche enter karo");
- runPrompt("Create a practical 30 day content calendar for "+n+". Include daily topic, format and hook in Hindi.", "plannerOut");
-}
-
-function growth(){
- var n=el("growthText").value.trim();
- if(!n)return notify("Channel details enter karo");
- runPrompt("Give a realistic content improvement plan for this channel: "+n+". Include content pillars, weekly plan, audience engagement and analytics review.", "growthOut");
-}
-
-async function videoPlan(){
- var t=el("topic").value.trim();
- if(!t)return notify("Video topic enter karo");
- currentVideo=await runPrompt(
- "Create a complete video script and production plan. Topic: "+t+
- ". Platform: "+el("platform").value+
- ". Duration: "+el("duration").value+
- ". Style: "+el("style").value+
- ". Include title, hook, narration, scenes, captions, thumbnail concept, description and hashtags. Hindi.",
- "videoOut"
- );
-}
-
-async function makeAd(){
- var p=el("product").value.trim();
- if(!p)return notify("Product name enter karo");
- currentAd=await runPrompt(
- "Create an advertisement creative for "+p+
- ". Details: "+el("productDetails").value+
- ". Platform: "+el("adPlatform").value+
- ". Include hook, ad script, visual scenes, headline, caption, CTA and hashtags. Avoid invented claims.",
- "adOut"
- );
-}
-
-/* Project saving */
-function saveProject(type,title,content){
- if(!content)return notify("Pehle content generate karo");
- savedProjects.push({
-  id:Date.now(),type:type,title:title,
-  content:content,date:new Date().toLocaleString()
- });
- localStorage.setItem("jarvis_projects",JSON.stringify(savedProjects));
- showQueue();
- notify("Project saved");
-}
-
-function saveVideo(){
- saveProject("Video",el("topic").value,currentVideo);
-}
-function saveAd(){
- saveProject("Advertisement",el("product").value,currentAd);
-}
-
-function showQueue(){
- try{
-  savedProjects=JSON.parse(localStorage.getItem("jarvis_projects")||"[]");
- }catch(e){savedProjects=[]}
- var out=el("queueOut");
- out.innerHTML="";
- if(savedProjects.length===0){
-  out.innerHTML="<p>Abhi koi project save nahi hai.</p>";
-  return;
- }
- savedProjects.forEach(function(item,index){
-  var box=document.createElement("div");
-  box.className="card";
-  var h=document.createElement("h3");
-  h.textContent=item.type+": "+item.title;
-  var p=document.createElement("p");
-  p.textContent=item.date;
-  var view=document.createElement("button");
-  view.className="btn";
-  view.textContent="View";
-  view.onclick=function(){
-   alert(item.content);
-  };
-  var del=document.createElement("button");
-  del.className="btn btn2";
-  del.textContent="Delete";
-  del.onclick=function(){
-   savedProjects.splice(index,1);
-   localStorage.setItem("jarvis_projects",JSON.stringify(savedProjects));
-   showQueue();
-  };
-  box.appendChild(h);box.appendChild(p);
-  box.appendChild(view);box.appendChild(del);
-  out.appendChild(box);
- });
-}
-
-/* Account placeholders */
-function connect(platform){
- alert(platform+" integration abhi connect nahi hai. OAuth aur secure backend setup next phase mein hoga.");
-}
-
-/* Backend test */
-async function testConnection(){
- saveSettings();
- hideError();
- notify("Testing...");
- try{
-  var r=await callAI("Reply only: CONNECTION OK");
-  alert("Connected successfully!\n"+r);
- }catch(e){
-  showError(e.message);
-  alert("Connection failed:\n"+e.message);
- }
-}
-
-loadSettings();
-restoreChat();
-showQueue();
-openPage("chat");
-</script>
-</body>
- </html>
- 
+let settings = JSON.parse(localStorage.getItem("jarvis_settings") || "{}");
+let chatHistory = JSON.parse(localStorage.getIte
