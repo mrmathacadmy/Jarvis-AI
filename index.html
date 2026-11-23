@@ -4,600 +4,466 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JARVIS AI - Creator Studio</title>
-<meta name="theme-color" content="#080d18">
-
+<title>Jarvis AI</title>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;background:#080d18;color:#eaf0ff;
- font-family:system-ui,-apple-system,Arial,sans-serif
-}
+body{margin:0;background:#080d18;color:#edf3ff;font-family:Arial,sans-serif}
 button,input,textarea,select{font:inherit}
 button{cursor:pointer}
-:root{
- --bg:#080d18;--panel:#111a2b;--panel2:#172239;
- --border:#263650;--blue:#4e8cff;--cyan:#42d5ee;
- --muted:#9eacc5;--green:#38d996;--red:#ff647c
-}
-.app{display:flex;min-height:100vh}
-.sidebar{
- width:245px;background:#0b1220;border-right:1px solid var(--border);
- padding:18px;position:fixed;inset:0 auto 0 0;z-index:10;
- display:flex;flex-direction:column
-}
-.logo{font-size:23px;font-weight:900;color:white;margin-bottom:8px}
-.logo span{color:var(--cyan)}
-.sublogo{font-size:12px;color:var(--muted);margin-bottom:25px}
-.nav{display:flex;flex-direction:column;gap:7px}
-.nav button{
- text-align:left;border:1px solid transparent;background:transparent;
- color:#c8d5ed;padding:12px;border-radius:12px
-}
-.nav button.active,.nav button:hover{
- background:var(--panel2);border-color:var(--border);color:white
-}
-.sidebar-bottom{margin-top:auto}
-.main{margin-left:245px;width:calc(100% - 245px);padding:24px}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}
-.topbar h1{font-size:25px;margin:0}
-.status{font-size:12px;color:var(--green);background:#10291f;padding:8px 12px;border-radius:20px}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:220px;background:#101827;padding:15px;position:fixed;height:100vh;overflow:auto}
+.logo{font-size:23px;font-weight:bold;margin:10px 0 22px}
+.logo span{color:#39caff}
+.navbtn{display:block;width:100%;padding:13px;margin:5px 0;text-align:left;background:#172338;border:1px solid #263851;color:white;border-radius:10px}
+.navbtn:hover{background:#254267}
+.main{margin-left:220px;padding:20px;width:calc(100% - 220px)}
 .page{display:none}
-.page.active{display:block}
-.card{
- background:var(--panel);border:1px solid var(--border);
- border-radius:17px;padding:18px;margin-bottom:15px
-}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
-.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
-h2{font-size:19px;margin:0 0 14px}
-h3{font-size:16px;margin:0 0 8px}
-p{color:var(--muted);line-height:1.6}
-.small{font-size:12px;color:var(--muted)}
-.btn{
- border:0;border-radius:11px;padding:11px 15px;
- color:white;background:var(--blue);font-weight:650
-}
-.btn.secondary{background:#263650}
-.btn.green{background:#168e64}
-.btn.red{background:#9b3449}
-.btn.full{width:100%}
-input,textarea,select{
- width:100%;padding:12px;background:#091120;color:white;
- border:1px solid var(--border);border-radius:10px;outline:none
-}
-textarea{min-height:120px;resize:vertical}
-label{display:block;margin:12px 0 7px;font-size:13px;color:#b9c8df}
-.row{display:flex;gap:10px;align-items:center}
-.row>*{flex:1}
-hr{border:0;border-top:1px solid var(--border);margin:17px 0}
-.badge{display:inline-block;padding:5px 9px;border-radius:8px;background:#1b2a43;color:#bcd4ff;font-size:11px}
-.output{white-space:pre-wrap;line-height:1.7;color:#e6edff;overflow-wrap:anywhere}
-.chatbox{
- height:52vh;min-height:300px;overflow:auto;background:#091120;
- border:1px solid var(--border);border-radius:14px;padding:13px
-}
-.msg{padding:12px;margin:8px 0;border-radius:12px;max-width:95%;white-space:pre-wrap;overflow-wrap:anywhere}
-.msg.user{background:#20385d;margin-left:auto}
-.msg.ai{background:#152239}
-.chat-input{display:flex;gap:8px;margin-top:10px}
-.chat-input textarea{min-height:50px;max-height:120px}
-.feature-icon{font-size:26px;margin-bottom:10px}
-.stat{font-size:27px;font-weight:800;margin:10px 0}
-.queue-item{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.mobile-menu{display:none}
-#toast{
- position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
- background:#263650;color:white;padding:12px 18px;border-radius:12px;
- display:none;z-index:99
-}
-@media(max-width:800px){
- .sidebar{width:70px;padding:10px}
- .logo{font-size:15px;text-align:center}
- .sublogo{display:none}
- .nav button{font-size:0;text-align:center;padding:13px 5px}
- .nav button span{font-size:20px}
- .sidebar-bottom button{font-size:0;padding:10px}
- .main{margin-left:70px;width:calc(100% - 70px);padding:13px}
- .grid,.grid3{grid-template-columns:1fr}
- .topbar h1{font-size:20px}
- .chatbox{height:55vh}
+.page.show{display:block}
+.card{background:#111c2f;border:1px solid #273952;border-radius:15px;padding:16px;margin-bottom:15px}
+h1{font-size:23px}
+h2{font-size:19px;margin-top:0}
+p{color:#b5c4da;line-height:1.6}
+input,textarea,select{width:100%;padding:12px;background:#091221;color:white;border:1px solid #30425c;border-radius:9px;margin:7px 0}
+textarea{min-height:100px}
+.btn{background:#287bff;border:0;border-radius:9px;padding:12px;color:white;margin:5px 0}
+.btn2{background:#30435e}
+.full{width:100%}
+.chatbox{height:45vh;min-height:250px;overflow:auto;border:1px solid #2c3f5b;background:#07101e;border-radius:12px;padding:10px}
+.msg{padding:10px;margin:8px 0;border-radius:10px;white-space:pre-wrap;overflow-wrap:anywhere}
+.user{background:#1d3c65;margin-left:15%}
+.ai{background:#17243a;margin-right:10%}
+.row{display:flex;gap:8px}
+.row>*{flex:1;min-width:0}
+.output{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}
+#errbox{background:#421e29;color:#ffb4c0;padding:10px;border-radius:8px;display:none;margin-bottom:12px}
+#toast{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);background:#263c59;padding:12px;border-radius:10px;display:none;z-index:99}
+@media(max-width:700px){
+.sidebar{width:64px;padding:6px}
+.logo{font-size:12px;text-align:center}
+.navbtn{font-size:0;padding:12px 5px;text-align:center}
+.navbtn b{font-size:19px}
+.main{margin-left:64px;width:calc(100% - 64px);padding:10px}
+h1{font-size:20px}
+.row{flex-wrap:wrap}
 }
 </style>
 </head>
-
 <body>
-<div class="app">
 
+<div class="layout">
 <aside class="sidebar">
- <div class="logo">JARVIS<span> AI</span></div>
- <div class="sublogo">Your AI Creator Assistant</div>
+<div class="logo">JARVIS<span> AI</span></div>
 
- <nav class="nav">
-  <button class="active" data-page="home"><span>💬</span> Chat</button>
-  <button data-page="studio"><span>🚀</span> Creator Studio</button>
-  <button data-page="video"><span>🎬</span> AI Video Studio</button>
-  <button data-page="ads"><span>📢</span> Ads Studio</button>
-  <button data-page="accounts"><span>🔗</span> Connections</button>
-  <button data-page="queue"><span>📅</span> Publishing Queue</button>
-  <button data-page="settings"><span>⚙️</span> Settings</button>
- </nav>
-
- <div class="sidebar-bottom">
-  <button class="btn secondary full" onclick="newChat()">＋ New Chat</button>
- </div>
+<button class="navbtn" onclick="openPage('chat')"><b>💬</b> Chat</button>
+<button class="navbtn" onclick="openPage('studio')"><b>🚀</b> Creator Studio</button>
+<button class="navbtn" onclick="openPage('video')"><b>🎬</b> Video Studio</button>
+<button class="navbtn" onclick="openPage('ads')"><b>📢</b> Ads Studio</button>
+<button class="navbtn" onclick="openPage('accounts')"><b>🔗</b> Accounts</button>
+<button class="navbtn" onclick="openPage('queue')"><b>📅</b> Queue</button>
+<button class="navbtn" onclick="openPage('settings')"><b>⚙️</b> Settings</button>
+<button class="navbtn" onclick="newChat()"><b>➕</b> New Chat</button>
 </aside>
 
 <main class="main">
- <header class="topbar">
-  <h1 id="pageTitle">Jarvis AI Chat</h1>
-  <div class="status" id="connectionStatus">● Ready</div>
- </header>
+<div id="errbox"></div>
+<h1 id="heading">Jarvis AI</h1>
 
-<!-- CHAT -->
-<section class="page active" id="home">
- <div class="card">
-  <h2>🤖 Jarvis Assistant</h2>
-  <p>Ideas, scripts, planning, website help, social media aur content strategy.</p>
-  <div id="chatbox" class="chatbox"></div>
-  <div class="chat-input">
-   <textarea id="chatInput" rows="2" placeholder="Jarvis se kuch poochho..."></textarea>
-   <button class="btn" onclick="sendChat()">Send ➤</button>
-  </div>
-  <div class="small" style="margin-top:8px">Enter = Send · Shift + Enter = New line</div>
- </div>
+<section id="chat" class="page show">
+<div class="card">
+<h2>AI Chat</h2>
+<div id="chatbox" class="chatbox"></div>
+<form id="chatForm">
+<textarea id="message" placeholder="Jarvis ko message likho..." required></textarea>
+<button type="submit" class="btn full" id="sendBtn">Send Message ➤</button>
+</form>
+</div>
 </section>
 
-<!-- DASHBOARD -->
-<section class="page" id="studio">
- <div class="card">
-  <h2>🚀 Creator Studio</h2>
-  <p>Apne content projects ko ek jagah manage karo.</p>
- </div>
-
- <div class="grid3">
-  <div class="card">
-   <div class="feature-icon">🎬</div>
-   <h3>Video Projects</h3>
-   <div class="stat" id="videoCount">0</div>
-   <p>Created video scripts</p>
-  </div>
-  <div class="card">
-   <div class="feature-icon">📅</div>
-   <h3>Publishing Queue</h3>
-   <div class="stat" id="queueCount">0</div>
-   <p>Planned posts</p>
-  </div>
-  <div class="card">
-   <div class="feature-icon">🔗</div>
-   <h3>Connected Accounts</h3>
-   <div class="stat">0</div>
-   <p>Account connections pending</p>
-  </div>
- </div>
-
- <div class="grid">
-  <div class="card">
-   <h2>💡 Content Idea Generator</h2>
-   <label>Niche / Channel topic</label>
-   <input id="ideaNiche" placeholder="Tech, gaming, education, vlog...">
-   <button class="btn full" style="margin-top:12px" onclick="generateIdeas()">Generate Ideas</button>
-   <div id="ideaOutput" class="output" style="margin-top:15px"></div>
-  </div>
-
-  <div class="card">
-   <h2>📈 Growth Coach</h2>
-   <label>Channel details</label>
-   <textarea id="growthInput" placeholder="Channel topic, audience, current goals..."></textarea>
-   <button class="btn full" onclick="growthPlan()">Create Growth Plan</button>
-   <div id="growthOutput" class="output" style="margin-top:15px"></div>
-  </div>
- </div>
-
- <div class="card">
-  <h2>📆 30-Day Content Planner</h2>
-  <label>Channel niche</label>
-  <input id="plannerNiche" placeholder="Your niche">
-  <button class="btn" style="margin-top:12px" onclick="makePlanner()">Create 30-Day Plan</button>
-  <div id="plannerOutput" class="output" style="margin-top:15px"></div>
- </div>
+<section id="studio" class="page">
+<div class="card">
+<h2>Creator Studio</h2>
+<p>Content ideas generate karo.</p>
+<input id="niche" placeholder="Channel topic / niche">
+<button class="btn full" onclick="ideas()">Generate Ideas</button>
+<div id="ideasOut" class="output"></div>
+</div>
+<div class="card">
+<h2>30-Day Planner</h2>
+<input id="plannerNiche" placeholder="Channel niche">
+<button class="btn full" onclick="planner()">Create Planner</button>
+<div id="plannerOut" class="output"></div>
+</div>
+<div class="card">
+<h2>Growth Coach</h2>
+<textarea id="growthText" placeholder="Apne channel ki details"></textarea>
+<button class="btn full" onclick="growth()">Growth Plan</button>
+<div id="growthOut" class="output"></div>
+</div>
 </section>
 
-<!-- VIDEO STUDIO -->
-<section class="page" id="video">
- <div class="card">
-  <h2>🎬 AI Video Studio</h2>
-  <p>Video concept, script, scenes, narration, captions aur thumbnail idea generate karo.</p>
-
-  <label>Video topic</label>
-  <input id="videoTopic" placeholder="Video kis topic par banani hai?">
-
-  <div class="grid">
-   <div>
-    <label>Platform</label>
-    <select id="videoPlatform">
-     <option>YouTube Long Video</option>
-     <option>YouTube Shorts</option>
-     <option>Instagram Reel</option>
-     <option>Facebook Reel</option>
-     <option>Advertisement</option>
-    </select>
-   </div>
-   <div>
-    <label>Video duration</label>
-    <select id="videoDuration">
-     <option>30 seconds</option>
-     <option>60 seconds</option>
-     <option>3 minutes</option>
-     <option>5 minutes</option>
-     <option>10 minutes</option>
-     <option>15 minutes</option>
-    </select>
-   </div>
-  </div>
-
-  <label>Style</label>
-  <select id="videoStyle">
-   <option>Faceless cinematic</option>
-   <option>Talking presenter</option>
-   <option>Documentary</option>
-   <option>Funny / entertaining</option>
-   <option>Educational</option>
-   <option>Motivational</option>
-   <option>Product showcase</option>
-  </select>
-
-  <label>Language</label>
-  <select id="videoLanguage">
-   <option>Hindi</option>
-   <option>Hinglish</option>
-   <option>English</option>
-  </select>
-
-  <button class="btn full" style="margin-top:15px" onclick="generateVideoPlan()">✨ Generate Video Plan</button>
- </div>
-
- <div class="card" id="videoResultCard" style="display:none">
-  <h2>🎥 Generated Video Script</h2>
-  <div id="videoOutput" class="output"></div>
-  <div class="row" style="margin-top:15px">
-   <button class="btn secondary" onclick="copyText('videoOutput')">Copy Script</button>
-   <button class="btn green" onclick="saveVideo()">Save Project</button>
-  </div>
- </div>
-
- <div class="card">
-  <h2>Video Production</h2>
-  <div class="grid">
-   <div><span class="badge">1</span><p>Script generation</p></div>
-   <div><span class="badge">2</span><p>Scene planning</p></div>
-   <div><span class="badge">3</span><p>Voiceover preparation</p></div>
-   <div><span class="badge">4</span><p>Captions & thumbnail ideas</p></div>
-  </div>
-  <p>Actual video rendering, voice generation aur video file export ke liye dedicated media-generation service integrate karni hogi.</p>
- </div>
+<section id="video" class="page">
+<div class="card">
+<h2>AI Video Studio</h2>
+<input id="topic" placeholder="Video topic">
+<select id="platform">
+<option>YouTube Long Video</option>
+<option>YouTube Shorts</option>
+<option>Instagram Reel</option>
+<option>Facebook Reel</option>
+<option>Advertisement</option>
+</select>
+<select id="duration">
+<option>30 seconds</option><option>60 seconds</option>
+<option>3 minutes</option><option>5 minutes</option>
+<option>10 minutes</option>
+</select>
+<select id="style">
+<option>Faceless cinematic</option>
+<option>Documentary</option><option>Educational</option>
+<option>Funny</option><option>Motivational</option>
+</select>
+<button class="btn full" onclick="videoPlan()">Generate Script</button>
+<div id="videoOut" class="output"></div>
+<button class="btn btn2 full" onclick="saveVideo()">Save Project</button>
+</div>
 </section>
 
-<!-- ADS -->
-<section class="page" id="ads">
- <div class="card">
-  <h2>📢 Ads Studio</h2>
-  <p>Business, product, website ya channel ke liye advertising content generate karo.</p>
-
-  <label>Product / Business</label>
-  <input id="adProduct" placeholder="Product ya business ka naam">
-
-  <label>Product details</label>
-  <textarea id="adDetails" placeholder="Features, benefits, audience aur offer..."></textarea>
-
-  <div class="grid">
-   <div>
-    <label>Ad platform</label>
-    <select id="adPlatform">
-     <option>YouTube Ads</option>
-     <option>Instagram</option>
-     <option>Facebook</option>
-     <option>Google Ads</option>
-     <option>All Platforms</option>
-    </select>
-   </div>
-   <div>
-    <label>Ad format</label>
-    <select id="adFormat">
-     <option>30-second video ad</option>
-     <option>15-second short ad</option>
-     <option>60-second video ad</option>
-     <option>Image ad copy</option>
-     <option>Social media campaign</option>
-    </select>
-   </div>
-  </div>
-
-  <button class="btn full" style="margin-top:15px" onclick="generateAd()">Generate Advertisement</button>
- </div>
-
- <div class="card" id="adResultCard" style="display:none">
-  <h2>📄 Your Ad Campaign</h2>
-  <div id="adOutput" class="output"></div>
-  <div class="row" style="margin-top:15px">
-   <button class="btn secondary" onclick="copyText('adOutput')">Copy</button>
-   <button class="btn green" onclick="saveAd()">Save Campaign</button>
-  </div>
- </div>
-
- <div class="card">
-  <h3>Campaign Safety</h3>
-  <p>Jarvis campaign ideas aur creative tayar kar sakta hai. Paid advertising campaign launch karne aur paise spend karne se pehle tumhari explicit approval zaroori rahegi.</p>
- </div>
+<section id="ads" class="page">
+<div class="card">
+<h2>Ads Studio</h2>
+<input id="product" placeholder="Product / business name">
+<textarea id="productDetails" placeholder="Product details, features, audience"></textarea>
+<select id="adPlatform">
+<option>All platforms</option><option>YouTube</option>
+<option>Instagram</option><option>Facebook</option>
+</select>
+<button class="btn full" onclick="makeAd()">Generate Ad</button>
+<div id="adOut" class="output"></div>
+<button class="btn btn2 full" onclick="saveAd()">Save Campaign</button>
+</div>
 </section>
 
-<!-- CONNECTIONS -->
-<section class="page" id="accounts">
- <div class="card">
-  <h2>🔗 Connect Your Accounts</h2>
-  <p>Accounts ko secure OAuth/API authorization se connect kiya jayega. Password yahan mat daalna.</p>
- </div>
-
- <div class="grid">
-  <div class="card">
-   <h2>▶️ YouTube</h2>
-   <span class="badge">Not connected</span>
-   <p>YouTube channel, video publishing, title, description, thumbnail and analytics.</p>
-   <button class="btn full" onclick="connectPlatform('YouTube')">Connect YouTube</button>
-  </div>
-
-  <div class="card">
-   <h2>📸 Instagram</h2>
-   <span class="badge">Not connected</span>
-   <p>Professional account integration for supported publishing features.</p>
-   <button class="btn full" onclick="connectPlatform('Instagram')">Connect Instagram</button>
-  </div>
-
-  <div class="card">
-   <h2>📘 Facebook</h2>
-   <span class="badge">Not connected</span>
-   <p>Facebook Pages, content publishing and supported insights.</p>
-   <button class="btn full" onclick="connectPlatform('Facebook')">Connect Facebook</button>
-  </div>
-
-  <div class="card">
-   <h2>🌐 Website / Apps</h2>
-   <span class="badge">Not connected</span>
-   <p>API integration, website content and supported app automation.</p>
-   <button class="btn full" onclick="connectPlatform('Website / Apps')">Configure Connection</button>
-  </div>
- </div>
+<section id="accounts" class="page">
+<div class="card">
+<h2>Connect Accounts</h2>
+<p>Abhi account connection configure nahi hua hai. OAuth setup backend par hoga.</p>
+<button class="btn full" onclick="connect('YouTube')">Connect YouTube</button>
+<button class="btn full" onclick="connect('Instagram')">Connect Instagram</button>
+<button class="btn full" onclick="connect('Facebook')">Connect Facebook</button>
+<button class="btn full" onclick="connect('Website/API')">Connect Website / API</button>
+</div>
 </section>
 
-<!-- QUEUE -->
-<section class="page" id="queue">
- <div class="card">
-  <h2>📅 Publishing Queue</h2>
-  <p>Saved content projects yahan manage kar sakte ho. Filhaal items browser mein save hote hain.</p>
-  <div id="queueList"></div>
-  <button class="btn secondary" onclick="refreshQueue()">Refresh</button>
- </div>
+<section id="queue" class="page">
+<div class="card">
+<h2>Saved Projects</h2>
+<button class="btn btn2" onclick="showQueue()">Refresh</button>
+<div id="queueOut"></div>
+</div>
 </section>
 
-<!-- SETTINGS -->
-<section class="page" id="settings">
- <div class="card">
-  <h2>⚙️ Backend Settings</h2>
-  <p>Jarvis AI ko Supabase Edge Function se connect karo.</p>
-
-  <label>Supabase Project URL</label>
-  <input id="supabaseURL" placeholder="https://YOURPROJECT.supabase.co">
-
-  <label>Supabase Anon / Publishable Key</label>
-  <input id="supabaseKey" placeholder="Your public anon key">
-
-  <label>Edge Function Name</label>
-  <input id="functionName" value="rapid-worker">
-
-  <button class="btn full" style="margin-top:15px" onclick="saveSettings()">Save Settings</button>
-  <button class="btn secondary full" style="margin-top:8px" onclick="testBackend()">Test Connection</button>
- </div>
-
- <div class="card">
-  <h2>🧠 Memory & Data</h2>
-  <p>Chat history, projects aur queue is device ke browser storage mein save hote hain.</p>
-  <button class="btn secondary" onclick="exportData()">Export My Data</button>
-  <button class="btn red" style="margin-top:10px" onclick="clearData()">Clear Local Data</button>
- </div>
+<section id="settings" class="page">
+<div class="card">
+<h2>Supabase Settings</h2>
+<label>Project URL</label>
+<input id="url" placeholder="https://yourproject.supabase.co">
+<label>Public anon key</label>
+<input id="key" placeholder="Supabase public key">
+<label>Function Name</label>
+<input id="fn" value="rapid-worker">
+<button class="btn full" onclick="saveSettings()">Save Settings</button>
+<button class="btn full btn2" onclick="testConnection()">Test Connection</button>
+</div>
 </section>
-
 </main>
 </div>
 <div id="toast"></div>
 
 <script>
-/* ================= CONFIG ================= */
-const DEFAULT_URL="https://jiqewyflnbhutrocacyt.supabase.co";
-const DEFAULT_FUNCTION="rapid-worker";
+/* JARVIS MAIN SCRIPT */
+var cfg={};
+var historyMessages=[];
+var savedProjects=[];
+var currentVideo="";
+var currentAd="";
+var isSending=false;
 
-let settings=JSON.parse(localStorage.getItem("jarvis_settings")||"{}");
-let chats=JSON.parse(localStorage.getItem("jarvis_chats")||"[]");
-let projects=JSON.parse(localStorage.getItem("jarvis_projects")||"[]");
-let queue=JSON.parse(localStorage.getItem("jarvis_queue")||"[]");
-let currentChat=[];
-let lastVideo="";
-let lastAd="";
-let busy=false;
+function el(id){return document.getElementById(id)}
 
-const $=id=>document.getElementById(id);
-
-function toast(message){
- const t=$("toast");
- t.textContent=message;t.style.display="block";
- setTimeout(()=>t.style.display="none",2800);
+function notify(t){
+ el("toast").innerText=t;
+ el("toast").style.display="block";
+ window.setTimeout(function(){el("toast").style.display="none"},2500);
 }
 
-function saveLocal(){
- localStorage.setItem("jarvis_chats",JSON.stringify(chats));
- localStorage.setItem("jarvis_projects",JSON.stringify(projects));
- localStorage.setItem("jarvis_queue",JSON.stringify(queue));
+function showError(t){
+ el("errbox").style.display="block";
+ el("errbox").innerText="ERROR: "+t;
+}
+function hideError(){
+ el("errbox").style.display="none";
 }
 
-function init(){
- $("supabaseURL").value=settings.url||DEFAULT_URL;
- $("supabaseKey").value=settings.key||"";
- $("functionName").value=settings.functionName||DEFAULT_FUNCTION;
- renderChat();
- refreshQueue();
- updateStats();
-}
-
-/* ================= NAVIGATION ================= */
-document.querySelectorAll(".nav button").forEach(btn=>{
- btn.onclick=()=>{
-  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  $(btn.dataset.page).classList.add("active");
-  const names={
-   home:"Jarvis AI Chat",studio:"Creator Studio",
-   video:"AI Video Studio",ads:"Ads Studio",
-   accounts:"Account Connections",
-   queue:"Publishing Queue",settings:"Settings"
-  };
-  $("pageTitle").textContent=names[btn.dataset.page]||"Jarvis";
+function openPage(name){
+ var pages=document.querySelectorAll(".page");
+ for(var i=0;i<pages.length;i++){pages[i].classList.remove("show")}
+ var target=el(name);
+ if(target){target.classList.add("show")}
+ var titles={
+ chat:"Jarvis AI Chat",studio:"Creator Studio",
+ video:"AI Video Studio",ads:"Ads Studio",
+ accounts:"Account Connections",queue:"Saved Projects",
+ settings:"Settings"
  };
-});
+ el("heading").innerText=titles[name]||"Jarvis";
+ hideError();
+}
 
-/* ================= AI API ================= */
-async function askAI(message,history=[]){
- const url=(settings.url||DEFAULT_URL).replace(/\/$/,"");
- const key=settings.key;
- const functionName=settings.functionName||DEFAULT_FUNCTION;
+function loadSettings(){
+ try{
+  cfg=JSON.parse(localStorage.getItem("jarvis_cfg")||"{}");
+ }catch(e){cfg={}}
+ el("url").value=cfg.url||"https://jiqewyflnbhutrocacyt.supabase.co";
+ el("key").value=cfg.key||"";
+ el("fn").value=cfg.fn||"rapid-worker";
+}
 
- if(!key)throw new Error("Supabase public key Settings mein add karo.");
+function saveSettings(){
+ cfg={
+  url:el("url").value.trim().replace(/\/$/,""),
+  key:el("key").value.trim(),
+  fn:el("fn").value.trim()
+ };
+ localStorage.setItem("jarvis_cfg",JSON.stringify(cfg));
+ notify("Settings saved");
+}
 
- const endpoint=url+"/functions/v1/"+functionName;
+function backendReady(){
+ if(!cfg.url||!cfg.key||!cfg.fn){
+  throw new Error("Settings mein Supabase URL, public key aur function name bharna zaroori hai.");
+ }
+}
 
- const response=await fetch(endpoint,{
+async function callAI(message){
+ backendReady();
+ var endpoint=cfg.url+"/functions/v1/"+cfg.fn;
+ var res=await fetch(endpoint,{
   method:"POST",
   headers:{
    "Content-Type":"application/json",
-   "apikey":key,
-   "Authorization":"Bearer "+key
+   "apikey":cfg.key,
+   "Authorization":"Bearer "+cfg.key
   },
-  body:JSON.stringify({message,history})
+  body:JSON.stringify({
+   message:message,
+   history:historyMessages.slice(-16)
+  })
  });
-
- const raw=await response.text();
- let data;
- try{data=JSON.parse(raw)}catch{data={reply:raw}}
-
- if(!response.ok){
-  throw new Error(data.error||data.message||"HTTP "+response.status+" "+raw.slice(0,300));
+ var raw=await res.text();
+ var data;
+ try{data=JSON.parse(raw)}catch(e){data={reply:raw}}
+ if(!res.ok){
+  throw new Error("HTTP "+res.status+": "+(data.error||data.message||raw));
  }
-
- return data.reply||data.text||data.message||JSON.stringify(data);
+ var reply=data.reply||data.text||data.message;
+ if(!reply)throw new Error("Backend se reply nahi mila.");
+ return reply;
 }
 
-/* ================= CHAT ================= */
-function addMessage(role,text){
- const box=$("chatbox");
- const div=document.createElement("div");
- div.className="msg "+(role==="user"?"user":"ai");
- div.textContent=text;
- box.appendChild(div);
- box.scrollTop=box.scrollHeight;
-}
-
-function renderChat(){
- $("chatbox").innerHTML="";
- currentChat.forEach(m=>addMessage(m.role,m.content));
-}
-
-async function sendChat(){
- if(busy)return;
- const input=$("chatInput");
- const message=input.value.trim();
- if(!message)return;
- input.value="";
- currentChat.push({role:"user",content:message});
- addMessage("user",message);
- busy=true;
- $("connectionStatus").textContent="● Thinking...";
-
- try{
-  const reply=await askAI(message,currentChat.slice(-20));
-  currentChat.push({role:"assistant",content:reply});
-  addMessage("assistant",reply);
-  chats.push({date:new Date().toISOString(),messages:currentChat});
-  saveLocal();
-  $("connectionStatus").textContent="● Connected";
- }catch(e){
-  addMessage("assistant","Error: "+e.message);
-  $("connectionStatus").textContent="● Error";
- }finally{busy=false}
-}
-
-$("chatInput").addEventListener("keydown",e=>{
- if(e.key==="Enter"&&!e.shiftKey){
-  e.preventDefault();sendChat();
- }
+/* Chat form */
+el("chatForm").addEventListener("submit",async function(event){
+ event.preventDefault();
+ sendMessage();
 });
 
+async function sendMessage(){
+ if(isSending)return;
+ var text=el("message").value.trim();
+ if(!text)return;
+
+ isSending=true;
+ el("sendBtn").disabled=true;
+ el("sendBtn").innerText="Sending...";
+ el("message").value="";
+ addChat("user",text);
+ historyMessages.push({role:"user",content:text});
+ hideError();
+
+ try{
+  var reply=await callAI(text);
+  addChat("assistant",reply);
+  historyMessages.push({role:"assistant",content:reply});
+  localStorage.setItem("jarvis_history",JSON.stringify(historyMessages));
+ }catch(e){
+  showError(e.message);
+  addChat("assistant","Request failed: "+e.message);
+ }finally{
+  isSending=false;
+  el("sendBtn").disabled=false;
+  el("sendBtn").innerText="Send Message ➤";
+ }
+}
+
+function addChat(role,text){
+ var d=document.createElement("div");
+ d.className="msg "+(role==="user"?"user":"ai");
+ d.textContent=text;
+ el("chatbox").appendChild(d);
+ el("chatbox").scrollTop=el("chatbox").scrollHeight;
+}
+
 function newChat(){
- currentChat=[];
- renderChat();
- toast("New chat started");
+ historyMessages=[];
+ el("chatbox").innerHTML="";
+ localStorage.removeItem("jarvis_history");
+ openPage("chat");
+ notify("New chat");
 }
 
-/* ================= GENERATORS ================= */
-async function generateIdeas(){
- const niche=$("ideaNiche").value.trim();
- if(!niche)return toast("Niche enter karo");
- $("ideaOutput").textContent="Generating...";
+function restoreChat(){
  try{
-  $("ideaOutput").textContent=await askAI(
-   "Create 20 original content ideas for the niche: "+niche+
-   ". Include catchy titles, audience and short hook. Answer in Hindi/Hinglish."
-  );
- }catch(e){$("ideaOutput").textContent="Error: "+e.message}
+  historyMessages=JSON.parse(localStorage.getItem("jarvis_history")||"[]");
+  historyMessages.forEach(function(m){addChat(m.role,m.content)});
+ }catch(e){historyMessages=[]}
 }
 
-async function growthPlan(){
- const input=$("growthInput").value.trim();
- if(!input)return toast("Channel details enter karo");
- $("growthOutput").textContent="Analyzing...";
+/* AI tools */
+async function runPrompt(prompt,outputId){
+ el(outputId).innerText="Jarvis is working...";
  try{
-  $("growthOutput").textContent=await askAI(
-   "Act as a responsible content strategy coach. Create a practical growth plan based on: "+input+
-   ". Include content pillars, posting ideas, improvement tips and weekly review. No fake guarantees."
-  );
- }catch(e){$("growthOutput").textContent="Error: "+e.message}
+  var result=await callAI(prompt);
+  el(outputId).innerText=result;
+  return result;
+ }catch(e){
+  el(outputId).innerText="Error: "+e.message;
+  showError(e.message);
+  return "";
+ }
 }
 
-async function makePlanner(){
- const niche=$("plannerNiche").value.trim();
- if(!niche)return toast("Niche enter karo");
- $("plannerOutput").textContent="Creating planner...";
- try{
-  $("plannerOutput").textContent=await askAI(
-   "Create a 30 day content calendar for "+niche+
-   ". Make a numbered daily plan with topic, format and hook. In Hindi."
-  );
- }catch(e){$("plannerOutput").textContent="Error: "+e.message}
+function ideas(){
+ var n=el("niche").value.trim();
+ if(!n)return notify("Topic enter karo");
+ runPrompt("Generate 20 unique content ideas for "+n+". Give title, hook and format. Hindi/Hinglish.", "ideasOut");
 }
 
-async function generateVideoPlan(){
- const topic=$("videoTopic").value.trim();
- if(!topic)return toast("Video topic enter karo");
- $("videoResultCard").style.display="block";
- $("videoOutput").textContent="Generating video script and scene plan...";
- lastVideo="";
- try{
-  const prompt=`Create a complete video production plan.
-Topic: ${topic}
-Platform: ${$("videoPlatform").value}
-Duration: ${$("videoDuration").value}
-Style: ${$("videoStyle").value}
-Language: ${$("videoLanguage").value}
+function planner(){
+ var n=el("plannerNiche").value.trim();
+ if(!n)return notify("Niche enter karo");
+ runPrompt("Create a practical 30 day content calendar for "+n+". Include daily topic, format and hook in Hindi.", "plannerOut");
+}
 
-Include:
-1. Title
-2. Opening hook
-3. 
+function growth(){
+ var n=el("growthText").value.trim();
+ if(!n)return notify("Channel details enter karo");
+ runPrompt("Give a realistic content improvement plan for this channel: "+n+". Include content pillars, weekly plan, audience engagement and analytics review.", "growthOut");
+}
+
+async function videoPlan(){
+ var t=el("topic").value.trim();
+ if(!t)return notify("Video topic enter karo");
+ currentVideo=await runPrompt(
+ "Create a complete video script and production plan. Topic: "+t+
+ ". Platform: "+el("platform").value+
+ ". Duration: "+el("duration").value+
+ ". Style: "+el("style").value+
+ ". Include title, hook, narration, scenes, captions, thumbnail concept, description and hashtags. Hindi.",
+ "videoOut"
+ );
+}
+
+async function makeAd(){
+ var p=el("product").value.trim();
+ if(!p)return notify("Product name enter karo");
+ currentAd=await runPrompt(
+ "Create an advertisement creative for "+p+
+ ". Details: "+el("productDetails").value+
+ ". Platform: "+el("adPlatform").value+
+ ". Include hook, ad script, visual scenes, headline, caption, CTA and hashtags. Avoid invented claims.",
+ "adOut"
+ );
+}
+
+/* Project saving */
+function saveProject(type,title,content){
+ if(!content)return notify("Pehle content generate karo");
+ savedProjects.push({
+  id:Date.now(),type:type,title:title,
+  content:content,date:new Date().toLocaleString()
+ });
+ localStorage.setItem("jarvis_projects",JSON.stringify(savedProjects));
+ showQueue();
+ notify("Project saved");
+}
+
+function saveVideo(){
+ saveProject("Video",el("topic").value,currentVideo);
+}
+function saveAd(){
+ saveProject("Advertisement",el("product").value,currentAd);
+}
+
+function showQueue(){
+ try{
+  savedProjects=JSON.parse(localStorage.getItem("jarvis_projects")||"[]");
+ }catch(e){savedProjects=[]}
+ var out=el("queueOut");
+ out.innerHTML="";
+ if(savedProjects.length===0){
+  out.innerHTML="<p>Abhi koi project save nahi hai.</p>";
+  return;
+ }
+ savedProjects.forEach(function(item,index){
+  var box=document.createElement("div");
+  box.className="card";
+  var h=document.createElement("h3");
+  h.textContent=item.type+": "+item.title;
+  var p=document.createElement("p");
+  p.textContent=item.date;
+  var view=document.createElement("button");
+  view.className="btn";
+  view.textContent="View";
+  view.onclick=function(){
+   alert(item.content);
+  };
+  var del=document.createElement("button");
+  del.className="btn btn2";
+  del.textContent="Delete";
+  del.onclick=function(){
+   savedProjects.splice(index,1);
+   localStorage.setItem("jarvis_projects",JSON.stringify(savedProjects));
+   showQueue();
+  };
+  box.appendChild(h);box.appendChild(p);
+  box.appendChild(view);box.appendChild(del);
+  out.appendChild(box);
+ });
+}
+
+/* Account placeholders */
+function connect(platform){
+ alert(platform+" integration abhi connect nahi hai. OAuth aur secure backend setup next phase mein hoga.");
+}
+
+/* Backend test */
+async function testConnection(){
+ saveSettings();
+ hideError();
+ notify("Testing...");
+ try{
+  var r=await callAI("Reply only: CONNECTION OK");
+  alert("Connected successfully!\n"+r);
+ }catch(e){
+  showError(e.message);
+  alert("Connection failed:\n"+e.message);
+ }
+}
+
+loadSettings();
+restoreChat();
+showQueue();
+openPage("chat");
+</script>
+</body>
+ </html>
+ 
