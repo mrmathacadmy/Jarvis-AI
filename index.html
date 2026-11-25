@@ -1,452 +1,207 @@
-
 <!DOCTYPE html>
+<!doctype html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Jarvis AI Creator Studio</title>
-
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#0a1020;color:#edf3ff;font-family:Arial,sans-serif}
-:root{--p:#141e32;--b:#273750;--blue:#5788ff;--muted:#9cacc6}
-button{background:var(--blue);color:white;border:0;border-radius:10px;padding:12px;cursor:pointer;font-weight:bold}
-button:active{transform:scale(.98)}
-button.secondary{background:#1d2b43;border:1px solid var(--b)}
-input,textarea,select{width:100%;padding:12px;background:#0b1426;color:white;border:1px solid var(--b);border-radius:10px}
-textarea{min-height:120px;resize:vertical}
-label{color:var(--muted);font-size:13px}
-.app{display:flex;min-height:100vh}
-.sidebar{width:230px;position:fixed;top:0;bottom:0;overflow:auto;background:#0d1628;border-right:1px solid var(--b);padding:15px}
-.logo{font-size:23px;font-weight:bold;margin:10px 0 20px}
-.logo span{color:#6f9bff}
+body{margin:0;background:#080d18;color:#eaf1ff;font-family:Arial,sans-serif}
+:root{--panel:#101a2c;--border:#253550;--blue:#4b8dff;--muted:#a6b4cc}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;color:#fff;background:#235fcb;border:0;border-radius:10px;padding:11px 14px;font-weight:700}
+button.secondary{background:#18263c;border:1px solid #304563}
+button.danger{background:#8d2938}
+button:disabled{opacity:.5;cursor:not-allowed}
+input,select,textarea{width:100%;padding:11px;border:1px solid #344965;border-radius:9px;background:#091322;color:#eaf1ff;margin:6px 0 12px}
+textarea{min-height:105px;resize:vertical}
+label{font-size:13px;color:#c5d2e6}
+h1,h2,h3{margin:0 0 12px}
+p{color:var(--muted);line-height:1.5}
+.app{display:grid;grid-template-columns:245px 1fr;min-height:100vh}
+.sidebar{background:#0b1322;border-right:1px solid var(--border);padding:14px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{font-size:21px;font-weight:800;margin:8px 0 16px}
 .nav{display:grid;gap:6px}
-.nav button{text-align:left;background:transparent;color:#aab8ce}
-.nav button.active{background:#203453;color:white}
-.main{margin-left:230px;width:calc(100% - 230px);padding:22px}
-.page{display:none}
-.page.active{display:block}
-h1{font-size:25px;margin:0 0 8px}
-h2{font-size:19px}
-.muted{color:var(--muted);font-size:13px}
-.card{background:var(--p);border:1px solid var(--b);border-radius:14px;padding:16px;margin-bottom:14px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.form{display:grid;gap:12px}
-.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.output{white-space:pre-wrap;overflow-wrap:anywhere;background:#070d18;border:1px solid var(--b);border-radius:12px;padding:15px;margin-top:15px;line-height:1.6;display:none}
-.output.visible{display:block}
-.status{color:#70dbaa;font-size:13px}
-video,audio{width:100%;max-height:350px;margin-top:10px}
-.media-item{padding:10px;border:1px solid var(--b);border-radius:10px;margin:8px 0}
-.media-item button{margin-top:8px}
-.file-label{display:block;border:1px dashed #496080;border-radius:12px;padding:18px;text-align:center;cursor:pointer}
-.file-label input{margin-top:10px}
-.project{border-bottom:1px solid var(--b);padding:12px 0}
-.smallbtn{padding:8px;font-size:12px}
-@media(max-width:750px){
- .app{display:block}
- .sidebar{position:relative;width:100%;height:auto;border:0;border-bottom:1px solid var(--b)}
- .nav{grid-template-columns:repeat(3,1fr)}
- .nav button{text-align:center;font-size:12px;padding:8px 3px}
- .main{width:100%;margin:0;padding:14px}
- .grid{grid-template-columns:1fr}
-}
+.nav button{background:transparent;text-align:left;border:1px solid transparent;padding:10px}
+.nav button.active,.nav button:hover{background:#172740;border-color:#314965}
+main{padding:18px;max-width:1100px;width:100%;margin:auto}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.page{display:none}.page.active{display:block}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.output{white-space:pre-wrap;overflow-wrap:anywhere;background:#07101e;border:1px solid var(--border);border-radius:10px;padding:12px;min-height:30px}
+.small{font-size:12px;color:var(--muted)}
+.status{margin:8px 0;color:#9dc4ff;min-height:20px}
+.chatbox{height:360px;overflow:auto;background:#07101e;border:1px solid var(--border);border-radius:10px;padding:10px}
+.msg{white-space:pre-wrap;padding:10px;border-radius:10px;margin:8px 0;max-width:95%;overflow-wrap:anywhere}
+.user{background:#183357;margin-left:auto}.assistant{background:#142238}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.project{border:1px solid var(--border);border-radius:10px;padding:12px}
+@media(max-width:760px){.app{display:block}.sidebar{position:relative;height:auto;padding:10px}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap}.sidebar .brand{margin:4px}.main{padding:12px}main{padding:12px}}
 </style>
 </head>
 <body>
-
 <div class="app">
 <aside class="sidebar">
-  <div class="logo">⚡ JARVIS <span>AI</span></div>
-  <div class="nav">
-    <button class="active" data-page="home">🏠 Home</button>
-    <button data-page="chat">💬 AI Chat</button>
-    <button data-page="website">🌐 Website</button>
-    <button data-page="apps">📱 Apps</button>
-    <button data-page="games">🎮 Games</button>
-    <button data-page="code">💻 Code</button>
-    <button data-page="content">✍️ Content</button>
-    <button data-page="video">🎬 Video Studio</button>
-    <button data-page="media">🎞️ Media Editor</button>
-    <button data-page="music">🎵 Music Studio</button>
-    <button data-page="thumbnail">🖼️ Thumbnail</button>
-    <button data-page="poster">🎞️ Movie Poster</button>
-    <button data-page="ads">📢 Ads</button>
-    <button data-page="projects">📂 Projects</button>
-    <button data-page="settings">⚙️ Settings</button>
-  </div>
+<div class="brand">⚡ JARVIS AI</div>
+<div class="nav" id="nav">
+<button class="active" data-page="home">🏠 Home</button>
+<button data-page="chat">🤖 AI Chat</button>
+<button data-page="website">🌐 Website</button>
+<button data-page="apps">📱 Apps</button>
+<button data-page="games">🎮 Games</button>
+<button data-page="code">💻 Code</button>
+<button data-page="content">📝 Content</button>
+<button data-page="video">🎬 Video Studio</button>
+<button data-page="media">✂️ Media Editor</button>
+<button data-page="music">🎵 Music</button>
+<button data-page="thumbnail">🖼️ Thumbnail</button>
+<button data-page="poster">🎞️ Poster</button>
+<button data-page="ads">📢 Ads</button>
+<button data-page="projects">📁 Projects</button>
+<button data-page="settings">⚙️ Settings</button>
+</div>
 </aside>
+<main>
+<div class="top"><div><h1 id="pageTitle">Jarvis Creator Studio</h1><div class="small">AI Creator & Developer Assistant</div></div><button class="secondary" data-page="settings">Settings</button></div>
+<div id="globalStatus" class="status">Ready.</div>
 
-<main class="main">
-<header class="card">
-  <b>All-in-One Creator + Developer Assistant</b>
-  <div class="muted">Website • Apps • Games • Movies • Music • Content</div>
-  <div id="status" class="status">● Ready</div>
-</header>
-
-<!-- HOME -->
-<section id="home" class="page active">
-<h1>Jarvis Creator Studio</h1>
-<p class="muted">Choose what you want to create.</p>
+<section class="page active" id="page-home">
+<div class="card"><h2>All-in-One Creator + Developer Assistant</h2><p>Apne ideas ko plans, code drafts, content aur project notes mein badlo. Real execution ke liye connected services ki zaroorat hogi.</p></div>
 <div class="grid">
-<div class="card"><h2>🌐 Website Builder</h2><button data-go="website">Open</button></div>
-<div class="card"><h2>📱 App Builder</h2><button data-go="apps">Open</button></div>
-<div class="card"><h2>🎮 Game Builder</h2><button data-go="games">Open</button></div>
-<div class="card"><h2>💻 Code Studio</h2><button data-go="code">Open</button></div>
-<div class="card"><h2>✍️ Content Ideas</h2><button data-go="content">Open</button></div>
-<div class="card"><h2>🎬 Video Studio</h2><button data-go="video">Open</button></div>
-<div class="card"><h2>🎞️ Media Editor</h2><button data-go="media">Open</button></div>
-<div class="card"><h2>🎵 Music Studio</h2><button data-go="music">Open</button></div>
-<div class="card"><h2>🖼️ Thumbnail</h2><button data-go="thumbnail">Open</button></div>
-<div class="card"><h2>🎞️ Poster Maker</h2><button data-go="poster">Open</button></div>
-<div class="card"><h2>📢 Ads Studio</h2><button data-go="ads">Open</button></div>
-<div class="card"><h2>📂 Projects</h2><button data-go="projects">Open</button></div>
+<div class="card"><h3>🌐 Website Builder</h3><button data-page="website">Open</button></div>
+<div class="card"><h3>📱 App Builder</h3><button data-page="apps">Open</button></div>
+<div class="card"><h3>🎮 Game Builder</h3><button data-page="games">Open</button></div>
+<div class="card"><h3>💻 Code Studio</h3><button data-page="code">Open</button></div>
+<div class="card"><h3>📝 Content Studio</h3><button data-page="content">Open</button></div>
+<div class="card"><h3>🎬 Video Studio</h3><button data-page="video">Open</button></div>
+<div class="card"><h3>✂️ Media Editor</h3><button data-page="media">Open</button></div>
+<div class="card"><h3>🎵 Music Studio</h3><button data-page="music">Open</button></div>
+<div class="card"><h3>🖼️ Thumbnail Studio</h3><button data-page="thumbnail">Open</button></div>
+<div class="card"><h3>🎞️ Poster Studio</h3><button data-page="poster">Open</button></div>
+<div class="card"><h3>📢 Ads Studio</h3><button data-page="ads">Open</button></div>
+<div class="card"><h3>📁 Projects</h3><button data-page="projects">Open</button></div>
 </div>
 </section>
 
-<!-- CHAT -->
-<section id="chat" class="page">
-<h1>💬 AI Chat</h1>
-<div class="card">
-<div id="chatMessages"></div>
-<form id="chatForm" class="form">
-<textarea id="chatInput" placeholder="Jarvis se kuchh bhi poochho..." required></textarea>
-<button>Send Message</button>
-<button type="button" class="secondary" data-action="clear-chat">Clear Chat</button>
-</form>
-</div>
-</section>
+<section class="page" id="page-chat">
+<div class="card"><h2>AI Chat</h2><div id="chatMessages" class="chatbox"></div>
+<form id="chatForm"><textarea id="chatInput" placeholder="Jarvis se kuch bhi poochho..." required></textarea><div class="actions"><button type="submit">Send Message</button><button type="button" class="secondary" data-action="clear-chat">Clear Chat</button></div></form>
+</div></section>
 
-<!-- WEBSITE -->
-<section id="website" class="page">
-<h1>🌐 Website Builder</h1>
-<div class="card form">
+<section class="page" id="page-website"><div class="card"><h2>Website Builder</h2>
 <label>Website name</label><input id="websiteName" placeholder="My Website">
-<label>Website type</label>
-<select id="websiteType">
-<option>Business</option><option>Portfolio</option><option>E-commerce</option>
-<option>Education</option><option>Blog</option><option>Dashboard</option>
-<option>Social platform</option><option>Custom</option>
-</select>
-<label>Details</label><textarea id="websiteDetails" placeholder="Pages, design, features, colors, login..."></textarea>
-<button data-action="website">Generate Website</button>
-</div>
-<div id="websiteOut" class="output"></div>
-<div class="actions"><button class="secondary" data-copy="websiteOut">Copy</button><button data-save="Website:websiteOut">Save</button></div>
-</section>
+<label>Website type</label><select id="websiteType"><option>Business</option><option>Portfolio</option><option>E-commerce</option><option>Education</option><option>Blog</option><option>Dashboard</option><option>Social platform</option><option>Other</option></select>
+<label>Requirements</label><textarea id="websiteDetails" placeholder="Pages, design, features, login, database, etc."></textarea>
+<button data-action="generate-website">Generate Website Plan / Code</button><div id="websiteOut" class="output"></div><div class="actions"><button class="secondary" data-action="copy" data-target="websiteOut">Copy</button><button class="secondary" data-action="save" data-target="websiteOut" data-project="Website">Save Project</button></div></div></section>
 
-<!-- APPS -->
-<section id="apps" class="page">
-<h1>📱 App Builder</h1>
-<div class="card form">
+<section class="page" id="page-apps"><div class="card"><h2>App Builder</h2>
 <label>App name</label><input id="appName" placeholder="My App">
-<label>Platform</label><select id="appPlatform"><option>Android</option><option>iOS + Android</option><option>Web App</option><option>Flutter</option><option>React Native</option></select>
-<label>App requirements</label><textarea id="appDetails" placeholder="Screens, features, login, database, design..."></textarea>
-<button data-action="apps">Generate App Plan & Code</button>
-</div>
-<div id="appsOut" class="output"></div>
-<div class="actions"><button class="secondary" data-copy="appsOut">Copy</button><button data-save="App:appsOut">Save</button></div>
-</section>
+<label>Platform</label><select id="appPlatform"><option>Android</option><option>Android + iOS</option><option>Web App</option></select>
+<label>Features</label><textarea id="appDetails" placeholder="Screens, login, database, APIs, features..."></textarea>
+<button data-action="generate-app">Generate App Plan & Code</button><div id="appOut" class="output"></div><div class="actions"><button class="secondary" data-action="copy" data-target="appOut">Copy</button><button class="secondary" data-action="save" data-target="appOut" data-project="App">Save Project</button></div></div></section>
 
-<!-- GAMES -->
-<section id="games" class="page">
-<h1>🎮 Game Builder</h1>
-<div class="card form">
+<section class="page" id="page-games"><div class="card"><h2>Game Builder</h2>
 <label>Game name</label><input id="gameName" placeholder="My Game">
-<label>Engine/platform</label><select id="gameEngine"><option>HTML Browser Game</option><option>Godot</option><option>Unity</option><option>Android</option><option>PC</option></select>
-<label>Game concept and mechanics</label><textarea id="gameDetails" placeholder="Player, controls, levels, enemies, scoring..."></textarea>
-<button data-action="games">Generate Game</button>
-</div>
-<div id="gamesOut" class="output"></div>
-<div class="actions"><button class="secondary" data-copy="gamesOut">Copy</button><button data-save="Game:gamesOut">Save</button></div>
-</section>
+<label>Platform / engine</label><select id="gameEngine"><option>Browser HTML5</option><option>Unity</option><option>Godot</option><option>Android</option></select>
+<label>Game concept</label><textarea id="gameDetails" placeholder="Gameplay, controls, levels, characters..."></textarea>
+<button data-action="generate-game">Generate Game Plan / Code</button><div id="gameOut" class="output"></div><div class="actions"><button class="secondary" data-action="copy" data-target="gameOut">Copy</button><button class="secondary" data-action="save" data-target="gameOut" data-project="Game">Save Project</button></div></div></section>
 
-<!-- CODE -->
-<section id="code" class="page">
-<h1>💻 Code Studio</h1>
-<div class="card form">
-<label>Task</label><select id="codeTask"><option>Write code</option><option>Fix errors</option><option>Explain code</option><option>Improve code</option><option>Build project</option></select>
-<label>Language</label><select id="codeLanguage"><option>HTML CSS JavaScript</option><option>JavaScript</option><option>Python</option><option>Java</option><option>Kotlin</option><option>React</option><option>Flutter</option><option>C++</option><option>SQL</option></select>
-<label>Instructions/code</label><textarea id="codeDetails" placeholder="Paste code or explain..."></textarea>
-<button data-action="code">Run Code Assistant</button>
-</div>
-<div id="codeOut" class="output"></div>
-<div class="actions"><button class="secondary" data-copy="codeOut">Copy</button><button data-save="Code:codeOut">Save</button></div>
-</section>
+<section class="page" id="page-code"><div class="card"><h2>Code Studio</h2>
+<label>Task</label><select id="codeTask"><option>Write code</option><option>Explain code</option><option>Debug errors</option><option>Improve code</option><option>Convert code</option></select>
+<label>Language</label><select id="codeLanguage"><option>HTML, CSS, JavaScript</option><option>Python</option><option>Java</option><option>Kotlin</option><option>C++</option><option>TypeScript</option><option>Other</option></select>
+<label>Code / instructions</label><textarea id="codeDetails" placeholder="Code paste karein ya requirements batayein"></textarea>
+<button data-action="generate-code">Run Code Assistant</button><div id="codeOut" class="output"></div><div class="actions"><button class="secondary" data-action="copy" data-target="codeOut">Copy</button><button class="secondary" data-action="save" data-target="codeOut" data-project="Code">Save Project</button></div></div></section>
 
-<!-- CONTENT -->
-<section id="content" class="page">
-<h1>✍️ Content Studio</h1>
-<div class="card form">
-<label>Platform</label><select id="contentPlatform"><option>YouTube</option><option>Instagram</option><option>Facebook</option><option>Blog</option><option>All platforms</option></select>
-<label>Output type</label><select id="contentType"><option>Content ideas</option><option>Captions</option><option>Post</option><option>Titles</option><option>Hashtags</option><option>30-day calendar</option><option>SEO article</option><option>Growth plan</option></select>
-<label>Topic</label><textarea id="contentDetails" placeholder="Niche, topic, audience..."></textarea>
-<button data-action="content">Generate Content</button>
-</div>
-<div id="contentOut" class="output"></div>
-<div class="actions"><button class="secondary" data-copy="contentOut">Copy</button><button data-save="Content:contentOut">Save</button></div>
-</section>
+<section class="page" id="page-content"><div class="card"><h2>Content Studio</h2>
+<label>Platform</label><select id="contentPlatform"><option>YouTube</option><option>Instagram</option><option>Facebook</option><option>Blog</option><option>Other</option></select>
+<label>Content type</label><select id="contentType"><option>Video script</option><option>Short video idea</option><option>Post</option><option>Caption</option><option>Article</option><option>Content calendar</option></select>
+<label>Topic / details</label><textarea id="contentDetails" placeholder="Topic, audience, language, tone..."></textarea>
+<button data-action="generate-content">Generate Content</button><div id="contentOut" class="output"></div><div class="actions"><button class="secondary" data-action="copy" data-target="contentOut">Copy</button><button class="secondary" data-action="save" data-target="contentOut" data-project="Content">Save Project</button></div></div></section>
 
-<!-- VIDEO -->
-<section id="video" class="page">
-<h1>🎬 Video Studio</h1>
-<div class="card form">
-<label>Video format</label><select id="videoFormat"><option>YouTube long video</option><option>Shorts</option><option>Reel</option><option>Short film</option><option>Documentary</option><option>Movie</option></select>
-<label>Video type</label><select id="videoKind"><option>Idea</option><option>Full script</option><option>Scene breakdown</option><option>Storyboard</option><option>Voice-over</option><option>Shot list</option></select>
-<label>Topic and details</label><textarea id="videoDetails" placeholder="Story, duration, genre, actors, style..."></textarea>
-<button data-action="video">Generate Video Plan</button>
-</div>
-<div id="videoOut" class="output"></div>
-<div class="actions"><button class="secondary" data-copy="videoOut">Copy</button><button data-save="Video:videoOut">Save</button></div>
-</section>
+<section class="page" id="page-video"><div class="card"><h2>Video Studio</h2>
+<label>Video format</label><select id="videoFormat"><option>YouTube long video</option><option>Shorts</option><option>Reel</option><option>Ad</option><option>Explainer</option></select>
+<label>Video topic</label><input id="videoTopic" placeholder="Topic">
+<label>Details</label><textarea id="videoDetails" placeholder="Duration, scenes, narration, style..."></textarea>
+<button data-action="generate-video">Generate Video Plan</button><div id="videoOut" class="output"></div><div class="actions"><button class="secondary" data-action="copy" data-target="videoOut">Copy</button><button class="secondary" data-action="save" data-target="videoOut" data-project="Video">Save Project</button></div></div></section>
 
-<!-- MEDIA EDITOR -->
-<section id="media" class="page">
-<h1>🎞️ Media Editor</h1>
-<p class="muted">Upload your footage and audio, preview files, then create an AI editing plan.</p>
+<section class="page" id="page-media"><div class="card"><h2>Media Editor</h2><p>Files select kar sakte ho; ye browser mein file list/preview aur editing brief banata hai. Actual video rendering abhi connected nahi.</p>
+<label>Select video files</label><input type="file" id="videoFiles" accept="video/*" multiple><div id="videoFileList"></div>
+<label>Select audio files</label><input type="file" id="audioFiles" accept="audio/*" multiple><div id="audioFileList"></div>
+<label>Editing style</label><select id="editStyle"><option>Cinematic</option><option>Documentary</option><option>Action trailer</option><option>Social media short</option><option>Professional commercial</option></select>
+<label>Editing instructions</label><textarea id="editInstructions" placeholder="Cut, transitions, captions, sequence..."></textarea>
+<label>Output format</label><select id="editFormat"><option>16:9 YouTube</option><option>9:16 Reel/Short</option><option>1:1 Square</option></select>
+<button data-action="media-plan">Create Editing Plan</button><div id="mediaOut" class="output"></div><div class="actions"><button class="secondary" data-action="copy" data-target="mediaOut">Copy Plan</button><button class="secondary" data-action="save" data-target="mediaOut" data-project="Media Edit">Save Project</button></div></div></section>
 
-<div class="card">
-<label class="file-label">
-📁 Select video footage
-<input type="file" id="videoFiles" accept="video/*" multiple>
-</label>
-<div id="videoList"></div>
-<div id="videoPreview"></div>
-</div>
+<section class="page" id="page-music"><div class="card"><h2>Music Studio</h2>
+<label>Song title</label><input id="songTitle" placeholder="Song title">
+<label>Language</label><select id="songLanguage"><option>Hindi</option><option>English</option><option>Punjabi</option><option>Instrumental</option><option>Other</option></select>
+<label>Genre</label><select id="songGenre"><option>Pop</option><option>Hip-hop</option><option>Romantic</option><option>Devotional</option><option>Lo-fi</option><option>EDM</option><option>Acoustic</option><option>Other</option></select>
+<label>Song idea / mood</label><textarea id="songDetails" placeholder="Mood, theme, instruments, tempo..."></textarea>
+<button data-action="generate-music">Create Original Song Concept</button><div id="musicOut" class="output"></div><div class="actions"><button class="secondary" data-action="copy" data-target="musicOut">Copy</button><button class="secondary" data-action="save" data-target="musicOut" data-project="Music">Save Project</button></div></div></section>
 
-<div class="card">
-<label class="file-label">
-🎵 Select audio/music
-<input type="file" id="audioFiles" accept="audio/*" multiple>
-</label>
-<div id="audioList"></div>
-<div id="audioPreview"></div>
-</div>
+<section class="page" id="page-thumbnail"><div class="card"><h2>Thumbnail Studio</h2>
+<label>Video title</label><input id="thumbTitle" placeholder="Video title">
+<label>Thumbnail idea</label><textarea id="thumbDetails" placeholder="Subject, expression, background, colors, text..."></textarea>
+<button data-action="generate-thumbnail">Generate Thumbnail Prompt</button><div id="thumbnailOut" class="output"></div><div class="actions"><button class="secondary" data-action="copy" data-target="thumbnailOut">Copy Prompt</button><button class="secondary" data-action="save" data-target="thumbnailOut" data-project="Thumbnail">Save Project</button></div></div></section>
 
-<div class="card form">
-<label>Editing style</label>
-<select id="editStyle">
-<option>Cinematic</option><option>Vlog</option><option>Documentary</option>
-<option>Action trailer</option><option>Music video</option><option>Short film</option>
-<option>Social media short</option><option>Professional commercial</option>
-</select>
-
-<label>Editing instructions</label>
-<textarea id="editInstructions" placeholder="Example: Start with best scene, remove pauses, add cinematic transitions, music, subtitles, color grade, sound effects, end credits..."></textarea>
-
-<label>Output format</label>
-<select id="editFormat"><option>16:9 YouTube</option><option>9:16 Reel/Short</option><option>1:1 Square</option><option>Movie 16:9</option></select>
-
-<label>Music preference</label>
-<input id="editMusic" placeholder="Mood, instruments, tempo, music style">
-
-<button data-action="media">Create Complete Editing Plan</button>
-</div>
-
-<div id="mediaOut" class="output"></div>
-<div class="actions">
-<button class="secondary" data-copy="mediaOut">Copy Editing Plan</button>
-<button data-save="Media Edit:mediaOut">Save Project</button>
-</div>
-</section>
-
-<!-- MUSIC -->
-<section id="music" class="page">
-<h1>🎵 Music Studio</h1>
-<p class="muted">Songwriting, lyrics, composition plans and original music concepts.</p>
-<div class="card form">
-<label>Song name/topic</label><input id="songName" placeholder="Song title or theme">
-<label>Language</label><select id="songLanguage"><option>Hindi</option><option>English</option><option>Hinglish</option><option>Punjabi</option><option>Instrumental</option></select>
-<label>Genre</label><select id="songGenre"><option>Pop</option><option>Hip-hop</option><option>Rock</option><option>Romantic</option><option>Lo-fi</option><option>Electronic</option><option>Classical</option><option>Cinematic</option><option>Devotional</option><option>Custom</option></select>
-<label>Mood and details</label><textarea id="songDetails" placeholder="Mood, story, instruments, vocal style, duration..."></textarea>
-<button data-action="music">Create Original Song</button>
-</div>
-<div id="musicOut" class="output"></div>
-<div class="actions"><button class="secondary" data-copy="musicOut">Copy</button><button data-save="Music:musicOut">Save</button></div>
-</section>
-
-<!-- THUMBNAIL -->
-<section id="thumbnail" class="page">
-<h1>🖼️ Thumbnail Studio</h1>
-<div class="card form">
-<label>Video title/topic</label><input id="thumbTitle" placeholder="Video title">
-<label>Thumbnail details</label><textarea id="thumbDetails" placeholder="Subject, emotion, background, text, colors, composition..."></textarea>
-<label>Platform</label><select id="thumbPlatform"><option>YouTube</option><option>Instagram</option><option>Facebook</option></select>
-<button data-action="thumbnail">Create Thumbnail Concept + Prompt</button>
-</div>
-<div id="thumbnailOut" class="output"></div>
-<div class="actions"><button class="secondary" data-copy="thumbnailOut">Copy Prompt</button><button data-save="Thumbnail:thumbnailOut">Save</button></div>
-</section>
-
-<!-- POSTER -->
-<section id="poster" class="page">
-<h1>🎞️ Movie Poster Studio</h1>
-<div class="card form">
+<section class="page" id="page-poster"><div class="card"><h2>Movie Poster Studio</h2>
 <label>Movie name</label><input id="posterName" placeholder="Movie title">
-<label>Genre</label><select id="posterGenre"><option>Action</option><option>Drama</option><option>Comedy</option><option>Romance</option><option>Thriller</option><option>Science Fiction</option><option>Horror</option><option>Documentary</option></select>
-<label>Poster concept</label><textarea id="posterDetails" placeholder="Characters, story, mood, visual design, tagline..."></textarea>
-<button data-action="poster">Create Movie Poster Prompt</button>
-</div>
-<div id="posterOut" class="output"></div>
-<div class="actions"><button class="secondary" data-copy="posterOut">Copy</button><button data-save="Poster:posterOut">Save</button></div>
-</section>
+<label>Genre</label><select id="posterGenre"><option>Drama</option><option>Action</option><option>Comedy</option><option>Thriller</option><option>Fantasy</option><option>Documentary</option></select>
+<label>Poster concept</label><textarea id="posterDetails" placeholder="Characters, visual, atmosphere, composition..."></textarea>
+<button data-action="generate-poster">Create Poster Prompt</button><div id="posterOut" class="output"></div><div class="actions"><button class="secondary" data-action="copy" data-target="posterOut">Copy</button><button class="secondary" data-action="save" data-target="posterOut" data-project="Poster">Save Project</button></div></div></section>
 
-<!-- ADS -->
-<section id="ads" class="page">
-<h1>📢 Ads Studio</h1>
-<div class="card form">
-<label>Product/service</label><input id="adProduct" placeholder="Product name">
-<label>Platform</label><select id="adPlatform"><option>YouTube</option><option>Instagram</option><option>Facebook</option><option>Google</option><option>Multiple</option></select>
-<label>Ad type</label><select id="adKind"><option>Ad idea</option><option>Video script</option><option>Image ad copy</option><option>Campaign</option><option>Marketing plan</option></select>
-<label>Details</label><textarea id="adDetails" placeholder="Audience, product features, campaign goals..."></textarea>
-<button data-action="ads">Generate Ad</button>
-</div>
-<div id="adsOut" class="output"></div>
-<div class="actions"><button class="secondary" data-copy="adsOut">Copy</button><button data-save="Advertisement:adsOut">Save</button></div>
-</section>
+<section class="page" id="page-ads"><div class="card"><h2>Ads Studio</h2>
+<label>Product / service</label><input id="adProduct" placeholder="Product name">
+<label>Platform</label><select id="adPlatform"><option>YouTube</option><option>Instagram</option><option>Facebook</option><option>Other</option></select>
+<label>Ad type</label><select id="adType"><option>Video script</option><option>Image ad concept</option><option>Copy / caption</option><option>Campaign plan</option></select>
+<label>Target audience / details</label><textarea id="adDetails" placeholder="Audience, product benefits, objective, budget if applicable..."></textarea>
+<button data-action="generate-ad">Generate Ad Plan</button><div id="adsOut" class="output"></div><div class="actions"><button class="secondary" data-action="copy" data-target="adsOut">Copy</button><button class="secondary" data-action="save" data-target="adsOut" data-project="Advertisement">Save Project</button></div></div></section>
 
-<!-- PROJECTS -->
-<section id="projects" class="page">
-<h1>📂 My Projects</h1>
-<div class="card" id="projectList"></div>
-<button class="secondary" data-action="refresh-projects">Refresh</button>
-<button class="secondary" data-action="delete-projects">Delete All</button>
-</section>
+<section class="page" id="page-projects"><div class="card"><h2>My Projects</h2><p>Projects is device/browser local storage. Export backup to keep your saved projects.</p><div class="actions"><button data-action="refresh-projects">Refresh</button><button class="secondary" data-action="export-projects">Export Backup</button><button class="secondary" data-action="import-projects">Import Backup</button><input hidden type="file" id="importFile" accept="application/json"></div><div id="projectsList" class="grid"></div></div></section>
 
-<!-- SETTINGS -->
-<section id="settings" class="page">
-<h1>⚙️ Settings</h1>
-<div class="card form">
-<label>Supabase URL</label><input id="supabaseUrl" placeholder="https://yourproject.supabase.co">
-<label>Anon/public key</label><textarea id="supabaseKey" placeholder="Supabase public key"></textarea>
-<label>Edge Function</label><input id="functionName" value="rapid-worker">
-<button data-action="save-settings">Save Settings</button>
-<button class="secondary" data-action="test">Test AI Connection</button>
-<div class="muted">Gemini API key और service-role key को frontend में कभी न डालें।</div>
-</div>
-<div id="settingsOut" class="output"></div>
-</section>
-
-</main>
-</div>
+<section class="page" id="page-settings"><div class="card"><h2>Settings</h2>
+<label>Supabase Project URL</label><input id="supabaseUrl" placeholder="https://your-project.supabase.co">
+<label>Supabase Anon / Publishable Key</label><textarea id="supabaseKey" placeholder="Public anon/publishable key"></textarea>
+<label>Edge Function name</label><input id="functionName" placeholder="rapid-worker" value="rapid-worker">
+<p class="small">Frontend mein sirf public anon key rakhein. Service-role key ya Gemini API key kabhi yahan paste na karein.</p>
+<div class="actions"><button data-action="save-settings">Save Settings</button><button class="secondary" data-action="test-connection">Test AI Connection</button><button class="secondary" data-action="forget-settings">Clear Settings</button></div>
+<div id="settingsOut" class="output"></div></div>
+<div class="card"><h3>Memory</h3><p>Chat history aur projects is browser/device mein save hote hain.</p><button class="danger" data-action="clear-local">Clear Local Data</button></div></section>
+</main></div>
 
 <script>
+(() => {
 "use strict";
-
-/* JARVIS: SINGLE EVENT SYSTEM */
-
 const $ = id => document.getElementById(id);
-const DEFAULT_SUPABASE = "https://jiqewyflnbhutrocacyt.supabase.co";
-const DEFAULT_FUNCTION = "rapid-worker";
-
-let settings = read("jarvis_settings",{});
-let chat = read("jarvis_chat",[]);
-let selectedVideos = [];
-let selectedAudios = [];
-
-function read(key,fallback){
-  try{return JSON.parse(localStorage.getItem(key)) ?? fallback}
-  catch{return fallback}
-}
-
-function write(key,value){
-  localStorage.setItem(key,JSON.stringify(value));
-}
-
-function status(text){
-  $("status").textContent=text;
-}
-
-function show(id,text){
-  const el=$(id);
-  if(!el)return;
-  el.textContent=text;
-  el.classList.add("visible");
-}
-
+const SETTINGS_KEY="jarvis_settings_v2", CHAT_KEY="jarvis_chat_v2", PROJECT_KEY="jarvis_projects_v2", MEMORY_KEY="jarvis_memory_v2";
+const defaults={url:"",key:"",fn:"rapid-worker"};
+let settings=load(SETTINGS_KEY,defaults), history=load(CHAT_KEY,[]), projects=load(PROJECT_KEY,[]), busy=false;
+function load(k,fallback){try{return JSON.parse(localStorage.getItem(k))??fallback}catch{return fallback}}
+function write(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function status(t){$("globalStatus").textContent=t}
+function show(id,text){const e=$(id);if(e)e.textContent=String(text??"")}
 function page(name){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
-  $(name)?.classList.add("active");
-  document.querySelector('[data-page="'+name+'"]')?.classList.add("active");
-  if(name==="projects")refreshProjects();
-  if(name==="chat")renderChat();
-  window.scrollTo(0,0);
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ const el=$("page-"+name); if(!el){status("Page not found: "+name);return}
+ el.classList.add("active");
+ document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===name));
+ $("pageTitle").textContent=({home:"Jarvis Creator Studio",chat:"AI Chat",website:"Website Builder",apps:"App Builder",games:"Game Builder",code:"Code Studio",content:"Content Studio",video:"Video Studio",media:"Media Editor",music:"Music Studio",thumbnail:"Thumbnail Studio",poster:"Poster Studio",ads:"Ads Studio",projects:"Projects",settings:"Settings"})[name]||name;
+ if(name==="projects")renderProjects();
+ window.scrollTo({top:0,behavior:"smooth"});
 }
-
-function settingsLoad(){
-  $("supabaseUrl").value=settings.url||DEFAULT_SUPABASE;
-  $("supabaseKey").value=settings.key||"";
-  $("functionName").value=settings.fn||DEFAULT_FUNCTION;
-}
-
-function settingsSave(){
-  settings={
-    url:$("supabaseUrl").value.trim().replace(/\/+$/,""),
-    key:$("supabaseKey").value.trim(),
-    fn:$("functionName").value.trim()||DEFAULT_FUNCTION
-  };
-  write("jarvis_settings",settings);
-  show("settingsOut","Settings saved.");
-}
-
-async function ai(message,history=[]){
-  if(!settings.url||!settings.key)throw Error("Settings में Supabase URL और public key डालें।");
-
-  const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),90000);
-
-  try{
-    const response=await fetch(
-      settings.url+"/functions/v1/"+(settings.fn||DEFAULT_FUNCTION),
-      {
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json",
-          "apikey":settings.key,
-          "Authorization":"Bearer "+settings.key
-        },
-        body:JSON.stringify({message,history}),
-        signal:controller.signal
-      }
-    );
-
-    const raw=await response.text();
-    let data;
-    try{data=JSON.parse(raw)}catch{data={reply:raw}}
-
-    if(!response.ok){
-      throw Error(data.error||data.message||"HTTP "+response.status+" "+raw);
-    }
-
-    if(typeof data==="string")return data;
-    return data.reply||data.response||data.output||data.text||data.result||JSON.stringify(data,null,2);
-  }finally{
-    clearTimeout(timer);
-  }
-}
-
-async function generate(prompt,output){
-  show(output,"Jarvis is working... Please wait.");
-  status("● Generating");
-  try{
-    const result=await ai(prompt);
-    show(output,result);
-    status("● Ready");
-  }catch(e){
-    show(output,"ERROR: "+e.message);
-    status("● Error");
-  }
-}
-
-function val(id){return $(id)?.value.trim()||""}
-
-/* Builder tasks */
-
-async function task(action){
-  switch(action){
-
-  case "website":
-    if(!val("websiteDetails"))return alert("Website requirements likho.");
-    return generate(
-      "Create a complete website plan and code. Website name: "+v
+function readSettings(){settings={url:$("supabaseUrl").value.trim().replace(/\/+$/,""),key:$("supabaseKey").value.trim(),fn:$("functionName").value.trim()||"rapid-worker"};return settings}
+function renderChat(){const box=$("chatMessages");box.innerHTML="";history.forEach(m=>{const d=document.createElement("div");d.className="msg "+(m.role==="user"?"user":"assistant");d.textContent=m.text;box.appendChild(d)});box.scrollTop=box.scrollHeight}
+function saveChat(){write(CHAT_KEY,history);write(MEMORY_KEY,history.slice(-30))}
+async function callAI(message,extraHistory=[]){
+ readSettings();
+ if(!settings.url||!settings.key)throw new Error("Settings mein Supabase URL aur public anon key pehle save karein.");
+ const endpoint=settings.url+"/functions/v1/"+encodeURIComponent(settings.fn);
+ const controller=new AbortController(), timer=setTimeout(()=>controller.abort(),60000);
+ try{
+  const response=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json","apikey":settings.key,"Authorization":"Bearer "+settings.key},body:JSON.stringify({message,history:extraHistory}),signal:controller.signal});
+  const raw=await response.text();let data;try{data=JSON.parse(raw)}catch{data={reply:raw}}
+  if(!response.ok)throw new Error(data.error||data.message||raw||("HTTP "+response.status));
+  if(data.success===false)throw new Err
